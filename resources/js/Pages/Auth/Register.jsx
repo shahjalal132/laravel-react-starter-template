@@ -35,13 +35,6 @@ export default function Register() {
                     aria-hidden="true"
                 />
                 <div className="relative z-10 w-full max-w-[480px]">
-                    <Link href="/" className="block">
-                        <img
-                            src="https://readymadeui.com/readymadeui.svg"
-                            alt="logo"
-                            className="mx-auto mb-8 block w-40"
-                        />
-                    </Link>
                     <div className="rounded-2xl border border-gray-200 bg-white/95 p-6 text-slate-900 shadow-sm sm:p-8">
                         <h1 className="text-center text-3xl font-semibold">
                             Create account
