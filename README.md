@@ -1,6 +1,6 @@
-# Expense Tracker
+# Laravel, React Starter Template
 
-Expense Tracker is a Laravel + Inertia.js (React) Starter template. The stack uses Vite for bundling and Tailwind CSS for styling.
+This is a Laravel + Inertia.js (React) Starter template. The stack uses Vite for bundling and Tailwind CSS for styling.
 
 ## Tech Stack
 
