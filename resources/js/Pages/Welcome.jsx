@@ -1,28 +1,58 @@
 import { Head, Link } from "@inertiajs/react";
 
-export default function Welcome({ auth, laravelVersion, phpVersion }) {
-    const handleImageError = () => {
-        document
-            .getElementById("screenshot-container")
-            ?.classList.add("!hidden");
-        document.getElementById("docs-card")?.classList.add("!row-span-1");
-        document
-            .getElementById("docs-card-content")
-            ?.classList.add("!flex-row");
-        document.getElementById("background")?.classList.add("!hidden");
-    };
+export default function Welcome({ auth }) {
+    const isLoggedIn = Boolean(auth?.user);
 
     return (
         <>
             <Head title="Welcome" />
-            <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-                <img
-                    id="background"
-                    className="absolute -left-20 top-0 max-w-[877px]"
-                    src="https://laravel.com/assets/img/welcome/background.svg"
-                />
-                <h2>Welcome to Expense Tracker</h2>
-            </div>
+            <section
+                className="relative flex min-h-screen items-center justify-center bg-black/70 text-white"
+                style={{
+                    backgroundImage:
+                        "url(https://images.pexels.com/photos/34441449/pexels-photo-34441449.jpeg)",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                }}
+            >
+                <div className="absolute inset-0 bg-black/70" aria-hidden="true" />
+                <div className="relative z-10 mx-auto w-full max-w-3xl px-6 text-center">
+                    <p className="mb-4 text-sm uppercase tracking-[0.3em] text-white/70">
+                        Expense Tracker
+                    </p>
+                    <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
+                        Welcome to your smarter way to manage expenses
+                    </h1>
+                    <p className="mt-4 text-base text-white/80 sm:text-lg">
+                        Track, categorize, and visualize your spending with ease.
+                    </p>
+                    <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                        {isLoggedIn ? (
+                            <Link
+                                href="/dashboard"
+                                className="rounded-md bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90"
+                            >
+                                Dashboard
+                            </Link>
+                        ) : (
+                            <>
+                                <Link
+                                    href="/login"
+                                    className="rounded-md bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90"
+                                >
+                                    Login
+                                </Link>
+                                <Link
+                                    href="/register"
+                                    className="rounded-md border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                                >
+                                    Register
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </section>
         </>
     );
 }
