@@ -3,29 +3,16 @@ import { useState } from 'react';
 import {
     LayoutDashboard,
     ShoppingBag,
-    Bot,
-    Package,
     User,
-    CheckSquare,
-    FileText,
-    Table,
-    File,
     ChevronDown,
     ChevronRight,
     Menu,
     Search,
-    Bell,
     MoreHorizontal,
     Grid3x3,
-    Settings,
-    Info,
     LogOut,
-    MessageCircle,
-    Languages,
-    Mail,
-    Clock,
-    Box,
     Download,
+    Globe,
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
 
@@ -230,6 +217,15 @@ export default function AuthenticatedLayout({ header, children }) {
                         </div>
 
                         <div className="flex items-center gap-3">
+                            <Link
+                                href="/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                title="Go to frontend"
+                            >
+                                <Globe className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                            </Link>
                             <ThemeToggle />
                             <div className="relative">
                                 <button
@@ -298,14 +294,14 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 {header && (
                     <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-                        <div className="mx-auto max-w-7xl px-6 py-4">
+                        <div className="px-10 py-5">
                             {header}
                         </div>
                     </div>
                 )}
 
-                <main className="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-                    <div className="max-w-7xl mx-auto">{children}</div>
+                <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+                    <div >{children}</div>
                 </main>
             </div>
         </div>

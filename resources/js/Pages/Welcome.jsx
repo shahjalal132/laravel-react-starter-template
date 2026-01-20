@@ -29,7 +29,7 @@ export default function Welcome({ auth }) {
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                         {isLoggedIn ? (
                             <Link
-                                href="/dashboard"
+                                href="/admin/dashboard"
                                 className="rounded-md bg-white dark:bg-gray-100 px-6 py-3 text-sm font-semibold text-black dark:text-gray-900 transition hover:bg-white/90 dark:hover:bg-gray-200"
                             >
                                 Dashboard
