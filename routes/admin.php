@@ -7,4 +7,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/dashboard', function () {
         return Inertia::render('Admin/Dashboard');
     })->name('dashboard');
+
+    Route::get('/settings', function () {
+        return Inertia::render('Admin/Settings');
+    })->name('settings');
 });

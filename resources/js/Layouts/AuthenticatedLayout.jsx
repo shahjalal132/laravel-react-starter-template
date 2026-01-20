@@ -13,6 +13,7 @@ import {
     LogOut,
     Download,
     Globe,
+    Settings,
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
 
@@ -70,6 +71,13 @@ export default function AuthenticatedLayout({ header, children }) {
             icon: Download,
             hasSubmenu: false,
         },
+        {
+            id: 'settings',
+            label: 'Settings',
+            icon: Settings,
+            hasSubmenu: false,
+            route: 'admin.settings',
+        },
     ];
 
     return (
@@ -123,12 +131,19 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 <nav className="flex-1 px-3 pb-4 overflow-y-auto custom-scrollbar">
                     {menuItems.map((item) => {
+                        const isLink = item.route && !item.hasSubmenu;
+                        const Component = isLink ? Link : 'button';
+                        const componentProps = isLink
+                            ? { href: route(item.route) }
+                            : {
+                                  onClick: () =>
+                                      item.hasSubmenu && toggleMenu(item.id),
+                              };
+
                         return (
                             <div key={item.id} className="mb-1">
-                                <button
-                                    onClick={() =>
-                                        item.hasSubmenu && toggleMenu(item.id)
-                                    }
+                                <Component
+                                    {...componentProps}
                                     className="w-full flex items-center justify-between px-3 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors group"
                                     title={!sidebarOpen ? item.label : ''}
                                 >
@@ -138,9 +153,13 @@ export default function AuthenticatedLayout({ header, children }) {
                                                 !sidebarOpen && 'lg:mx-auto'
                                             }`}
                                         />
-                                        <span className={`text-sm font-medium transition-opacity duration-300 ${
-                                            sidebarOpen ? 'opacity-100' : 'lg:opacity-0 lg:hidden'
-                                        }`}>
+                                        <span
+                                            className={`text-sm font-medium transition-opacity duration-300 ${
+                                                sidebarOpen
+                                                    ? 'opacity-100'
+                                                    : 'lg:opacity-0 lg:hidden'
+                                            }`}
+                                        >
                                             {item.label}
                                         </span>
                                         {sidebarOpen && item.badge && (
@@ -158,7 +177,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                             )}
                                         </div>
                                     )}
-                                </button>
+                                </Component>
 
                                 {sidebarOpen &&
                                     item.hasSubmenu &&
