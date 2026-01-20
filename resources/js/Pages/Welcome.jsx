@@ -30,7 +30,7 @@ export default function Welcome({ auth }) {
                         {isLoggedIn ? (
                             <Link
                                 href="/dashboard"
-                                className="rounded-md bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90"
+                                className="rounded-md bg-white dark:bg-gray-100 px-6 py-3 text-sm font-semibold text-black dark:text-gray-900 transition hover:bg-white/90 dark:hover:bg-gray-200"
                             >
                                 Dashboard
                             </Link>
@@ -38,13 +38,13 @@ export default function Welcome({ auth }) {
                             <>
                                 <Link
                                     href="/login"
-                                    className="rounded-md bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90"
+                                    className="rounded-md bg-white dark:bg-gray-100 px-6 py-3 text-sm font-semibold text-black dark:text-gray-900 transition hover:bg-white/90 dark:hover:bg-gray-200"
                                 >
                                     Login
                                 </Link>
                                 <Link
                                     href="/register"
-                                    className="rounded-md border border-white/70 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                                    className="rounded-md border border-white/70 dark:border-gray-300/70 px-6 py-3 text-sm font-semibold text-white dark:text-gray-100 transition hover:bg-white/10 dark:hover:bg-gray-300/20"
                                 >
                                     Register
                                 </Link>

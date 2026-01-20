@@ -35,12 +35,12 @@ export default function Login({ status, canResetPassword }) {
                     aria-hidden="true"
                 />
                 <div className="relative z-10 w-full max-w-[480px]">
-                    <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 text-slate-900 shadow-sm sm:p-8">
+                    <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-6 text-slate-900 dark:text-gray-100 shadow-sm sm:p-8">
                         <h1 className="text-center text-3xl font-semibold">
                             Sign in
                         </h1>
                         {status && (
-                            <div className="mt-4 text-center text-sm font-medium text-green-600">
+                            <div className="mt-4 text-center text-sm font-medium text-green-600 dark:text-green-400">
                                 {status}
                             </div>
                         )}
@@ -48,7 +48,7 @@ export default function Login({ status, canResetPassword }) {
                             <div>
                                 <label
                                     htmlFor="email"
-                                    className="mb-2 block text-sm font-medium text-slate-900"
+                                    className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
                                 >
                                     Email
                                 </label>
@@ -58,7 +58,7 @@ export default function Login({ status, canResetPassword }) {
                                         type="email"
                                         name="email"
                                         value={data.email}
-                                        className="w-full border border-slate-300 px-4 py-3 pr-10 text-sm text-slate-900 outline-blue-600"
+                                        className="w-full border border-slate-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 pr-10 text-sm text-slate-900 dark:text-gray-100 outline-blue-600 dark:outline-blue-400"
                                         autoComplete="username"
                                         isFocused={true}
                                         onChange={(e) =>
@@ -94,7 +94,7 @@ export default function Login({ status, canResetPassword }) {
                             <div>
                                 <label
                                     htmlFor="password"
-                                    className="mb-2 block text-sm font-medium text-slate-900"
+                                    className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
                                 >
                                     Password
                                 </label>
@@ -104,7 +104,7 @@ export default function Login({ status, canResetPassword }) {
                                         type="password"
                                         name="password"
                                         value={data.password}
-                                        className="w-full border border-slate-300 px-4 py-3 pr-10 text-sm text-slate-900 outline-blue-600"
+                                        className="w-full border border-slate-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 pr-10 text-sm text-slate-900 dark:text-gray-100 outline-blue-600 dark:outline-blue-400"
                                         autoComplete="current-password"
                                         onChange={(e) =>
                                             setData('password', e.target.value)
@@ -144,7 +144,7 @@ export default function Login({ status, canResetPassword }) {
                                         }
                                         className="h-4 w-4 shrink-0 border-slate-300 text-blue-600 focus:ring-blue-500"
                                     />
-                                    <span className="ml-3 text-sm text-slate-900">
+                                    <span className="ml-3 text-sm text-slate-900 dark:text-gray-100">
                                         Remember me
                                     </span>
                                 </label>
@@ -163,16 +163,16 @@ export default function Login({ status, canResetPassword }) {
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="w-full cursor-pointer rounded-md bg-blue-600 px-4 py-3 text-[15px] font-medium tracking-wide text-white transition hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
+                                    className="w-full cursor-pointer rounded-md bg-blue-600 dark:bg-blue-500 px-4 py-3 text-[15px] font-medium tracking-wide text-white transition hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
                                 >
                                     Sign in
                                 </button>
                             </div>
-                            <p className="!mt-6 text-center text-sm text-slate-900">
+                            <p className="!mt-6 text-center text-sm text-slate-900 dark:text-gray-100">
                                 Don&apos;t have an account?
                                 <Link
                                     href={route('register')}
-                                    className="ml-1 whitespace-nowrap font-semibold text-blue-600 hover:underline"
+                                    className="ml-1 whitespace-nowrap font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                                 >
                                     Register here
                                 </Link>

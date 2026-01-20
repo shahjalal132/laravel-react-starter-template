@@ -14,7 +14,6 @@ import {
     ChevronRight,
     Menu,
     Search,
-    Moon,
     Bell,
     MoreHorizontal,
     Grid3x3,
@@ -28,6 +27,7 @@ import {
     Box,
     Download,
 } from 'lucide-react';
+import ThemeToggle from '@/Components/ThemeToggle';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -86,12 +86,12 @@ export default function AuthenticatedLayout({ header, children }) {
     ];
 
     return (
-        <div className="flex h-screen bg-gray-50">
+        <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
             <aside
                 className={`${sidebarOpen ? 'w-64' : 'w-20'
-                    } bg-white border-r border-gray-200 transition-all duration-300 flex flex-col`}
+                    } bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col`}
             >
-                <div className="h-16 flex items-center justify-center border-b border-gray-200">
+                <div className="h-16 flex items-center justify-center border-b border-gray-200 dark:border-gray-700">
                     <Link href="/" className="flex items-center gap-2">
                         <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
                             <div className="flex flex-col gap-0.5">
@@ -103,7 +103,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
                         </div>
                         {sidebarOpen && (
-                            <span className="text-xl font-bold text-gray-800">
+                            <span className="text-xl font-bold text-gray-800 dark:text-gray-100">
                                 TailAdmin
                             </span>
                         )}
@@ -112,7 +112,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 {sidebarOpen && (
                     <div className="px-6 py-4">
-                        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                             Menu
                         </span>
                     </div>
@@ -126,7 +126,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     key={item.id}
                                     className="my-3 flex justify-center"
                                 >
-                                    <MoreHorizontal className="w-5 h-5 text-gray-300" />
+                                    <MoreHorizontal className="w-5 h-5 text-gray-300 dark:text-gray-600" />
                                 </div>
                             );
                         }
@@ -137,12 +137,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                     onClick={() =>
                                         item.hasSubmenu && toggleMenu(item.id)
                                     }
-                                    className="w-full flex items-center justify-between px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors group"
+                                    className="w-full flex items-center justify-between px-3 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors group"
                                     title={!sidebarOpen ? item.label : ''}
                                 >
                                     <div className="flex items-center gap-3">
                                         <item.icon
-                                            className={`w-5 h-5 text-gray-500 group-hover:text-blue-600 ${!sidebarOpen && 'mx-auto'
+                                            className={`w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 ${!sidebarOpen && 'mx-auto'
                                                 }`}
                                         />
                                         {sidebarOpen && (
@@ -151,7 +151,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                                     {item.label}
                                                 </span>
                                                 {item.badge && (
-                                                    <span className="px-2 py-0.5 text-xs font-semibold bg-green-100 text-green-700 rounded">
+                                                    <span className="px-2 py-0.5 text-xs font-semibold bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
                                                         {item.badge}
                                                     </span>
                                                 )}
@@ -161,9 +161,9 @@ export default function AuthenticatedLayout({ header, children }) {
                                     {sidebarOpen && item.hasSubmenu && (
                                         <>
                                             {openMenus[item.id] ? (
-                                                <ChevronDown className="w-4 h-4 text-gray-400" />
+                                                <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                                             ) : (
-                                                <ChevronRight className="w-4 h-4 text-gray-400" />
+                                                <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                                             )}
                                         </>
                                     )}
@@ -179,15 +179,15 @@ export default function AuthenticatedLayout({ header, children }) {
                                                     <button
                                                         key={`${item.id}-${idx}`}
                                                         className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-between ${subitem.active
-                                                            ? 'bg-blue-50 text-blue-600 font-medium'
-                                                            : 'text-gray-600 hover:bg-gray-50'
+                                                            ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
+                                                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                                                             }`}
                                                     >
                                                         <span>
                                                             {subitem.label}
                                                         </span>
                                                         {subitem.badge && (
-                                                            <span className="px-2 py-0.5 text-xs font-semibold bg-green-100 text-green-700 rounded">
+                                                            <span className="px-2 py-0.5 text-xs font-semibold bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
                                                                 {
                                                                     subitem.badge
                                                                 }
@@ -206,42 +206,37 @@ export default function AuthenticatedLayout({ header, children }) {
 
             {/* Header */}
             <div className="flex-1 flex flex-col">
-                <header className="bg-white border-b border-gray-200 px-6 py-4">
+                <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <button
                                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                             >
-                                <Menu className="w-5 h-5 text-gray-600" />
+                                <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                             </button>
 
                             <div className="relative">
-                                <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                <Search className="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                                 <input
                                     type="text"
                                     placeholder="Search or type command..."
-                                    className="pl-10 pr-20 py-2 w-96 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="pl-10 pr-20 py-2 w-96 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                                 />
-                                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded">
+                                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded">
                                     ⌘K
                                 </kbd>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3">
-                            {/* <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                                <Moon className="w-5 h-5 text-gray-600" />
-                            </button>
-                            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                                <Bell className="w-5 h-5 text-gray-600" />
-                            </button> */}
+                            <ThemeToggle />
                             <div className="relative">
                                 <button
                                     onClick={() =>
                                         setUserDropdownOpen(!userDropdownOpen)
                                     }
-                                    className="flex items-center gap-2 pl-3 border-l border-gray-200 hover:bg-gray-50 rounded-r-lg pr-2 py-1 transition-colors"
+                                    className="flex items-center gap-2 pl-3 border-l border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-r-lg pr-2 py-1 transition-colors"
                                 >
                                     <img
                                         src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
@@ -251,20 +246,20 @@ export default function AuthenticatedLayout({ header, children }) {
                                         className="w-10 h-10 rounded-full"
                                     />
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm font-medium text-gray-700">
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                                             {user.name}
                                         </span>
-                                        <ChevronDown className="w-4 h-4 text-gray-400" />
+                                        <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                                     </div>
                                 </button>
 
                                 {userDropdownOpen && (
-                                    <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
-                                        <div className="px-4 py-3 border-b border-gray-100">
-                                            <div className="font-semibold text-gray-800">
+                                    <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                                        <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                                            <div className="font-semibold text-gray-800 dark:text-gray-100">
                                                 {user.name}
                                             </div>
-                                            <div className="text-sm text-gray-500">
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">
                                                 {user.email}
                                             </div>
                                         </div>
@@ -272,24 +267,24 @@ export default function AuthenticatedLayout({ header, children }) {
                                         <div className="py-2">
                                             <Link
                                                 href={route('profile.edit')}
-                                                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                                                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                             >
-                                                <User className="w-5 h-5 text-gray-500" />
-                                                <span className="text-sm font-medium text-gray-700">
+                                                <User className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                                                     Edit profile
                                                 </span>
                                             </Link>
                                         </div>
 
-                                        <div className="border-t border-gray-100 pt-2">
+                                        <div className="border-t border-gray-100 dark:border-gray-700 pt-2">
                                             <Link
                                                 href={route('logout')}
                                                 method="post"
                                                 as="button"
-                                                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                                                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                             >
-                                                <LogOut className="w-5 h-5 text-gray-500" />
-                                                <span className="text-sm font-medium text-gray-700">
+                                                <LogOut className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                                                     Sign out
                                                 </span>
                                             </Link>
@@ -302,14 +297,14 @@ export default function AuthenticatedLayout({ header, children }) {
                 </header>
 
                 {header && (
-                    <div className="border-b border-gray-200 bg-white">
+                    <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                         <div className="mx-auto max-w-7xl px-6 py-4">
                             {header}
                         </div>
                     </div>
                 )}
 
-                <main className="flex-1 p-6 overflow-y-auto">
+                <main className="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
                     <div className="max-w-7xl mx-auto">{children}</div>
                 </main>
             </div>

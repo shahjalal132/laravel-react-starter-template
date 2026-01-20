@@ -15,6 +15,30 @@
         @viteReactRefresh
         @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
         @inertiaHead
+        
+        <script>
+            (function() {
+                const themePreference = localStorage.getItem('theme-preference');
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                let shouldUseDark = false;
+                
+                if (themePreference === 'dark') {
+                    shouldUseDark = true;
+                } else if (themePreference === 'light') {
+                    shouldUseDark = false;
+                } else {
+                    // Default to system preference
+                    shouldUseDark = systemPrefersDark;
+                }
+                
+                if (shouldUseDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+        </script>
     </head>
     <body class="font-sans antialiased">
         @inertia
