@@ -18,7 +18,7 @@ import ThemeToggle from '@/Components/ThemeToggle';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const [openMenus, setOpenMenus] = useState({
         dashboard: true,
@@ -73,14 +73,24 @@ export default function AuthenticatedLayout({ header, children }) {
     ];
 
     return (
-        <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
+            {/* Mobile Sidebar Overlay */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 z-40 bg-black/50 lg:hidden backdrop-blur-sm transition-opacity"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
+
+            {/* Sidebar */}
             <aside
-                className={`${sidebarOpen ? 'w-64' : 'w-20'
-                    } bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col`}
+                className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 lg:static lg:translate-x-0 ${
+                    sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0 lg:w-20'
+                }`}
             >
-                <div className="h-16 flex items-center justify-center border-b border-gray-200 dark:border-gray-700">
+                <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-700">
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shrink-0">
                             <div className="flex flex-col gap-0.5">
                                 <div className="flex gap-0.5">
                                     <div className="w-1 h-3 bg-white rounded-full"></div>
@@ -89,35 +99,30 @@ export default function AuthenticatedLayout({ header, children }) {
                                 </div>
                             </div>
                         </div>
-                        {sidebarOpen && (
-                            <span className="text-xl font-bold text-gray-800 dark:text-gray-100">
-                                TailAdmin
-                            </span>
-                        )}
+                        <span className={`text-xl font-bold text-gray-800 dark:text-gray-100 transition-opacity duration-300 ${
+                            sidebarOpen ? 'opacity-100' : 'lg:opacity-0 lg:hidden'
+                        }`}>
+                            TailAdmin
+                        </span>
                     </Link>
+                    <button
+                        onClick={() => setSidebarOpen(false)}
+                        className="p-2 lg:hidden hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                    >
+                        <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300 rotate-180" />
+                    </button>
                 </div>
 
-                {sidebarOpen && (
-                    <div className="px-6 py-4">
-                        <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                            Menu
-                        </span>
-                    </div>
-                )}
+                <div className={`px-6 py-4 transition-opacity duration-300 ${
+                    sidebarOpen ? 'opacity-100' : 'lg:opacity-0 lg:hidden'
+                }`}>
+                    <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                        Menu
+                    </span>
+                </div>
 
-                <nav className="flex-1 px-3 pb-4 overflow-y-auto">
+                <nav className="flex-1 px-3 pb-4 overflow-y-auto custom-scrollbar">
                     {menuItems.map((item) => {
-                        if (item.isDivider) {
-                            return (
-                                <div
-                                    key={item.id}
-                                    className="my-3 flex justify-center"
-                                >
-                                    <MoreHorizontal className="w-5 h-5 text-gray-300 dark:text-gray-600" />
-                                </div>
-                            );
-                        }
-
                         return (
                             <div key={item.id} className="mb-1">
                                 <button
@@ -129,60 +134,49 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     <div className="flex items-center gap-3">
                                         <item.icon
-                                            className={`w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 ${!sidebarOpen && 'mx-auto'
-                                                }`}
+                                            className={`w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0 ${
+                                                !sidebarOpen && 'lg:mx-auto'
+                                            }`}
                                         />
-                                        {sidebarOpen && (
-                                            <>
-                                                <span className="text-sm font-medium">
-                                                    {item.label}
-                                                </span>
-                                                {item.badge && (
-                                                    <span className="px-2 py-0.5 text-xs font-semibold bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
-                                                        {item.badge}
-                                                    </span>
-                                                )}
-                                            </>
+                                        <span className={`text-sm font-medium transition-opacity duration-300 ${
+                                            sidebarOpen ? 'opacity-100' : 'lg:opacity-0 lg:hidden'
+                                        }`}>
+                                            {item.label}
+                                        </span>
+                                        {sidebarOpen && item.badge && (
+                                            <span className="px-2 py-0.5 text-xs font-semibold bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
+                                                {item.badge}
+                                            </span>
                                         )}
                                     </div>
                                     {sidebarOpen && item.hasSubmenu && (
-                                        <>
+                                        <div className="transition-transform duration-200">
                                             {openMenus[item.id] ? (
                                                 <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                                             ) : (
                                                 <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                                             )}
-                                        </>
+                                        </div>
                                     )}
                                 </button>
 
                                 {sidebarOpen &&
                                     item.hasSubmenu &&
                                     openMenus[item.id] &&
-                                    item.submenu.length > 0 && (
+                                    item.submenu && item.submenu.length > 0 && (
                                         <div className="ml-11 mt-1 space-y-1">
-                                            {item.submenu.map(
-                                                (subitem, idx) => (
-                                                    <button
-                                                        key={`${item.id}-${idx}`}
-                                                        className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-between ${subitem.active
+                                            {item.submenu.map((subitem, idx) => (
+                                                <button
+                                                    key={`${item.id}-${idx}`}
+                                                    className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-between ${
+                                                        subitem.active
                                                             ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
                                                             : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                                            }`}
-                                                    >
-                                                        <span>
-                                                            {subitem.label}
-                                                        </span>
-                                                        {subitem.badge && (
-                                                            <span className="px-2 py-0.5 text-xs font-semibold bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
-                                                                {
-                                                                    subitem.badge
-                                                                }
-                                                            </span>
-                                                        )}
-                                                    </button>
-                                                ),
-                                            )}
+                                                    }`}
+                                                >
+                                                    <span>{subitem.label}</span>
+                                                </button>
+                                            ))}
                                         </div>
                                     )}
                             </div>
@@ -191,58 +185,61 @@ export default function AuthenticatedLayout({ header, children }) {
                 </nav>
             </aside>
 
-            {/* Header */}
-            <div className="flex-1 flex flex-col">
-                <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+                {/* Header */}
+                <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4 sticky top-0 z-30">
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
                             <button
                                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors shrink-0"
                             >
                                 <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                             </button>
 
-                            <div className="relative">
+                            <div className="relative flex-1 max-w-md hidden md:block">
                                 <Search className="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                                 <input
                                     type="text"
-                                    placeholder="Search or type command..."
-                                    className="pl-10 pr-20 py-2 w-96 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
+                                    placeholder="Search..."
+                                    className="pl-10 pr-12 py-2 w-full border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                                 />
-                                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded">
+                                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-[10px] font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded hidden sm:block">
                                     ⌘K
                                 </kbd>
                             </div>
+                            
+                            {/* Mobile Search Icon */}
+                            <button className="p-2 md:hidden hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                                <Search className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                            </button>
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1 sm:gap-3 shrink-0">
                             <Link
                                 href="/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors hidden sm:flex"
                                 title="Go to frontend"
                             >
                                 <Globe className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                             </Link>
                             <ThemeToggle />
+                            
                             <div className="relative">
                                 <button
-                                    onClick={() =>
-                                        setUserDropdownOpen(!userDropdownOpen)
-                                    }
-                                    className="flex items-center gap-2 pl-3 border-l border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-r-lg pr-2 py-1 transition-colors"
+                                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                                    className="flex items-center gap-2 pl-2 sm:pl-3 border-l border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-r-lg pr-1 sm:pr-2 py-1 transition-colors"
                                 >
                                     <img
-                                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                                            user.name,
-                                        )}&background=3b82f6&color=fff`}
+                                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=3b82f6&color=fff`}
                                         alt={user.name}
-                                        className="w-10 h-10 rounded-full"
+                                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full shrink-0"
                                     />
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                    <div className="hidden sm:flex items-center gap-2">
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate max-w-[100px]">
                                             {user.name}
                                         </span>
                                         <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />
@@ -250,12 +247,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                 </button>
 
                                 {userDropdownOpen && (
-                                    <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                                    <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
                                         <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
-                                            <div className="font-semibold text-gray-800 dark:text-gray-100">
+                                            <div className="font-semibold text-gray-800 dark:text-gray-100 truncate">
                                                 {user.name}
                                             </div>
-                                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                                            <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
                                                 {user.email}
                                             </div>
                                         </div>
@@ -277,7 +274,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                                 href={route('logout')}
                                                 method="post"
                                                 as="button"
-                                                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                                className="w-full text-left flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                             >
                                                 <LogOut className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                                                 <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -294,14 +291,14 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 {header && (
                     <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-                        <div className="px-10 py-5">
+                        <div className="px-4 sm:px-10 py-4 sm:py-5">
                             {header}
                         </div>
                     </div>
                 )}
 
                 <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-                    <div >{children}</div>
+                    <div className="p-4 sm:p-6">{children}</div>
                 </main>
             </div>
         </div>
