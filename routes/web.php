@@ -24,10 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->name('dashboard');
-});
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';
