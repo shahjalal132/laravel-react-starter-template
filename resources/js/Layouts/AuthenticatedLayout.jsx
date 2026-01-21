@@ -1,5 +1,5 @@
 import { Link, usePage, Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     LayoutDashboard,
     ShoppingBag,
@@ -52,6 +52,17 @@ export default function AuthenticatedLayout({ header, children }) {
             route: 'admin.dashboard',
         },
         {
+            id: 'ecommerce',
+            label: 'E-commerce',
+            icon: ShoppingBag,
+            hasSubmenu: true,
+            submenu: [
+                { label: 'Products', route: 'admin.dashboard' }, // Placeholder routes
+                { label: 'Orders', route: 'admin.dashboard' },
+                { label: 'Customers', route: 'admin.dashboard' },
+            ]
+        },
+        {
             id: 'settings',
             label: 'Settings',
             icon: Settings,
@@ -60,6 +71,17 @@ export default function AuthenticatedLayout({ header, children }) {
         },
     ];
 
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('main-search-input')?.focus();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     const handleSearch = (query) => {
         setSearchQuery(query);
         if (!query.trim()) {
@@ -67,10 +89,27 @@ export default function AuthenticatedLayout({ header, children }) {
             return;
         }
 
-        const filtered = menuItems.filter(item => 
-            item.label.toLowerCase().includes(query.toLowerCase())
-        );
-        setSearchResults(filtered);
+        const results = [];
+        const searchRecursive = (items, parentPath = '') => {
+            items.forEach(item => {
+                const currentPath = parentPath ? `${parentPath} > ${item.label}` : item.label;
+                if (item.label.toLowerCase().includes(query.toLowerCase())) {
+                    if (item.route) {
+                        results.push({
+                            ...item,
+                            path: currentPath,
+                            displayLabel: item.label
+                        });
+                    }
+                }
+                if (item.submenu) {
+                    searchRecursive(item.submenu, currentPath);
+                }
+            });
+        };
+
+        searchRecursive(menuItems);
+        setSearchResults(results);
     };
 
     const appName = settings?.general?.app_name || 'TailAdmin';
@@ -226,6 +265,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             <div className="relative flex-1 max-w-md hidden md:block">
                                 <Search className="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                                 <input
+                                    id="main-search-input"
                                     type="text"
                                     placeholder="Search menu..."
                                     value={searchQuery}
@@ -234,19 +274,31 @@ export default function AuthenticatedLayout({ header, children }) {
                                     onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
                                     className="pl-10 pr-12 py-2 w-full border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                                 />
+                                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-[10px] font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded hidden sm:block">
+                                    ⌘K
+                                </kbd>
 
                                 {isSearchFocused && searchResults.length > 0 && (
-                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
-                                        {searchResults.map((result) => (
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 max-h-96 overflow-y-auto">
+                                        {searchResults.map((result, index) => (
                                             <Link
-                                                key={result.id}
+                                                key={`${result.route}-${index}`}
                                                 href={route(result.route)}
-                                                className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                                className="flex flex-col px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                             >
-                                                <result.icon className="w-5 h-5 text-gray-400" />
-                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                                                    {result.label}
-                                                </span>
+                                                <div className="flex items-center gap-3">
+                                                    {result.icon ? (
+                                                        <result.icon className="w-4 h-4 text-gray-400" />
+                                                    ) : (
+                                                        <ChevronRight className="w-4 h-4 text-gray-400" />
+                                                    )}
+                                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                                        {result.displayLabel}
+                                                    </span>
+                                                </div>
+                                                <div className="text-[10px] text-gray-400 dark:text-gray-500 ml-7">
+                                                    {result.path}
+                                                </div>
                                             </Link>
                                         ))}
                                     </div>
