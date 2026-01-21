@@ -15,6 +15,7 @@ import {
     X,
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
+import LanguageSelector from '@/Components/LanguageSelector';
 import { Toaster } from 'react-hot-toast';
 
 export default function AuthenticatedLayout({ header, children }) {
@@ -345,6 +346,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     >
                                         <Globe className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                                     </Link>
+                                    <LanguageSelector />
                                     <ThemeToggle />
                                     
                                     <div className="relative">

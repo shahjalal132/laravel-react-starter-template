@@ -1,0 +1,10 @@
+{
+  "title": "General Information",
+  "description": "Update your application's general information and branding.",
+  "languagePreference": "Language Preference",
+  "languageDescription": "Select your preferred language for the application interface.",
+  "languages": {
+    "en": "English",
+    "bn": "বাংলা (Bengali)"
+  }
+}

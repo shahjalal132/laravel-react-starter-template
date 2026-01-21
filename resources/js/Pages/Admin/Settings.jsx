@@ -40,6 +40,7 @@ export default function Settings({ settings = {}, flash }) {
             app_email: general.app_email || '',
             app_phone: general.app_phone || '',
             app_address: general.app_address || '',
+            language: general.language || 'en',
             logo: null,
             // Payment
             payment_gateway: payment.payment_gateway || 'none',
@@ -245,6 +246,22 @@ export default function Settings({ settings = {}, flash }) {
                             />
                         </div>
                         <InputError message={errors.app_address} />
+                    </div>
+
+                    <div className="space-y-2">
+                        <InputLabel htmlFor="language" value="Language Preference" />
+                        <Select
+                            id="language"
+                            value={data.language}
+                            onChange={(e) => setData('language', e.target.value)}
+                        >
+                            <option value="en">English</option>
+                            <option value="bn">বাংলা (Bengali)</option>
+                        </Select>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Select your preferred language for the application interface.
+                        </p>
+                        <InputError message={errors.language} />
                     </div>
                 </div>
 
