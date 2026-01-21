@@ -19,7 +19,7 @@ const CURRENCY_SYMBOLS = {
 };
 
 export default function Settings({ settings = {}, flash }) {
-    const [activeTab, setActiveTab] = useState('general');
+    const [activeTab, setActiveTab] = useState('');
     const [logoPreview, setLogoPreview] = useState(null);
     const [ogImagePreview, setOgImagePreview] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
@@ -156,13 +156,6 @@ export default function Settings({ settings = {}, flash }) {
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Settings updated successfully');
-                // Reset file inputs after successful submission
-                if (activeTab === 'general') {
-                    setLogoPreview(null);
-                }
-                if (activeTab === 'seo') {
-                    setOgImagePreview(null);
-                }
             },
             onError: () => {
                 toast.error('Failed to update settings');

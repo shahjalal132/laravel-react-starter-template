@@ -8,10 +8,7 @@ import {
     ChevronRight,
     Menu,
     Search,
-    MoreHorizontal,
-    Grid3x3,
     LogOut,
-    Download,
     Globe,
     Settings,
     ArrowLeft,
@@ -76,17 +73,6 @@ export default function AuthenticatedLayout({ header, children }) {
             route: 'admin.dashboard',
         },
         {
-            id: 'ecommerce',
-            label: 'E-commerce',
-            icon: ShoppingBag,
-            hasSubmenu: true,
-            submenu: [
-                { label: 'Products', route: 'admin.dashboard' }, // Placeholder routes
-                { label: 'Orders', route: 'admin.dashboard' },
-                { label: 'Customers', route: 'admin.dashboard' },
-            ]
-        },
-        {
             id: 'settings',
             label: 'Settings',
             icon: Settings,
@@ -144,7 +130,7 @@ export default function AuthenticatedLayout({ header, children }) {
         setSearchResults(results);
     };
 
-    const appName = settings?.general?.app_name || 'TailAdmin';
+    const appName = settings?.general?.app_name || 'Jalal';
     const appLogo = settings?.general?.logo;
     const metaTitle = settings?.seo?.meta_title;
 
