@@ -32,7 +32,7 @@ class SettingsUpdateRequest extends FormRequest
                 'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             ],
             'payment' => [
-                'payment_gateway' => ['nullable', 'string', 'in:stripe,paypal,none'],
+                'payment_gateway' => ['nullable', 'string', 'in:stripe,paypal,sslcommerz,none'],
                 'currency' => ['nullable', 'string', 'max:10'],
                 'currency_symbol' => ['nullable', 'string', 'max:10'],
                 'stripe_public_key' => ['nullable', 'string', 'max:255'],
@@ -40,6 +40,8 @@ class SettingsUpdateRequest extends FormRequest
                 'stripe_webhook_secret' => ['nullable', 'string', 'max:255'],
                 'paypal_client_id' => ['nullable', 'string', 'max:255'],
                 'paypal_secret' => ['nullable', 'string', 'max:255'],
+                'sslcommerz_store_id' => ['nullable', 'string', 'max:255'],
+                'sslcommerz_store_password' => ['nullable', 'string', 'max:255'],
                 'payment_mode' => ['nullable', 'string', 'in:sandbox,live'],
             ],
             'seo' => [

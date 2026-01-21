@@ -9,6 +9,7 @@ import Toggle from '@/Components/Toggle';
 import Textarea from '@/Components/Textarea';
 import { Settings as SettingsIcon, Upload, Globe, Mail, Phone, MapPin, CreditCard, Search, Send, Bell, ShieldCheck, Lock, Eye, EyeOff, Image as ImageIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Button from '@/Components/Button';
 
 export default function Settings({ settings = {}, flash }) {
     const [activeTab, setActiveTab] = useState('general');
@@ -42,6 +43,8 @@ export default function Settings({ settings = {}, flash }) {
             stripe_webhook_secret: payment.stripe_webhook_secret || '',
             paypal_client_id: payment.paypal_client_id || '',
             paypal_secret: payment.paypal_secret || '',
+            sslcommerz_store_id: payment.sslcommerz_store_id || '',
+            sslcommerz_store_password: payment.sslcommerz_store_password || '',
             payment_mode: payment.payment_mode || 'sandbox',
             // SEO
             meta_title: seo.meta_title || '',
@@ -292,6 +295,7 @@ export default function Settings({ settings = {}, flash }) {
                             onChange={(e) => setData('payment_gateway', e.target.value)}
                         >
                             <option value="none">None</option>
+                            <option value="sslcommerz">SSLCommerz</option>
                             <option value="stripe">Stripe</option>
                             <option value="paypal">PayPal</option>
                         </Select>
@@ -305,6 +309,32 @@ export default function Settings({ settings = {}, flash }) {
                             value={data.currency}
                             onChange={(e) => setData('currency', e.target.value)}
                         >
+                            <option value="BDT">BDT - Bangladeshi Taka</option>
+                            <option value="INR">INR - Indian Rupee</option>
+                            <option value="PKR">PKR - Pakistani Rupee</option>
+                            <option value="SAR">SAR - Saudi Arabian Riyal</option>
+                            <option value="AED">AED - United Arab Emirates Dirham</option>
+                            <option value="KWD">KWD - Kuwaiti Dinar</option>
+                            <option value="QAR">QAR - Qatari Riyal</option>
+                            <option value="OMR">OMR - Omani Rial</option>
+                            <option value="BHD">BHD - Bahraini Dinar</option>
+                            <option value="JOD">JOD - Jordanian Dinar</option>
+                            <option value="LYD">LYD - Libyan Dinar</option>
+                            <option value="TND">TND - Tunisian Dinar</option>
+                            <option value="MAD">MAD - Moroccan Dirham</option>
+                            <option value="NGN">NGN - Nigerian Naira</option>
+                            <option value="ZAR">ZAR - South African Rand</option>
+                            <option value="KES">KES - Kenyan Shilling</option>
+                            <option value="RWF">RWF - Rwandan Franc</option>
+                            <option value="UGX">UGX - Ugandan Shilling</option>
+                            <option value="TZS">TZS - Tanzanian Shilling</option>
+                            <option value="BWP">BWP - Botswana Pula</option>
+                            <option value="ZMW">ZMW - Zambian Kwacha</option>
+                            <option value="ZWL">ZWL - Zimbabwean Dollar</option>
+                            <option value="NAD">NAD - Namibian Dollar</option>
+                            <option value="MZN">MZN - Mozambican Metical</option>
+                            <option value="MUR">MUR - Mauritian Rupee</option>
+                            <option value="SCR">SCR - Seychellois Rupee</option>
                             <option value="USD">USD - US Dollar</option>
                             <option value="EUR">EUR - Euro</option>
                             <option value="GBP">GBP - British Pound</option>
@@ -339,67 +369,104 @@ export default function Settings({ settings = {}, flash }) {
                         <InputError message={errors.payment_mode} />
                     </div>
 
-                    <div className="space-y-2 md:col-span-2">
-                        <InputLabel htmlFor="stripe_public_key" value="Stripe Public Key" />
-                        <TextInput
-                            id="stripe_public_key"
-                            value={data.stripe_public_key}
-                            onChange={(e) => setData('stripe_public_key', e.target.value)}
-                            placeholder="pk_test_..."
-                        />
-                        <InputError message={errors.stripe_public_key} />
-                    </div>
+                    {data.payment_gateway === 'stripe' && (
+                        <>
+                            <div className="space-y-2 mt-6 md:col-span-2">
+                                <InputLabel htmlFor="stripe_public_key" value="Stripe Public Key" />
+                                <TextInput
+                                    id="stripe_public_key"
+                                    value={data.stripe_public_key}
+                                    onChange={(e) => setData('stripe_public_key', e.target.value)}
+                                    placeholder="pk_test_..."
+                                />
+                                <InputError message={errors.stripe_public_key} />
+                            </div>
 
-                    <div className="space-y-2 md:col-span-2">
-                        <InputLabel htmlFor="stripe_secret_key" value="Stripe Secret Key" />
-                        <TextInput
-                            id="stripe_secret_key"
-                            type="password"
-                            value={data.stripe_secret_key}
-                            onChange={(e) => setData('stripe_secret_key', e.target.value)}
-                            placeholder="sk_test_..."
-                        />
-                        <InputError message={errors.stripe_secret_key} />
-                    </div>
+                            <div className="space-y-2 md:col-span-2">
+                                <InputLabel htmlFor="stripe_secret_key" value="Stripe Secret Key" />
+                                <TextInput
+                                    id="stripe_secret_key"
+                                    type="password"
+                                    value={data.stripe_secret_key}
+                                    onChange={(e) => setData('stripe_secret_key', e.target.value)}
+                                    placeholder="sk_test_..."
+                                />
+                                <InputError message={errors.stripe_secret_key} />
+                            </div>
 
-                    <div className="space-y-2 md:col-span-2">
-                        <InputLabel htmlFor="stripe_webhook_secret" value="Stripe Webhook Secret" />
-                        <TextInput
-                            id="stripe_webhook_secret"
-                            type="password"
-                            value={data.stripe_webhook_secret}
-                            onChange={(e) => setData('stripe_webhook_secret', e.target.value)}
-                            placeholder="whsec_..."
-                        />
-                        <InputError message={errors.stripe_webhook_secret} />
-                    </div>
+                            <div className="space-y-2 md:col-span-2">
+                                <InputLabel htmlFor="stripe_webhook_secret" value="Stripe Webhook Secret" />
+                                <TextInput
+                                    id="stripe_webhook_secret"
+                                    type="password"
+                                    value={data.stripe_webhook_secret}
+                                    onChange={(e) => setData('stripe_webhook_secret', e.target.value)}
+                                    placeholder="whsec_..."
+                                />
+                                <InputError message={errors.stripe_webhook_secret} />
+                            </div>
+                        </>
+                    )}
 
-                    <div className="space-y-2 md:col-span-2">
-                        <InputLabel htmlFor="paypal_client_id" value="PayPal Client ID" />
-                        <TextInput
-                            id="paypal_client_id"
-                            value={data.paypal_client_id}
-                            onChange={(e) => setData('paypal_client_id', e.target.value)}
-                        />
-                        <InputError message={errors.paypal_client_id} />
-                    </div>
+                    {data.payment_gateway === 'paypal' && (
+                        <>
+                            <div className="space-y-2 mt-8 md:col-span-2">
+                                <InputLabel htmlFor="paypal_client_id" value="PayPal Client ID" />
+                                <TextInput
+                                    id="paypal_client_id"
+                                    value={data.paypal_client_id}
+                                    onChange={(e) => setData('paypal_client_id', e.target.value)}
+                                    placeholder="PAYPAL_CLIENT_ID"
+                                />
+                                <InputError message={errors.paypal_client_id} />
+                            </div>
 
-                    <div className="space-y-2 md:col-span-2">
-                        <InputLabel htmlFor="paypal_secret" value="PayPal Secret" />
-                        <TextInput
-                            id="paypal_secret"
-                            type="password"
-                            value={data.paypal_secret}
-                            onChange={(e) => setData('paypal_secret', e.target.value)}
-                        />
-                        <InputError message={errors.paypal_secret} />
-                    </div>
+                            <div className="space-y-2 md:col-span-2">
+                                <InputLabel htmlFor="paypal_secret" value="PayPal Secret" />
+                                <TextInput
+                                    id="paypal_secret"
+                                    type="password"
+                                    value={data.paypal_secret}
+                                    onChange={(e) => setData('paypal_secret', e.target.value)}
+                                    placeholder="PAYPAL_SECRET"
+                                />
+                                <InputError message={errors.paypal_secret} />
+                            </div>
+                        </>
+                    )}
+
+                    {data.payment_gateway === 'sslcommerz' && (
+                        <>
+                            <div className="space-y-2 mt-8 md:col-span-2">
+                                <InputLabel htmlFor="sslcommerz_store_id" value="SSLCommerz Store ID" />
+                                <TextInput
+                                    id="sslcommerz_store_id"
+                                    value={data.sslcommerz_store_id}
+                                    onChange={(e) => setData('sslcommerz_store_id', e.target.value)}
+                                    placeholder="STORE_ID"
+                                />
+                                <InputError message={errors.sslcommerz_store_id} />
+                            </div>
+
+                            <div className="space-y-2 md:col-span-2">
+                                <InputLabel htmlFor="sslcommerz_store_password" value="SSLCommerz Store Password" />
+                                <TextInput
+                                    id="sslcommerz_store_password"
+                                    type="password"
+                                    value={data.sslcommerz_store_password}
+                                    onChange={(e) => setData('sslcommerz_store_password', e.target.value)}
+                                    placeholder="STORE_PASSWORD"
+                                />
+                                <InputError message={errors.sslcommerz_store_password} />
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <PrimaryButton disabled={processing} className="px-8 py-4 rounded-md">
+                    <Button disabled={processing} isActive={true} className="w-auto px-8 py-4">
                         Save Changes
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </form>
         </section>
@@ -824,9 +891,9 @@ export default function Settings({ settings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <PrimaryButton disabled={processing} className="px-8 py-4 rounded-md">
+                    <Button disabled={processing} isActive={true} className="w-auto px-8 py-4">
                         Save Changes
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </form>
         </section>

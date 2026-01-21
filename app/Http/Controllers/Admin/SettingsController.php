@@ -85,6 +85,8 @@ class SettingsController extends Controller
                 'stripe_webhook_secret' => ['key' => 'stripe_webhook_secret', 'type' => 'string'],
                 'paypal_client_id' => ['key' => 'paypal_client_id', 'type' => 'string'],
                 'paypal_secret' => ['key' => 'paypal_secret', 'type' => 'string'],
+                'sslcommerz_store_id' => ['key' => 'sslcommerz_store_id', 'type' => 'string'],
+                'sslcommerz_store_password' => ['key' => 'sslcommerz_store_password', 'type' => 'string'],
                 'payment_mode' => ['key' => 'payment_mode', 'type' => 'string'],
             ],
             'seo' => [
