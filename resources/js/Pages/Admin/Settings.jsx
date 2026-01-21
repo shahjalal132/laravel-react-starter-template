@@ -10,6 +10,13 @@ import Textarea from '@/Components/Textarea';
 import { Settings as SettingsIcon, Upload, Globe, Mail, Phone, MapPin, CreditCard, Search, Send, Bell, ShieldCheck, Lock, Eye, EyeOff, Image as ImageIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Button from '@/Components/Button';
+import { toast } from 'react-hot-toast';
+
+const CURRENCY_SYMBOLS = {
+    'BDT': '৳',
+    'INR': '₹',
+    'USD': '$',
+};
 
 export default function Settings({ settings = {}, flash }) {
     const [activeTab, setActiveTab] = useState('general');
@@ -139,6 +146,7 @@ export default function Settings({ settings = {}, flash }) {
         post(route('admin.settings.update'), {
             preserveScroll: true,
             onSuccess: () => {
+                toast.success('Settings updated successfully');
                 // Reset file inputs after successful submission
                 if (activeTab === 'general') {
                     setLogoPreview(null);
@@ -146,6 +154,9 @@ export default function Settings({ settings = {}, flash }) {
                 if (activeTab === 'seo') {
                     setOgImagePreview(null);
                 }
+            },
+            onError: () => {
+                toast.error('Failed to update settings');
             },
         });
     };
@@ -311,54 +322,22 @@ export default function Settings({ settings = {}, flash }) {
                         <Select
                             id="currency"
                             value={data.currency}
-                            onChange={(e) => setData('currency', e.target.value)}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                setData(prev => ({
+                                    ...prev,
+                                    currency: val,
+                                    currency_symbol: CURRENCY_SYMBOLS[val] || prev.currency_symbol
+                                }));
+                            }}
                         >
                             <option value="BDT">BDT - Bangladeshi Taka</option>
                             <option value="INR">INR - Indian Rupee</option>
-                            <option value="PKR">PKR - Pakistani Rupee</option>
-                            <option value="SAR">SAR - Saudi Arabian Riyal</option>
-                            <option value="AED">AED - United Arab Emirates Dirham</option>
-                            <option value="KWD">KWD - Kuwaiti Dinar</option>
-                            <option value="QAR">QAR - Qatari Riyal</option>
-                            <option value="OMR">OMR - Omani Rial</option>
-                            <option value="BHD">BHD - Bahraini Dinar</option>
-                            <option value="JOD">JOD - Jordanian Dinar</option>
-                            <option value="LYD">LYD - Libyan Dinar</option>
-                            <option value="TND">TND - Tunisian Dinar</option>
-                            <option value="MAD">MAD - Moroccan Dirham</option>
-                            <option value="NGN">NGN - Nigerian Naira</option>
-                            <option value="ZAR">ZAR - South African Rand</option>
-                            <option value="KES">KES - Kenyan Shilling</option>
-                            <option value="RWF">RWF - Rwandan Franc</option>
-                            <option value="UGX">UGX - Ugandan Shilling</option>
-                            <option value="TZS">TZS - Tanzanian Shilling</option>
-                            <option value="BWP">BWP - Botswana Pula</option>
-                            <option value="ZMW">ZMW - Zambian Kwacha</option>
-                            <option value="ZWL">ZWL - Zimbabwean Dollar</option>
-                            <option value="NAD">NAD - Namibian Dollar</option>
-                            <option value="MZN">MZN - Mozambican Metical</option>
-                            <option value="MUR">MUR - Mauritian Rupee</option>
-                            <option value="SCR">SCR - Seychellois Rupee</option>
                             <option value="USD">USD - US Dollar</option>
-                            <option value="EUR">EUR - Euro</option>
-                            <option value="GBP">GBP - British Pound</option>
-                            <option value="JPY">JPY - Japanese Yen</option>
-                            <option value="CAD">CAD - Canadian Dollar</option>
-                            <option value="AUD">AUD - Australian Dollar</option>
                         </Select>
                         <InputError message={errors.currency} />
                     </div>
 
-                    <div className="space-y-2">
-                        <InputLabel htmlFor="currency_symbol" value="Currency Symbol" />
-                        <TextInput
-                            id="currency_symbol"
-                            value={data.currency_symbol}
-                            onChange={(e) => setData('currency_symbol', e.target.value)}
-                            maxLength={10}
-                        />
-                        <InputError message={errors.currency_symbol} />
-                    </div>
 
                     <div className="space-y-2">
                         <InputLabel htmlFor="payment_mode" value="Payment Mode" />

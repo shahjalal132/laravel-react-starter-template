@@ -16,6 +16,7 @@ import {
     Settings,
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
+import { Toaster } from 'react-hot-toast';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -57,6 +58,10 @@ export default function AuthenticatedLayout({ header, children }) {
 
     return (
         <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
             {/* Mobile Sidebar Overlay */}
             {sidebarOpen && (
                 <div
