@@ -14,6 +14,8 @@ import {
     Download,
     Globe,
     Settings,
+    ArrowLeft,
+    X,
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
 import { Toaster } from 'react-hot-toast';
@@ -32,6 +34,7 @@ export default function AuthenticatedLayout({ header, children }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
+    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
     
     // Initialize open menus from localStorage
     const [openMenus, setOpenMenus] = useState(() => {
@@ -284,37 +287,174 @@ export default function AuthenticatedLayout({ header, children }) {
                 {/* Header */}
                 <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4 sticky top-0 z-30">
                     <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
-                            <button
-                                onClick={() => setSidebarOpen(!sidebarOpen)}
-                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors shrink-0"
-                            >
-                                <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                            </button>
+                        {!isMobileSearchOpen ? (
+                            <>
+                                <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                                    <button
+                                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors shrink-0"
+                                    >
+                                        <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                                    </button>
 
-                            <div className="relative flex-1 max-w-md hidden md:block">
-                                <Search className="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                                <input
-                                    id="main-search-input"
-                                    type="text"
-                                    placeholder="Search menu..."
-                                    value={searchQuery}
-                                    onChange={(e) => handleSearch(e.target.value)}
-                                    onFocus={() => setIsSearchFocused(true)}
-                                    onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                                    className="pl-10 pr-12 py-2 w-full border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
-                                />
-                                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-[10px] font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded hidden sm:block">
-                                    ⌘K
-                                </kbd>
+                                    <div className="relative flex-1 max-w-md hidden md:block">
+                                        <Search className="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                                        <input
+                                            id="main-search-input"
+                                            type="text"
+                                            placeholder="Search menu..."
+                                            value={searchQuery}
+                                            onChange={(e) => handleSearch(e.target.value)}
+                                            onFocus={() => setIsSearchFocused(true)}
+                                            onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                                            className="pl-10 pr-12 py-2 w-full border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
+                                        />
+                                        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-[10px] font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded hidden sm:block">
+                                            ⌘K
+                                        </kbd>
 
-                                {isSearchFocused && searchResults.length > 0 && (
-                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 max-h-96 overflow-y-auto">
+                                        {isSearchFocused && searchResults.length > 0 && (
+                                            <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 max-h-96 overflow-y-auto">
+                                                {searchResults.map((result, index) => (
+                                                    <Link
+                                                        key={`${result.route}-${index}`}
+                                                        href={route(result.route, result.params || {})}
+                                                        className="flex flex-col px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                                    >
+                                                        <div className="flex items-center gap-3">
+                                                            {result.icon ? (
+                                                                <result.icon className="w-4 h-4 text-gray-400" />
+                                                            ) : (
+                                                                <ChevronRight className="w-4 h-4 text-gray-400" />
+                                                            )}
+                                                            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                                                {result.displayLabel}
+                                                            </span>
+                                                        </div>
+                                                        <div className="text-[10px] text-gray-400 dark:text-gray-500 ml-7">
+                                                            {result.path}
+                                                        </div>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Mobile Search Icon */}
+                                    <button 
+                                        onClick={() => setIsMobileSearchOpen(true)}
+                                        className="p-2 md:hidden hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                    >
+                                        <Search className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                                    </button>
+                                </div>
+
+                                <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+                                    <Link
+                                        href="/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors hidden sm:flex"
+                                        title="Go to frontend"
+                                    >
+                                        <Globe className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                                    </Link>
+                                    <ThemeToggle />
+                                    
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                                            className="flex items-center gap-2 pl-2 sm:pl-3 border-l border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-r-lg pr-1 sm:pr-2 py-1 transition-colors"
+                                        >
+                                            <img
+                                                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=3b82f6&color=fff`}
+                                                alt={user.name}
+                                                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full shrink-0"
+                                            />
+                                            <div className="hidden sm:flex items-center gap-2">
+                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate max-w-[100px]">
+                                                    {user.name}
+                                                </span>
+                                                <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                                            </div>
+                                        </button>
+
+                                        {userDropdownOpen && (
+                                            <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                                                <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                                                    <div className="font-semibold text-gray-800 dark:text-gray-100 truncate">
+                                                        {user.name}
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                                                        {user.email}
+                                                    </div>
+                                                </div>
+
+                                                <div className="py-2">
+                                                    <Link
+                                                        href={route('profile.edit')}
+                                                        className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                                    >
+                                                        <User className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                                            Edit profile
+                                                        </span>
+                                                    </Link>
+                                                </div>
+
+                                                <div className="border-t border-gray-100 dark:border-gray-700 pt-2">
+                                                    <Link
+                                                        href={route('logout')}
+                                                        method="post"
+                                                        as="button"
+                                                        className="w-full text-left flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                                    >
+                                                        <LogOut className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                                            Sign out
+                                                        </span>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="flex items-center gap-2 w-full">
+                                <button 
+                                    onClick={() => setIsMobileSearchOpen(false)}
+                                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                >
+                                    <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                                </button>
+                                <div className="relative flex-1">
+                                    <Search className="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                                    <input
+                                        autoFocus
+                                        type="text"
+                                        placeholder="Search menu..."
+                                        value={searchQuery}
+                                        onChange={(e) => handleSearch(e.target.value)}
+                                        className="pl-10 pr-10 py-2 w-full border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
+                                    />
+                                    {searchQuery && (
+                                        <button 
+                                            onClick={() => handleSearch('')}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
+                                        >
+                                            <X className="w-4 h-4 text-gray-400" />
+                                        </button>
+                                    )}
+                                </div>
+                                {searchResults.length > 0 && (
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 shadow-xl border-b border-gray-200 dark:border-gray-700 py-2 z-50 max-h-[calc(100vh-80px)] overflow-y-auto">
                                         {searchResults.map((result, index) => (
                                             <Link
                                                 key={`${result.route}-${index}`}
                                                 href={route(result.route, result.params || {})}
-                                                className="flex flex-col px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                                onClick={() => setIsMobileSearchOpen(false)}
+                                                className="flex flex-col px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-50 dark:border-gray-700 last:border-0"
                                             >
                                                 <div className="flex items-center gap-3">
                                                     {result.icon ? (
@@ -334,83 +474,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </div>
                                 )}
                             </div>
-                            
-                            {/* Mobile Search Icon */}
-                            <button className="p-2 md:hidden hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-                                <Search className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                            </button>
-                        </div>
-
-                        <div className="flex items-center gap-1 sm:gap-3 shrink-0">
-                            <Link
-                                href="/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors hidden sm:flex"
-                                title="Go to frontend"
-                            >
-                                <Globe className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                            </Link>
-                            <ThemeToggle />
-                            
-                            <div className="relative">
-                                <button
-                                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                                    className="flex items-center gap-2 pl-2 sm:pl-3 border-l border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-r-lg pr-1 sm:pr-2 py-1 transition-colors"
-                                >
-                                    <img
-                                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=3b82f6&color=fff`}
-                                        alt={user.name}
-                                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full shrink-0"
-                                    />
-                                    <div className="hidden sm:flex items-center gap-2">
-                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate max-w-[100px]">
-                                            {user.name}
-                                        </span>
-                                        <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                                    </div>
-                                </button>
-
-                                {userDropdownOpen && (
-                                    <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
-                                        <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
-                                            <div className="font-semibold text-gray-800 dark:text-gray-100 truncate">
-                                                {user.name}
-                                            </div>
-                                            <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                                {user.email}
-                                            </div>
-                                        </div>
-
-                                        <div className="py-2">
-                                            <Link
-                                                href={route('profile.edit')}
-                                                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                                            >
-                                                <User className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                                                    Edit profile
-                                                </span>
-                                            </Link>
-                                        </div>
-
-                                        <div className="border-t border-gray-100 dark:border-gray-700 pt-2">
-                                            <Link
-                                                href={route('logout')}
-                                                method="post"
-                                                as="button"
-                                                className="w-full text-left flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                                            >
-                                                <LogOut className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                                                    Sign out
-                                                </span>
-                                            </Link>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </header>
 

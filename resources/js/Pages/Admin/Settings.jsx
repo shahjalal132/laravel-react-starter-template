@@ -195,7 +195,6 @@ export default function Settings({ settings = {}, flash }) {
                                 value={data.app_name}
                                 onChange={(e) => setData('app_name', e.target.value)}
                                 required
-                                isFocused
                                 placeholder="Application Name"
                             />
                         </div>
