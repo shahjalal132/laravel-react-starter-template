@@ -21,20 +21,41 @@ import { Toaster } from 'react-hot-toast';
 export default function AuthenticatedLayout({ header, children }) {
     const { auth, settings } = usePage().props;
     const user = auth.user;
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    
+    // Initialize sidebar state from localStorage
+    const [sidebarOpen, setSidebarOpen] = useState(() => {
+        const saved = localStorage.getItem('sidebar-open');
+        return saved !== null ? JSON.parse(saved) : true;
+    });
+    
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
-    const [openMenus, setOpenMenus] = useState({
-        dashboard: true,
-        aiAssistant: false,
-        ecommerce: false,
-        task: false,
-        forms: false,
-        tables: false,
-        pages: false,
+    
+    // Initialize open menus from localStorage
+    const [openMenus, setOpenMenus] = useState(() => {
+        const saved = localStorage.getItem('open-menus');
+        return saved !== null ? JSON.parse(saved) : {
+            dashboard: true,
+            aiAssistant: false,
+            ecommerce: false,
+            task: false,
+            forms: false,
+            tables: false,
+            pages: false,
+        };
     });
+
+    // Persist sidebar state
+    useEffect(() => {
+        localStorage.setItem('sidebar-open', JSON.stringify(sidebarOpen));
+    }, [sidebarOpen]);
+
+    // Persist open menus state
+    useEffect(() => {
+        localStorage.setItem('open-menus', JSON.stringify(openMenus));
+    }, [openMenus]);
 
     const toggleMenu = (menu) => {
         setOpenMenus((prev) => ({
@@ -66,8 +87,16 @@ export default function AuthenticatedLayout({ header, children }) {
             id: 'settings',
             label: 'Settings',
             icon: Settings,
-            hasSubmenu: false,
+            hasSubmenu: true,
             route: 'admin.settings',
+            submenu: [
+                { label: 'General', route: 'admin.settings', params: { tab: 'general' } },
+                { label: 'Payment', route: 'admin.settings', params: { tab: 'payment' } },
+                { label: 'SEO', route: 'admin.settings', params: { tab: 'seo' } },
+                { label: 'SMTP', route: 'admin.settings', params: { tab: 'smtp' } },
+                { label: 'Notifications', route: 'admin.settings', params: { tab: 'notifications' } },
+                { label: 'Security', route: 'admin.settings', params: { tab: 'security' } },
+            ]
         },
     ];
 
@@ -90,8 +119,8 @@ export default function AuthenticatedLayout({ header, children }) {
         }
 
         const results = [];
-        const searchRecursive = (items, parentPath = '') => {
-            items.forEach(item => {
+        const searchRecursive = (menuItems, parentPath = '') => {
+            menuItems.forEach(item => {
                 const currentPath = parentPath ? `${parentPath} > ${item.label}` : item.label;
                 if (item.label.toLowerCase().includes(query.toLowerCase())) {
                     if (item.route) {
@@ -176,7 +205,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 <nav className="flex-1 px-3 pb-4 overflow-y-auto custom-scrollbar">
                     {menuItems.map((item) => {
-                        const isLink = item.route && !item.hasSubmenu;
+                        const isLink = item.route && (!item.hasSubmenu || !sidebarOpen);
                         const Component = isLink ? Link : 'button';
                         const componentProps = isLink
                             ? { href: route(item.route) }
@@ -230,8 +259,9 @@ export default function AuthenticatedLayout({ header, children }) {
                                     item.submenu && item.submenu.length > 0 && (
                                         <div className="ml-11 mt-1 space-y-1">
                                             {item.submenu.map((subitem, idx) => (
-                                                <button
+                                                <Link
                                                     key={`${item.id}-${idx}`}
+                                                    href={route(subitem.route, subitem.params || {})}
                                                     className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-between ${
                                                         subitem.active
                                                             ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
@@ -239,7 +269,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                                     }`}
                                                 >
                                                     <span>{subitem.label}</span>
-                                                </button>
+                                                </Link>
                                             ))}
                                         </div>
                                     )}
@@ -283,7 +313,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         {searchResults.map((result, index) => (
                                             <Link
                                                 key={`${result.route}-${index}`}
-                                                href={route(result.route)}
+                                                href={route(result.route, result.params || {})}
                                                 className="flex flex-col px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                             >
                                                 <div className="flex items-center gap-3">

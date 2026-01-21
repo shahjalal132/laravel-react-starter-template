@@ -92,6 +92,15 @@ export default function Settings({ settings = {}, flash }) {
         setData('group', activeTab);
     }, [activeTab]);
 
+    // Handle deep-linking to tabs
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get('tab');
+        if (tab && tabs.find(t => t.id === tab)) {
+            setActiveTab(tab);
+        }
+    }, []);
+
     // Set logo preview if logo exists in settings
     useEffect(() => {
         if (settings.general?.logo) {
