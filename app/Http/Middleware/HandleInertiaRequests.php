@@ -34,6 +34,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'settings' => [
+                'general' => \App\Models\Setting::getGroup('general'),
+                'seo' => \App\Models\Setting::getGroup('seo'),
+            ],
         ];
     }
 }

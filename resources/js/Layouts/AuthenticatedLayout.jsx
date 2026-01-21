@@ -1,4 +1,4 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, Head } from '@inertiajs/react';
 import { useState } from 'react';
 import {
     LayoutDashboard,
@@ -19,9 +19,13 @@ import ThemeToggle from '@/Components/ThemeToggle';
 import { Toaster } from 'react-hot-toast';
 
 export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth.user;
+    const { auth, settings } = usePage().props;
+    const user = auth.user;
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
     const [openMenus, setOpenMenus] = useState({
         dashboard: true,
         aiAssistant: false,
@@ -56,8 +60,26 @@ export default function AuthenticatedLayout({ header, children }) {
         },
     ];
 
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        if (!query.trim()) {
+            setSearchResults([]);
+            return;
+        }
+
+        const filtered = menuItems.filter(item => 
+            item.label.toLowerCase().includes(query.toLowerCase())
+        );
+        setSearchResults(filtered);
+    };
+
+    const appName = settings?.general?.app_name || 'TailAdmin';
+    const appLogo = settings?.general?.logo;
+    const metaTitle = settings?.seo?.meta_title;
+
     return (
         <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
+            {metaTitle && <Head title={metaTitle} />}
             <Toaster
                 position="top-center"
                 reverseOrder={false}
@@ -78,19 +100,23 @@ export default function AuthenticatedLayout({ header, children }) {
             >
                 <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-700">
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shrink-0">
-                            <div className="flex flex-col gap-0.5">
-                                <div className="flex gap-0.5">
-                                    <div className="w-1 h-3 bg-white rounded-full"></div>
-                                    <div className="w-1 h-3 bg-white rounded-full"></div>
-                                    <div className="w-1 h-3 bg-white rounded-full"></div>
+                        {appLogo ? (
+                            <img src={`/storage/${appLogo}`} alt={appName} className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                        ) : (
+                            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                                <div className="flex flex-col gap-0.5">
+                                    <div className="flex gap-0.5">
+                                        <div className="w-1 h-3 bg-white rounded-full"></div>
+                                        <div className="w-1 h-3 bg-white rounded-full"></div>
+                                        <div className="w-1 h-3 bg-white rounded-full"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                         <span className={`text-xl font-bold text-gray-800 dark:text-gray-100 transition-opacity duration-300 ${
                             sidebarOpen ? 'opacity-100' : 'lg:opacity-0 lg:hidden'
                         }`}>
-                            TailAdmin
+                            {appName}
                         </span>
                     </Link>
                     <button
@@ -201,12 +227,30 @@ export default function AuthenticatedLayout({ header, children }) {
                                 <Search className="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                                 <input
                                     type="text"
-                                    placeholder="Search..."
+                                    placeholder="Search menu..."
+                                    value={searchQuery}
+                                    onChange={(e) => handleSearch(e.target.value)}
+                                    onFocus={() => setIsSearchFocused(true)}
+                                    onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
                                     className="pl-10 pr-12 py-2 w-full border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                                 />
-                                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-[10px] font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded hidden sm:block">
-                                    ⌘K
-                                </kbd>
+
+                                {isSearchFocused && searchResults.length > 0 && (
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                                        {searchResults.map((result) => (
+                                            <Link
+                                                key={result.id}
+                                                href={route(result.route)}
+                                                className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                            >
+                                                <result.icon className="w-5 h-5 text-gray-400" />
+                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                                    {result.label}
+                                                </span>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                             
                             {/* Mobile Search Icon */}

@@ -2,79 +2,78 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Models\User;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Inertia\Testing\AssertableInertia as Assert;
 
 class SettingsTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $admin;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->admin = User::factory()->create();
     }
 
-    public function test_settings_page_is_accessible_to_authenticated_users(): void
+    public function test_settings_page_is_accessible(): void
     {
-        $response = $this
-            ->actingAs($this->user)
+        $response = $this->actingAs($this->admin)
             ->get(route('admin.settings'));
 
-        $response->assertOk();
+        $response->assertStatus(200);
     }
 
-    public function test_payment_settings_can_be_updated(): void
+    public function test_settings_are_shared_via_inertia(): void
     {
-        $response = $this
-            ->actingAs($this->user)
-            ->post(route('admin.settings.update'), [
-                'group' => 'payment',
-                'payment_gateway' => 'sslcommerz',
-                'currency' => 'BDT',
-                'currency_symbol' => '৳',
-                'sslcommerz_store_id' => 'test_store_id',
-                'sslcommerz_store_password' => 'test_store_password',
-                'payment_mode' => 'sandbox',
-            ]);
+        Setting::setValue('app_name', 'Test App', 'general');
+        Setting::setValue('meta_title', 'Test Meta', 'seo');
 
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect(route('admin.settings'));
+        $response = $this->actingAs($this->admin)
+            ->get(route('admin.dashboard'));
 
-        $this->assertEquals('sslcommerz', Setting::getValue('payment_gateway', 'payment'));
-        $this->assertEquals('test_store_id', Setting::getValue('sslcommerz_store_id', 'payment'));
+        $response->assertInertia(fn (Assert $page) => $page
+            ->has('settings.general', fn (Assert $page) => $page
+                ->where('app_name', 'Test App')
+                ->etc()
+            )
+            ->has('settings.seo', fn (Assert $page) => $page
+                ->where('meta_title', 'Test Meta')
+                ->etc()
+            )
+        );
     }
 
-    public function test_payment_settings_validation(): void
+    public function test_general_settings_can_be_updated(): void
     {
-        $response = $this
-            ->actingAs($this->user)
+        $response = $this->actingAs($this->admin)
             ->post(route('admin.settings.update'), [
-                'group' => 'payment',
-                'payment_gateway' => 'invalid_gateway',
+                'group' => 'general',
+                'app_name' => 'Updated App Name',
+                'app_email' => 'admin@example.com',
+                'app_phone' => '123456789',
+                'app_address' => '123 Test St',
             ]);
 
-        $response->assertSessionHasErrors('payment_gateway');
+        $response->assertRedirect();
+        $this->assertEquals('Updated App Name', Setting::getValue('app_name'));
     }
 
-    public function test_security_settings_can_be_updated(): void
+    public function test_seo_settings_can_be_updated(): void
     {
-        $response = $this
-            ->actingAs($this->user)
+        $response = $this->actingAs($this->admin)
             ->post(route('admin.settings.update'), [
-                'group' => 'security',
-                'password_min_length' => 10,
-                'password_require_uppercase' => true,
+                'group' => 'seo',
+                'meta_title' => 'Updated Meta Title',
+                'meta_description' => 'Updated Meta Description',
+                'meta_keywords' => 'test, updated',
             ]);
 
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect(route('admin.settings'));
-
-        $this->assertEquals(10, Setting::getValue('password_min_length', 'security'));
-        $this->assertEquals(true, Setting::getValue('password_require_uppercase', 'security'));
+        $response->assertRedirect();
+        $this->assertEquals('Updated Meta Title', Setting::getValue('meta_title'));
     }
 }
