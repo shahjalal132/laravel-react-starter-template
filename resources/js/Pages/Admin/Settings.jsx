@@ -176,13 +176,14 @@ export default function Settings({ settings = {}, flash }) {
                                 onChange={(e) => setData('app_name', e.target.value)}
                                 required
                                 isFocused
+                                placeholder="Application Name"
                             />
                         </div>
                         <InputError message={errors.app_name} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="app_email" value="Support Email" />
+                        <InputLabel htmlFor="app_email" value="Email" />
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Mail className="h-4 w-4 text-gray-400" />
@@ -194,13 +195,14 @@ export default function Settings({ settings = {}, flash }) {
                                 value={data.app_email}
                                 onChange={(e) => setData('app_email', e.target.value)}
                                 required
+                                placeholder="Email"
                             />
                         </div>
                         <InputError message={errors.app_email} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="app_phone" value="Support Phone" />
+                        <InputLabel htmlFor="app_phone" value="Phone" />
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Phone className="h-4 w-4 text-gray-400" />
@@ -210,13 +212,14 @@ export default function Settings({ settings = {}, flash }) {
                                 className="w-full pl-10"
                                 value={data.app_phone}
                                 onChange={(e) => setData('app_phone', e.target.value)}
+                                placeholder="Phone"
                             />
                         </div>
                         <InputError message={errors.app_phone} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="app_address" value="Office Address" />
+                        <InputLabel htmlFor="app_address" value="Address" />
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <MapPin className="h-4 w-4 text-gray-400" />
@@ -226,6 +229,7 @@ export default function Settings({ settings = {}, flash }) {
                                 className="w-full pl-10"
                                 value={data.app_address}
                                 onChange={(e) => setData('app_address', e.target.value)}
+                                placeholder="Address"
                             />
                         </div>
                         <InputError message={errors.app_address} />
@@ -266,9 +270,9 @@ export default function Settings({ settings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <PrimaryButton disabled={processing} className="px-8 py-4 rounded-md">
+                    <Button disabled={processing} isActive={true} className="px-8 py-4">
                         Save Changes
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </form>
         </section>
@@ -570,9 +574,9 @@ export default function Settings({ settings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <PrimaryButton disabled={processing} className="px-8 py-4 rounded-md">
+                    <Button disabled={processing} isActive={true} className="px-8 py-4">
                         Save Changes
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </form>
         </section>
@@ -609,7 +613,7 @@ export default function Settings({ settings = {}, flash }) {
                             type="number"
                             value={data.smtp_port}
                             onChange={(e) => setData('smtp_port', e.target.value)}
-                            placeholder="587"
+                            placeholder="SMTP Port"
                         />
                         <InputError message={errors.smtp_port} />
                     </div>
@@ -620,6 +624,7 @@ export default function Settings({ settings = {}, flash }) {
                             id="smtp_username"
                             value={data.smtp_username}
                             onChange={(e) => setData('smtp_username', e.target.value)}
+                            placeholder="SMTP Username"
                         />
                         <InputError message={errors.smtp_username} />
                     </div>
@@ -633,6 +638,7 @@ export default function Settings({ settings = {}, flash }) {
                                 value={data.smtp_password}
                                 onChange={(e) => setData('smtp_password', e.target.value)}
                                 className="pr-10"
+                                placeholder="SMTP Password"
                             />
                             <button
                                 type="button"
@@ -684,9 +690,9 @@ export default function Settings({ settings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <PrimaryButton disabled={processing} className="px-8 py-4 rounded-md">
+                    <Button disabled={processing} isActive={true} className="px-8 py-4">
                         Save Changes
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </form>
         </section>
@@ -770,9 +776,9 @@ export default function Settings({ settings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <PrimaryButton disabled={processing} className="px-8 py-4 rounded-md">
+                    <Button disabled={processing} isActive={true} className="px-8 py-4">
                         Save Changes
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </form>
         </section>
@@ -960,8 +966,8 @@ export default function Settings({ settings = {}, flash }) {
                                             key={tab.id}
                                             onClick={() => setActiveTab(tab.id)}
                                             className={`w-full flex items-start gap-3 px-4 py-3 text-left rounded-xl transition-all duration-200 ${isActive
-                                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none'
-                                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none'
+                                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                                                 }`}
                                         >
                                             <Icon className={`h-5 w-5 mt-0.5 ${isActive ? 'text-white' : 'text-gray-400'}`} />
