@@ -19,7 +19,7 @@ class SetLocale
 
         // Try to get locale from authenticated user's settings
         if ($request->user()) {
-            $userLocale = \App\Models\Setting::getValue('language', 'general');
+            $userLocale = \App\Models\Setting::getValue('language');
             if ($userLocale && in_array($userLocale, ['en', 'bn'])) {
                 $locale = $userLocale;
             }

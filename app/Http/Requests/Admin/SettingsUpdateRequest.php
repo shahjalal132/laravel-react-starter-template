@@ -30,6 +30,7 @@ class SettingsUpdateRequest extends FormRequest
                 'app_phone' => ['nullable', 'string', 'max:50'],
                 'app_address' => ['nullable', 'string', 'max:500'],
                 'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+                'language' => ['nullable', 'string', 'in:en,bn'],
             ],
             'payment' => [
                 'payment_gateway' => ['nullable', 'string', 'in:stripe,paypal,sslcommerz,none'],

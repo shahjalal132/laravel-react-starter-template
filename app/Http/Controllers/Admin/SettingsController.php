@@ -33,7 +33,7 @@ class SettingsController extends Controller
     /**
      * Update settings.
      */
-    public function update(SettingsUpdateRequest $request): RedirectResponse
+    public function update(SettingsUpdateRequest $request): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $data = $request->validated();
         $group = $request->input('group');
@@ -59,6 +59,10 @@ class SettingsController extends Controller
                 
                 Setting::setValue($config['key'], $value, $group, $type);
             }
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Settings updated successfully.']);
         }
 
         return redirect()->route('admin.settings')->with('success', 'Settings updated successfully.');

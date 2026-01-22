@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { router, usePage } from '@inertiajs/react';
-import { Check, Languages } from 'lucide-react';
+import { Check, Languages, Loader2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import { toast } from 'react-hot-toast';
 
 export default function LanguageSelector() {
     const { i18n } = useTranslation();
-    const { locale } = usePage().props;
+    const { locale, settings } = usePage().props;
     const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const dropdownRef = useRef(null);
 
     const languages = [
@@ -36,21 +38,41 @@ export default function LanguageSelector() {
     }, []);
 
     const changeLanguage = (langCode) => {
+        if (isLoading) return;
+        
+        setIsLoading(true);
+        const previousLang = i18n.language;
+        
         // Update i18n immediately for instant UI feedback
         i18n.changeLanguage(langCode);
         
         // Save to backend
-        router.post(route('admin.settings.update'), {
+        const generalSettings = settings?.general || {};
+        
+        const payload = {
             group: 'general',
             language: langCode,
-        }, {
+            app_name: generalSettings.app_name || 'Expense Tracker',
+            app_email: generalSettings.app_email || 'admin@example.com',
+            app_phone: generalSettings.app_phone || '',
+            app_address: generalSettings.app_address || '',
+        };
+        
+        const targetRoute = route('admin.settings.update');
+        
+        router.post(targetRoute, payload, {
             preserveScroll: true,
             onSuccess: () => {
                 setIsOpen(false);
+                setIsLoading(false);
+                toast.success(`Language changed to ${languages.find(l => l.code === langCode)?.name}`);
             },
-            onError: () => {
+            onError: (errors) => {
                 // Revert on error
-                i18n.changeLanguage(locale?.current || 'en');
+                i18n.changeLanguage(previousLang);
+                setIsLoading(false);
+                const errorMessage = errors.language?.[0] || 'Failed to change language. Please try again.';
+                toast.error(errorMessage);
             },
         });
     };
@@ -59,10 +81,15 @@ export default function LanguageSelector() {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Change language"
+                disabled={isLoading}
             >
-                <Languages className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                {isLoading ? (
+                    <Loader2 className="w-5 h-5 text-gray-600 dark:text-gray-300 animate-spin" />
+                ) : (
+                    <Languages className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                )}
             </button>
 
             {isOpen && (
@@ -76,7 +103,8 @@ export default function LanguageSelector() {
                         <button
                             key={lang.code}
                             onClick={() => changeLanguage(lang.code)}
-                            className={`w-full flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                            disabled={isLoading || i18n.language === lang.code}
+                            className={`w-full flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                                 i18n.language === lang.code ? 'bg-blue-50 dark:bg-blue-900/30' : ''
                             }`}
                         >
