@@ -198,6 +198,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 <nav className="flex-1 px-3 pb-4 overflow-y-auto custom-scrollbar">
                     {menuItems.map((item) => {
+                        const isActive = item.route && route().current(item.route);
                         const isLink = item.route && (!item.hasSubmenu || !sidebarOpen);
                         const Component = isLink ? Link : 'button';
                         const componentProps = isLink
@@ -211,14 +212,20 @@ export default function AuthenticatedLayout({ header, children }) {
                             <div key={item.id} className="mb-1">
                                 <Component
                                     {...componentProps}
-                                    className="w-full flex items-center justify-between px-3 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors group"
+                                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors group ${
+                                        isActive
+                                            ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
+                                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                    }`}
                                     title={!sidebarOpen ? t(item.label) : ''}
                                 >
                                     <div className="flex items-center gap-3">
                                         <item.icon
-                                            className={`w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0 ${
-                                                !sidebarOpen && 'lg:mx-auto'
-                                            }`}
+                                            className={`w-5 h-5 shrink-0 transition-colors ${
+                                                isActive
+                                                    ? 'text-blue-600 dark:text-blue-400'
+                                                    : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
+                                            } ${!sidebarOpen && 'lg:mx-auto'}`}
                                         />
                                         <span
                                             className={`text-sm font-medium transition-opacity duration-300 ${
