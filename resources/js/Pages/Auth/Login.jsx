@@ -1,11 +1,15 @@
+import ApplicationLogo from '@/Components/ApplicationLogo';
 import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 export default function Login({ status, canResetPassword }) {
     const { t } = useTranslation('auth');
+    const { settings } = usePage().props;
+    const logoUrl = settings?.general?.logo ? `/storage/${settings.general.logo}` : null;
+
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -38,6 +42,12 @@ export default function Login({ status, canResetPassword }) {
                 />
                 <div className="relative z-10 w-full max-w-[480px]">
                     <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-6 text-slate-900 dark:text-gray-100 shadow-sm sm:p-8">
+                        <div className="flex justify-center mb-6">
+                            <ApplicationLogo 
+                                url={logoUrl}
+                                className="h-20 w-20 fill-current text-gray-500 dark:text-gray-400" 
+                            />
+                        </div>
                         <h1 className="text-center text-3xl font-semibold">
                             {t('login.heading')}
                         </h1>
