@@ -8,6 +8,9 @@ export default function Register() {
     const { t } = useTranslation('auth');
     const { settings } = usePage().props;
     const logoUrl = settings?.general?.logo ? `/storage/${settings.general.logo}` : null;
+    const backgroundImage = settings?.general?.background_image
+        ? `/storage/${settings.general.background_image}`
+        : 'https://images.pexels.com/photos/34441449/pexels-photo-34441449.jpeg';
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -30,8 +33,7 @@ export default function Register() {
             <section
                 className="relative flex min-h-screen items-center justify-center bg-black/70 px-4 py-6 text-white"
                 style={{
-                    backgroundImage:
-                        'url(https://images.pexels.com/photos/34441449/pexels-photo-34441449.jpeg)',
+                    backgroundImage: `url(${backgroundImage})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 }}
@@ -43,9 +45,9 @@ export default function Register() {
                 <div className="relative z-10 w-full max-w-[480px]">
                     <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-6 text-slate-900 dark:text-gray-100 shadow-sm sm:p-8">
                         <div className="flex justify-center mb-6">
-                            <ApplicationLogo 
+                            <ApplicationLogo
                                 url={logoUrl}
-                                className="h-20 w-20 fill-current text-gray-500 dark:text-gray-400" 
+                                className="h-20 w-20 fill-current text-gray-500 dark:text-gray-400"
                             />
                         </div>
                         <h1 className="text-center text-3xl font-semibold">

@@ -54,7 +54,10 @@
     "languageDescription": "Select your preferred language for the application interface.",
     "appLogo": "Application Logo",
     "changeLogo": "Change Logo",
-    "logoUploadHint": "PNG, JPG up to 2MB"
+    "logoUploadHint": "PNG, JPG up to 2MB",
+    "backgroundImage": "Background Image",
+    "changeBackgroundImage": "Change Background",
+    "backgroundImageUploadHint": "PNG, JPG up to 4MB"
   },
   "payment": {
     "title": "Payment Settings",

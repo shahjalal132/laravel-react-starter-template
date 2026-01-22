@@ -23,6 +23,7 @@ export default function Settings({ settings = {}, flash }) {
     const { t } = useTranslation('settings');
     const [activeTab, setActiveTab] = useState('');
     const [logoPreview, setLogoPreview] = useState(null);
+    const [backgroundImagePreview, setBackgroundImagePreview] = useState(null);
     const [ogImagePreview, setOgImagePreview] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
 
@@ -43,7 +44,9 @@ export default function Settings({ settings = {}, flash }) {
             app_phone: general.app_phone || '',
             app_address: general.app_address || '',
             language: general.language || 'en',
+            language: general.language || 'en',
             logo: null,
+            background_image: null,
             // Payment
             payment_gateway: payment.payment_gateway || 'none',
             currency: payment.currency || 'USD',
@@ -109,7 +112,10 @@ export default function Settings({ settings = {}, flash }) {
         if (settings.general?.logo) {
             setLogoPreview(`/storage/${settings.general.logo}`);
         }
-    }, [settings.general?.logo]);
+        if (settings.general?.background_image) {
+            setBackgroundImagePreview(`/storage/${settings.general.background_image}`);
+        }
+    }, [settings.general?.logo, settings.general?.background_image]);
 
     // Set OG image preview if og_image exists in settings
     useEffect(() => {
@@ -126,6 +132,19 @@ export default function Settings({ settings = {}, flash }) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setLogoPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // Handle background image preview
+    const handleBackgroundImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setData('background_image', file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setBackgroundImagePreview(reader.result);
             };
             reader.readAsDataURL(file);
         }
@@ -267,37 +286,68 @@ export default function Settings({ settings = {}, flash }) {
                     </div>
                 </div>
 
-                <div className="pt-4">
-                    <InputLabel value={t('general.appLogo')} />
-                    <div className="mt-3 flex items-center gap-6">
-                        <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
-                            {logoPreview ? (
-                                <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
-                            ) : (
-                                <div className="flex gap-1">
-                                    <div className="w-2 h-6 bg-white/90 rounded-full"></div>
-                                    <div className="w-2 h-6 bg-white/90 rounded-full"></div>
-                                    <div className="w-2 h-6 bg-white/90 rounded-full"></div>
-                                </div>
-                            )}
+                <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <InputLabel value={t('general.appLogo')} />
+                        <div className="mt-3 flex items-center gap-6">
+                            <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
+                                {logoPreview ? (
+                                    <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="flex gap-1">
+                                        <div className="w-2 h-6 bg-white/90 rounded-full"></div>
+                                        <div className="w-2 h-6 bg-white/90 rounded-full"></div>
+                                        <div className="w-2 h-6 bg-white/90 rounded-full"></div>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="space-y-3">
+                                <label className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all">
+                                    <Upload className="w-4 h-4" />
+                                    {t('general.changeLogo')}
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        accept="image/jpeg,image/png,image/jpg"
+                                        onChange={handleLogoChange}
+                                    />
+                                </label>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    {t('general.logoUploadHint')}
+                                </p>
+                            </div>
                         </div>
-                        <div className="space-y-3">
-                            <label className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all">
-                                <Upload className="w-4 h-4" />
-                                {t('general.changeLogo')}
-                                <input
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/jpeg,image/png,image/jpg"
-                                    onChange={handleLogoChange}
-                                />
-                            </label>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                {t('general.logoUploadHint')}
-                            </p>
-                        </div>
+                        <InputError message={errors.logo} />
                     </div>
-                    <InputError message={errors.logo} />
+
+                    <div>
+                        <InputLabel value={t('general.backgroundImage')} />
+                        <div className="mt-3 flex items-center gap-6">
+                            <div className="w-32 h-20 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center shrink-0 shadow-inner overflow-hidden border border-gray-200 dark:border-gray-700">
+                                {backgroundImagePreview ? (
+                                    <img src={backgroundImagePreview} alt="Background preview" className="w-full h-full object-cover" />
+                                ) : (
+                                    <ImageIcon className="w-8 h-8 text-gray-400" />
+                                )}
+                            </div>
+                            <div className="space-y-3">
+                                <label className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all">
+                                    <Upload className="w-4 h-4" />
+                                    {t('general.changeBackgroundImage')}
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        accept="image/jpeg,image/png,image/jpg"
+                                        onChange={handleBackgroundImageChange}
+                                    />
+                                </label>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    {t('general.backgroundImageUploadHint')}
+                                </p>
+                            </div>
+                        </div>
+                        <InputError message={errors.background_image} />
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">

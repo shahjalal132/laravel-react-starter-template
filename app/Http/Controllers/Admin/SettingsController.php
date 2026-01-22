@@ -44,6 +44,11 @@ class SettingsController extends Controller
             Setting::setValue('logo', $logoPath, 'general', 'file');
         }
 
+        if ($request->hasFile('background_image')) {
+            $bgPath = $request->file('background_image')->store('settings', 'public');
+            Setting::setValue('background_image', $bgPath, 'general', 'file');
+        }
+
         if ($request->hasFile('og_image')) {
             $ogImagePath = $request->file('og_image')->store('settings', 'public');
             Setting::setValue('og_image', $ogImagePath, 'seo', 'file');
@@ -80,6 +85,7 @@ class SettingsController extends Controller
                 'app_phone' => ['key' => 'app_phone', 'type' => 'string'],
                 'app_address' => ['key' => 'app_address', 'type' => 'string'],
                 'language' => ['key' => 'language', 'type' => 'string'],
+                'background_image' => ['key' => 'background_image', 'type' => 'file'],
             ],
             'payment' => [
                 'payment_gateway' => ['key' => 'payment_gateway', 'type' => 'string'],
