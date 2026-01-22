@@ -6,5 +6,153 @@
   "languages": {
     "en": "English",
     "bn": "বাংলা (Bengali)"
+  },
+  "pageTitle": "অ্যাপ্লিকেশন সেটিংস",
+  "headTitle": "সেটিংস",
+  "saveChanges": "পরিবর্তন সংরক্ষণ করুন",
+  "settingsUpdatedSuccess": "সেটিংস সফলভাবে আপডেট করা হয়েছে",
+  "settingsUpdateFailed": "সেটিংস আপডেট করতে ব্যর্থ",
+  "selectCategory": "সেটিংস কনফিগার করতে একটি বিভাগ নির্বাচন করুন",
+  "tabs": {
+    "general": {
+      "label": "সাধারণ",
+      "description": "অ্যাপ ব্র্যান্ডিং এবং তথ্য"
+    },
+    "payment": {
+      "label": "পেমেন্ট",
+      "description": "গেটওয়ে এবং মুদ্রা"
+    },
+    "seo": {
+      "label": "এসইও",
+      "description": "সার্চ ইঞ্জিন অপ্টিমাইজেশন"
+    },
+    "smtp": {
+      "label": "এসএমটিপি",
+      "description": "ইমেইল সার্ভার সেটিংস"
+    },
+    "notifications": {
+      "label": "বিজ্ঞপ্তি",
+      "description": "ইমেইল এবং পুশ অ্যালার্ট"
+    },
+    "security": {
+      "label": "নিরাপত্তা",
+      "description": "পাসওয়ার্ড এবং 2FA"
+    }
+  },
+  "general": {
+    "title": "সাধারণ তথ্য",
+    "description": "আপনার অ্যাপ্লিকেশনের সাধারণ তথ্য এবং ব্র্যান্ডিং আপডেট করুন।",
+    "appName": "অ্যাপ্লিকেশন নাম",
+    "appNamePlaceholder": "অ্যাপ্লিকেশন নাম",
+    "email": "ইমেইল",
+    "emailPlaceholder": "ইমেইল",
+    "phone": "ফোন",
+    "phonePlaceholder": "ফোন",
+    "address": "ঠিকানা",
+    "addressPlaceholder": "ঠিকানা",
+    "language": "ভাষা পছন্দ",
+    "languageDescription": "অ্যাপ্লিকেশন ইন্টারফেসের জন্য আপনার পছন্দের ভাষা নির্বাচন করুন।",
+    "appLogo": "অ্যাপ্লিকেশন লোগো",
+    "changeLogo": "লোগো পরিবর্তন করুন",
+    "logoUploadHint": "PNG, JPG সর্বোচ্চ 2MB"
+  },
+  "payment": {
+    "title": "পেমেন্ট সেটিংস",
+    "description": "পেমেন্ট গেটওয়ে এবং মুদ্রা সেটিংস কনফিগার করুন।",
+    "paymentGateway": "পেমেন্ট গেটওয়ে",
+    "none": "কোনটিই নয়",
+    "sslcommerz": "SSLCommerz",
+    "stripe": "Stripe",
+    "paypal": "PayPal",
+    "currency": "মুদ্রা",
+    "bdt": "BDT - বাংলাদেশী টাকা",
+    "inr": "INR - ভারতীয় রুপি",
+    "usd": "USD - মার্কিন ডলার",
+    "paymentMode": "পেমেন্ট মোড",
+    "sandbox": "স্যান্ডবক্স",
+    "live": "লাইভ",
+    "stripePublicKey": "Stripe পাবলিক কী",
+    "stripePublicKeyPlaceholder": "pk_test_...",
+    "stripeSecretKey": "Stripe সিক্রেট কী",
+    "stripeSecretKeyPlaceholder": "sk_test_...",
+    "stripeWebhookSecret": "Stripe ওয়েবহুক সিক্রেট",
+    "stripeWebhookSecretPlaceholder": "whsec_...",
+    "paypalClientId": "PayPal ক্লায়েন্ট ID",
+    "paypalClientIdPlaceholder": "PAYPAL_CLIENT_ID",
+    "paypalSecret": "PayPal সিক্রেট",
+    "paypalSecretPlaceholder": "PAYPAL_SECRET",
+    "sslcommerzStoreId": "SSLCommerz স্টোর ID",
+    "sslcommerzStoreIdPlaceholder": "STORE_ID",
+    "sslcommerzStorePassword": "SSLCommerz স্টোর পাসওয়ার্ড",
+    "sslcommerzStorePasswordPlaceholder": "STORE_PASSWORD"
+  },
+  "seo": {
+    "title": "এসইও সেটিংস",
+    "description": "সার্চ ইঞ্জিন অপ্টিমাইজেশন সেটিংস কনফিগার করুন।",
+    "metaTitle": "মেটা শিরোনাম",
+    "metaTitlePlaceholder": "আপনার সাইটের শিরোনাম",
+    "metaDescription": "মেটা বিবরণ",
+    "metaDescriptionPlaceholder": "আপনার সাইটের সংক্ষিপ্ত বিবরণ",
+    "metaKeywords": "মেটা কীওয়ার্ড",
+    "metaKeywordsPlaceholder": "কীওয়ার্ড1, কীওয়ার্ড2, কীওয়ার্ড3",
+    "ogImage": "ওপেন গ্রাফ ইমেজ",
+    "uploadImage": "ইমেজ আপলোড করুন",
+    "imageUploadHint": "PNG, JPG সর্বোচ্চ 2MB",
+    "googleAnalyticsId": "Google Analytics ID",
+    "googleAnalyticsIdPlaceholder": "G-XXXXXXXXXX",
+    "googleSearchConsoleVerification": "Google Search Console যাচাইকরণ",
+    "googleSearchConsoleVerificationPlaceholder": "যাচাইকরণ কোড"
+  },
+  "smtp": {
+    "title": "এসএমটিপি সেটিংস",
+    "description": "ইমেইল পাঠানোর জন্য ইমেইল সার্ভার সেটিংস কনফিগার করুন।",
+    "smtpHost": "এসএমটিপি হোস্ট",
+    "smtpHostPlaceholder": "smtp.example.com",
+    "smtpPort": "এসএমটিপি পোর্ট",
+    "smtpPortPlaceholder": "এসএমটিপি পোর্ট",
+    "smtpUsername": "এসএমটিপি ব্যবহারকারী নাম",
+    "smtpUsernamePlaceholder": "এসএমটিপি ব্যবহারকারী নাম",
+    "smtpPassword": "এসএমটিপি পাসওয়ার্ড",
+    "smtpPasswordPlaceholder": "এসএমটিপি পাসওয়ার্ড",
+    "encryption": "এনক্রিপশন",
+    "tls": "TLS",
+    "ssl": "SSL",
+    "none": "কোনটিই নয়",
+    "fromEmailAddress": "ইমেইল ঠিকানা থেকে",
+    "fromEmailAddressPlaceholder": "noreply@example.com",
+    "fromName": "নাম থেকে",
+    "fromNamePlaceholder": "আপনার অ্যাপের নাম"
+  },
+  "notifications": {
+    "title": "বিজ্ঞপ্তি সেটিংস",
+    "description": "ইমেইল এবং পুশ বিজ্ঞপ্তি পছন্দ কনফিগার করুন।",
+    "emailNotifications": "ইমেইল বিজ্ঞপ্তি",
+    "emailNotificationsDescription": "গুরুত্বপূর্ণ ইভেন্টের জন্য ইমেইল বিজ্ঞপ্তি সক্ষম করুন",
+    "pushNotifications": "পুশ বিজ্ঞপ্তি",
+    "pushNotificationsDescription": "ব্রাউজারে পুশ বিজ্ঞপ্তি সক্ষম করুন",
+    "orderNotifications": "অর্ডার বিজ্ঞপ্তি",
+    "orderNotificationsDescription": "নতুন অর্ডারের জন্য বিজ্ঞপ্তি গ্রহণ করুন",
+    "notificationEmail": "বিজ্ঞপ্তি ইমেইল",
+    "notificationEmailPlaceholder": "notifications@example.com",
+    "lowStockThreshold": "কম স্টক থ্রেশহোল্ড",
+    "lowStockThresholdPlaceholder": "10"
+  },
+  "security": {
+    "title": "নিরাপত্তা সেটিংস",
+    "description": "পাসওয়ার্ড প্রয়োজনীয়তা এবং নিরাপত্তা বৈশিষ্ট্য কনফিগার করুন।",
+    "passwordMinLength": "ন্যূনতম পাসওয়ার্ড দৈর্ঘ্য",
+    "passwordRequirements": "পাসওয়ার্ড প্রয়োজনীয়তা",
+    "requireUppercase": "বড় হাতের অক্ষর প্রয়োজন",
+    "requireUppercaseDescription": "পাসওয়ার্ডে অন্তত একটি বড় হাতের অক্ষর (A-Z) থাকতে হবে",
+    "requireLowercase": "ছোট হাতের অক্ষর প্রয়োজন",
+    "requireLowercaseDescription": "পাসওয়ার্ডে অন্তত একটি ছোট হাতের অক্ষর (a-z) থাকতে হবে",
+    "requireNumbers": "সংখ্যা প্রয়োজন",
+    "requireNumbersDescription": "পাসওয়ার্ডে অন্তত একটি সংখ্যা (0-9) থাকতে হবে",
+    "requireSymbols": "প্রতীক প্রয়োজন",
+    "requireSymbolsDescription": "পাসওয়ার্ডে অন্তত একটি প্রতীক (!@#$%^&*) থাকতে হবে",
+    "twoFactorAuthentication": "দুই-ফ্যাক্টর প্রমাণীকরণ",
+    "twoFactorAuthenticationDescription": "বর্ধিত নিরাপত্তার জন্য দুই-ফ্যাক্টর প্রমাণীকরণ সক্ষম করুন",
+    "sessionTimeout": "সেশন টাইমআউট (মিনিট)",
+    "sessionTimeoutPlaceholder": "120"
   }
 }

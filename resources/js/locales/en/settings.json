@@ -6,5 +6,153 @@
   "languages": {
     "en": "English",
     "bn": "বাংলা (Bengali)"
+  },
+  "pageTitle": "Application Settings",
+  "headTitle": "Settings",
+  "saveChanges": "Save Changes",
+  "settingsUpdatedSuccess": "Settings updated successfully",
+  "settingsUpdateFailed": "Failed to update settings",
+  "selectCategory": "Select a category to configure settings.",
+  "tabs": {
+    "general": {
+      "label": "General",
+      "description": "App branding and info"
+    },
+    "payment": {
+      "label": "Payment",
+      "description": "Gateways and currency"
+    },
+    "seo": {
+      "label": "SEO",
+      "description": "Search engine optimization"
+    },
+    "smtp": {
+      "label": "SMTP",
+      "description": "Email server settings"
+    },
+    "notifications": {
+      "label": "Notifications",
+      "description": "Email and push alerts"
+    },
+    "security": {
+      "label": "Security",
+      "description": "Password and 2FA"
+    }
+  },
+  "general": {
+    "title": "General Information",
+    "description": "Update your application's general information and branding.",
+    "appName": "Application Name",
+    "appNamePlaceholder": "Application Name",
+    "email": "Email",
+    "emailPlaceholder": "Email",
+    "phone": "Phone",
+    "phonePlaceholder": "Phone",
+    "address": "Address",
+    "addressPlaceholder": "Address",
+    "language": "Language Preference",
+    "languageDescription": "Select your preferred language for the application interface.",
+    "appLogo": "Application Logo",
+    "changeLogo": "Change Logo",
+    "logoUploadHint": "PNG, JPG up to 2MB"
+  },
+  "payment": {
+    "title": "Payment Settings",
+    "description": "Configure payment gateways and currency settings.",
+    "paymentGateway": "Payment Gateway",
+    "none": "None",
+    "sslcommerz": "SSLCommerz",
+    "stripe": "Stripe",
+    "paypal": "PayPal",
+    "currency": "Currency",
+    "bdt": "BDT - Bangladeshi Taka",
+    "inr": "INR - Indian Rupee",
+    "usd": "USD - US Dollar",
+    "paymentMode": "Payment Mode",
+    "sandbox": "Sandbox",
+    "live": "Live",
+    "stripePublicKey": "Stripe Public Key",
+    "stripePublicKeyPlaceholder": "pk_test_...",
+    "stripeSecretKey": "Stripe Secret Key",
+    "stripeSecretKeyPlaceholder": "sk_test_...",
+    "stripeWebhookSecret": "Stripe Webhook Secret",
+    "stripeWebhookSecretPlaceholder": "whsec_...",
+    "paypalClientId": "PayPal Client ID",
+    "paypalClientIdPlaceholder": "PAYPAL_CLIENT_ID",
+    "paypalSecret": "PayPal Secret",
+    "paypalSecretPlaceholder": "PAYPAL_SECRET",
+    "sslcommerzStoreId": "SSLCommerz Store ID",
+    "sslcommerzStoreIdPlaceholder": "STORE_ID",
+    "sslcommerzStorePassword": "SSLCommerz Store Password",
+    "sslcommerzStorePasswordPlaceholder": "STORE_PASSWORD"
+  },
+  "seo": {
+    "title": "SEO Settings",
+    "description": "Configure search engine optimization settings.",
+    "metaTitle": "Meta Title",
+    "metaTitlePlaceholder": "Your site title",
+    "metaDescription": "Meta Description",
+    "metaDescriptionPlaceholder": "A brief description of your site",
+    "metaKeywords": "Meta Keywords",
+    "metaKeywordsPlaceholder": "keyword1, keyword2, keyword3",
+    "ogImage": "Open Graph Image",
+    "uploadImage": "Upload Image",
+    "imageUploadHint": "PNG, JPG up to 2MB",
+    "googleAnalyticsId": "Google Analytics ID",
+    "googleAnalyticsIdPlaceholder": "G-XXXXXXXXXX",
+    "googleSearchConsoleVerification": "Google Search Console Verification",
+    "googleSearchConsoleVerificationPlaceholder": "Verification code"
+  },
+  "smtp": {
+    "title": "SMTP Settings",
+    "description": "Configure email server settings for sending emails.",
+    "smtpHost": "SMTP Host",
+    "smtpHostPlaceholder": "smtp.example.com",
+    "smtpPort": "SMTP Port",
+    "smtpPortPlaceholder": "SMTP Port",
+    "smtpUsername": "SMTP Username",
+    "smtpUsernamePlaceholder": "SMTP Username",
+    "smtpPassword": "SMTP Password",
+    "smtpPasswordPlaceholder": "SMTP Password",
+    "encryption": "Encryption",
+    "tls": "TLS",
+    "ssl": "SSL",
+    "none": "None",
+    "fromEmailAddress": "From Email Address",
+    "fromEmailAddressPlaceholder": "noreply@example.com",
+    "fromName": "From Name",
+    "fromNamePlaceholder": "Your App Name"
+  },
+  "notifications": {
+    "title": "Notification Settings",
+    "description": "Configure email and push notification preferences.",
+    "emailNotifications": "Email Notifications",
+    "emailNotificationsDescription": "Enable email notifications for important events",
+    "pushNotifications": "Push Notifications",
+    "pushNotificationsDescription": "Enable push notifications in the browser",
+    "orderNotifications": "Order Notifications",
+    "orderNotificationsDescription": "Receive notifications for new orders",
+    "notificationEmail": "Notification Email",
+    "notificationEmailPlaceholder": "notifications@example.com",
+    "lowStockThreshold": "Low Stock Threshold",
+    "lowStockThresholdPlaceholder": "10"
+  },
+  "security": {
+    "title": "Security Settings",
+    "description": "Configure password requirements and security features.",
+    "passwordMinLength": "Minimum Password Length",
+    "passwordRequirements": "Password Requirements",
+    "requireUppercase": "Require Uppercase Letters",
+    "requireUppercaseDescription": "Passwords must contain at least one uppercase letter (A-Z)",
+    "requireLowercase": "Require Lowercase Letters",
+    "requireLowercaseDescription": "Passwords must contain at least one lowercase letter (a-z)",
+    "requireNumbers": "Require Numbers",
+    "requireNumbersDescription": "Passwords must contain at least one number (0-9)",
+    "requireSymbols": "Require Symbols",
+    "requireSymbolsDescription": "Passwords must contain at least one symbol (!@#$%^&*)",
+    "twoFactorAuthentication": "Two-Factor Authentication",
+    "twoFactorAuthenticationDescription": "Enable two-factor authentication for enhanced security",
+    "sessionTimeout": "Session Timeout (minutes)",
+    "sessionTimeoutPlaceholder": "120"
   }
 }

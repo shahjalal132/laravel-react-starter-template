@@ -2,7 +2,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import Select from '@/Components/Select';
 import Toggle from '@/Components/Toggle';
@@ -11,6 +10,7 @@ import { Settings as SettingsIcon, Upload, Globe, Mail, Phone, MapPin, CreditCar
 import { useState, useEffect } from 'react';
 import Button from '@/Components/Button';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const CURRENCY_SYMBOLS = {
     'BDT': '৳',
@@ -19,6 +19,8 @@ const CURRENCY_SYMBOLS = {
 };
 
 export default function Settings({ settings = {}, flash }) {
+    const { t: tNav } = useTranslation('navigation');
+    const { t } = useTranslation('settings');
     const [activeTab, setActiveTab] = useState('');
     const [logoPreview, setLogoPreview] = useState(null);
     const [ogImagePreview, setOgImagePreview] = useState(null);
@@ -143,12 +145,12 @@ export default function Settings({ settings = {}, flash }) {
     };
 
     const tabs = [
-        { id: 'general', label: 'General', icon: Globe, description: 'App branding and info' },
-        { id: 'payment', label: 'Payment', icon: CreditCard, description: 'Gateways and currency' },
-        { id: 'seo', label: 'SEO', icon: Search, description: 'Search engine optimization' },
-        { id: 'smtp', label: 'SMTP', icon: Send, description: 'Email server settings' },
-        { id: 'notifications', label: 'Notifications', icon: Bell, description: 'Email and push alerts' },
-        { id: 'security', label: 'Security', icon: ShieldCheck, description: 'Password and 2FA' },
+        { id: 'general', label: tNav('tabs.general'), icon: Globe, description: t('tabs.general.description') },
+        { id: 'payment', label: tNav('tabs.payment'), icon: CreditCard, description: t('tabs.payment.description') },
+        { id: 'seo', label: tNav('tabs.seo'), icon: Search, description: t('tabs.seo.description') },
+        { id: 'smtp', label: tNav('tabs.smtp'), icon: Send, description: t('tabs.smtp.description') },
+        { id: 'notifications', label: tNav('tabs.notifications'), icon: Bell, description: t('tabs.notifications.description') },
+        { id: 'security', label: tNav('tabs.security'), icon: ShieldCheck, description: t('tabs.security.description') },
     ];
 
     const submit = (e) => {
@@ -156,10 +158,10 @@ export default function Settings({ settings = {}, flash }) {
         post(route('admin.settings.update'), {
             preserveScroll: true,
             onSuccess: () => {
-                toast.success('Settings updated successfully');
+                toast.success(t('settingsUpdatedSuccess'));
             },
             onError: () => {
-                toast.error('Failed to update settings');
+                toast.error(t('settingsUpdateFailed'));
             },
         });
     };
@@ -168,17 +170,17 @@ export default function Settings({ settings = {}, flash }) {
         <section className="max-w-2xl">
             <header>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                    General Information
+                    {t('general.title')}
                 </h2>
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Update your application's general information and branding.
+                    {t('general.description')}
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-8 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                        <InputLabel htmlFor="app_name" value="Application Name" />
+                        <InputLabel htmlFor="app_name" value={t('general.appName')} />
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Globe className="h-4 w-4 text-gray-400" />
@@ -189,14 +191,14 @@ export default function Settings({ settings = {}, flash }) {
                                 value={data.app_name}
                                 onChange={(e) => setData('app_name', e.target.value)}
                                 required
-                                placeholder="Application Name"
+                                placeholder={t('general.appNamePlaceholder')}
                             />
                         </div>
                         <InputError message={errors.app_name} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="app_email" value="Email" />
+                        <InputLabel htmlFor="app_email" value={t('general.email')} />
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Mail className="h-4 w-4 text-gray-400" />
@@ -208,14 +210,14 @@ export default function Settings({ settings = {}, flash }) {
                                 value={data.app_email}
                                 onChange={(e) => setData('app_email', e.target.value)}
                                 required
-                                placeholder="Email"
+                                placeholder={t('general.emailPlaceholder')}
                             />
                         </div>
                         <InputError message={errors.app_email} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="app_phone" value="Phone" />
+                        <InputLabel htmlFor="app_phone" value={t('general.phone')} />
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <Phone className="h-4 w-4 text-gray-400" />
@@ -225,14 +227,14 @@ export default function Settings({ settings = {}, flash }) {
                                 className="w-full pl-10"
                                 value={data.app_phone}
                                 onChange={(e) => setData('app_phone', e.target.value)}
-                                placeholder="Phone"
+                                placeholder={t('general.phonePlaceholder')}
                             />
                         </div>
                         <InputError message={errors.app_phone} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="app_address" value="Address" />
+                        <InputLabel htmlFor="app_address" value={t('general.address')} />
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <MapPin className="h-4 w-4 text-gray-400" />
@@ -242,31 +244,31 @@ export default function Settings({ settings = {}, flash }) {
                                 className="w-full pl-10"
                                 value={data.app_address}
                                 onChange={(e) => setData('app_address', e.target.value)}
-                                placeholder="Address"
+                                placeholder={t('general.addressPlaceholder')}
                             />
                         </div>
                         <InputError message={errors.app_address} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="language" value="Language Preference" />
+                        <InputLabel htmlFor="language" value={t('general.language')} />
                         <Select
                             id="language"
                             value={data.language}
                             onChange={(e) => setData('language', e.target.value)}
                         >
-                            <option value="en">English</option>
-                            <option value="bn">বাংলা (Bengali)</option>
+                            <option value="en">{t('languages.en')}</option>
+                            <option value="bn">{t('languages.bn')}</option>
                         </Select>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Select your preferred language for the application interface.
+                            {t('general.languageDescription')}
                         </p>
                         <InputError message={errors.language} />
                     </div>
                 </div>
 
                 <div className="pt-4">
-                    <InputLabel value="Application Logo" />
+                    <InputLabel value={t('general.appLogo')} />
                     <div className="mt-3 flex items-center gap-6">
                         <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
                             {logoPreview ? (
@@ -282,7 +284,7 @@ export default function Settings({ settings = {}, flash }) {
                         <div className="space-y-3">
                             <label className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all">
                                 <Upload className="w-4 h-4" />
-                                Change Logo
+                                {t('general.changeLogo')}
                                 <input
                                     type="file"
                                     className="hidden"
@@ -291,7 +293,7 @@ export default function Settings({ settings = {}, flash }) {
                                 />
                             </label>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
-                                PNG, JPG up to 2MB
+                                {t('general.logoUploadHint')}
                             </p>
                         </div>
                     </div>
@@ -300,7 +302,7 @@ export default function Settings({ settings = {}, flash }) {
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
                     <Button disabled={processing} isActive={true} className="px-8 py-4">
-                        Save Changes
+                        {t('saveChanges')}
                     </Button>
                 </div>
             </form>
@@ -311,32 +313,32 @@ export default function Settings({ settings = {}, flash }) {
         <section className="max-w-2xl">
             <header>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                    Payment Settings
+                    {t('payment.title')}
                 </h2>
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Configure payment gateways and currency settings.
+                    {t('payment.description')}
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-8 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                        <InputLabel htmlFor="payment_gateway" value="Payment Gateway" />
+                        <InputLabel htmlFor="payment_gateway" value={t('payment.paymentGateway')} />
                         <Select
                             id="payment_gateway"
                             value={data.payment_gateway}
                             onChange={(e) => setData('payment_gateway', e.target.value)}
                         >
-                            <option value="none">None</option>
-                            <option value="sslcommerz">SSLCommerz</option>
-                            <option value="stripe">Stripe</option>
-                            <option value="paypal">PayPal</option>
+                            <option value="none">{t('payment.none')}</option>
+                            <option value="sslcommerz">{t('payment.sslcommerz')}</option>
+                            <option value="stripe">{t('payment.stripe')}</option>
+                            <option value="paypal">{t('payment.paypal')}</option>
                         </Select>
                         <InputError message={errors.payment_gateway} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="currency" value="Currency" />
+                        <InputLabel htmlFor="currency" value={t('payment.currency')} />
                         <Select
                             id="currency"
                             value={data.currency}
@@ -349,23 +351,23 @@ export default function Settings({ settings = {}, flash }) {
                                 }));
                             }}
                         >
-                            <option value="BDT">BDT - Bangladeshi Taka</option>
-                            <option value="INR">INR - Indian Rupee</option>
-                            <option value="USD">USD - US Dollar</option>
+                            <option value="BDT">{t('payment.bdt')}</option>
+                            <option value="INR">{t('payment.inr')}</option>
+                            <option value="USD">{t('payment.usd')}</option>
                         </Select>
                         <InputError message={errors.currency} />
                     </div>
 
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="payment_mode" value="Payment Mode" />
+                        <InputLabel htmlFor="payment_mode" value={t('payment.paymentMode')} />
                         <Select
                             id="payment_mode"
                             value={data.payment_mode}
                             onChange={(e) => setData('payment_mode', e.target.value)}
                         >
-                            <option value="sandbox">Sandbox</option>
-                            <option value="live">Live</option>
+                            <option value="sandbox">{t('payment.sandbox')}</option>
+                            <option value="live">{t('payment.live')}</option>
                         </Select>
                         <InputError message={errors.payment_mode} />
                     </div>
@@ -373,36 +375,36 @@ export default function Settings({ settings = {}, flash }) {
                     {data.payment_gateway === 'stripe' && (
                         <>
                             <div className="space-y-2 mt-6 md:col-span-2">
-                                <InputLabel htmlFor="stripe_public_key" value="Stripe Public Key" />
+                                <InputLabel htmlFor="stripe_public_key" value={t('payment.stripePublicKey')} />
                                 <TextInput
                                     id="stripe_public_key"
                                     value={data.stripe_public_key}
                                     onChange={(e) => setData('stripe_public_key', e.target.value)}
-                                    placeholder="pk_test_..."
+                                    placeholder={t('payment.stripePublicKeyPlaceholder')}
                                 />
                                 <InputError message={errors.stripe_public_key} />
                             </div>
 
                             <div className="space-y-2 md:col-span-2">
-                                <InputLabel htmlFor="stripe_secret_key" value="Stripe Secret Key" />
+                                <InputLabel htmlFor="stripe_secret_key" value={t('payment.stripeSecretKey')} />
                                 <TextInput
                                     id="stripe_secret_key"
                                     type="password"
                                     value={data.stripe_secret_key}
                                     onChange={(e) => setData('stripe_secret_key', e.target.value)}
-                                    placeholder="sk_test_..."
+                                    placeholder={t('payment.stripeSecretKeyPlaceholder')}
                                 />
                                 <InputError message={errors.stripe_secret_key} />
                             </div>
 
                             <div className="space-y-2 md:col-span-2">
-                                <InputLabel htmlFor="stripe_webhook_secret" value="Stripe Webhook Secret" />
+                                <InputLabel htmlFor="stripe_webhook_secret" value={t('payment.stripeWebhookSecret')} />
                                 <TextInput
                                     id="stripe_webhook_secret"
                                     type="password"
                                     value={data.stripe_webhook_secret}
                                     onChange={(e) => setData('stripe_webhook_secret', e.target.value)}
-                                    placeholder="whsec_..."
+                                    placeholder={t('payment.stripeWebhookSecretPlaceholder')}
                                 />
                                 <InputError message={errors.stripe_webhook_secret} />
                             </div>
@@ -412,24 +414,24 @@ export default function Settings({ settings = {}, flash }) {
                     {data.payment_gateway === 'paypal' && (
                         <>
                             <div className="space-y-2 mt-8 md:col-span-2">
-                                <InputLabel htmlFor="paypal_client_id" value="PayPal Client ID" />
+                                <InputLabel htmlFor="paypal_client_id" value={t('payment.paypalClientId')} />
                                 <TextInput
                                     id="paypal_client_id"
                                     value={data.paypal_client_id}
                                     onChange={(e) => setData('paypal_client_id', e.target.value)}
-                                    placeholder="PAYPAL_CLIENT_ID"
+                                    placeholder={t('payment.paypalClientIdPlaceholder')}
                                 />
                                 <InputError message={errors.paypal_client_id} />
                             </div>
 
                             <div className="space-y-2 md:col-span-2">
-                                <InputLabel htmlFor="paypal_secret" value="PayPal Secret" />
+                                <InputLabel htmlFor="paypal_secret" value={t('payment.paypalSecret')} />
                                 <TextInput
                                     id="paypal_secret"
                                     type="password"
                                     value={data.paypal_secret}
                                     onChange={(e) => setData('paypal_secret', e.target.value)}
-                                    placeholder="PAYPAL_SECRET"
+                                    placeholder={t('payment.paypalSecretPlaceholder')}
                                 />
                                 <InputError message={errors.paypal_secret} />
                             </div>
@@ -439,24 +441,24 @@ export default function Settings({ settings = {}, flash }) {
                     {data.payment_gateway === 'sslcommerz' && (
                         <>
                             <div className="space-y-2 mt-8 md:col-span-2">
-                                <InputLabel htmlFor="sslcommerz_store_id" value="SSLCommerz Store ID" />
+                                <InputLabel htmlFor="sslcommerz_store_id" value={t('payment.sslcommerzStoreId')} />
                                 <TextInput
                                     id="sslcommerz_store_id"
                                     value={data.sslcommerz_store_id}
                                     onChange={(e) => setData('sslcommerz_store_id', e.target.value)}
-                                    placeholder="STORE_ID"
+                                    placeholder={t('payment.sslcommerzStoreIdPlaceholder')}
                                 />
                                 <InputError message={errors.sslcommerz_store_id} />
                             </div>
 
                             <div className="space-y-2 md:col-span-2">
-                                <InputLabel htmlFor="sslcommerz_store_password" value="SSLCommerz Store Password" />
+                                <InputLabel htmlFor="sslcommerz_store_password" value={t('payment.sslcommerzStorePassword')} />
                                 <TextInput
                                     id="sslcommerz_store_password"
                                     type="password"
                                     value={data.sslcommerz_store_password}
                                     onChange={(e) => setData('sslcommerz_store_password', e.target.value)}
-                                    placeholder="STORE_PASSWORD"
+                                    placeholder={t('payment.sslcommerzStorePasswordPlaceholder')}
                                 />
                                 <InputError message={errors.sslcommerz_store_password} />
                             </div>
@@ -466,7 +468,7 @@ export default function Settings({ settings = {}, flash }) {
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
                     <Button disabled={processing} isActive={true} className="w-auto px-8 py-4">
-                        Save Changes
+                        {t('saveChanges')}
                     </Button>
                 </div>
             </form>
@@ -477,51 +479,51 @@ export default function Settings({ settings = {}, flash }) {
         <section className="max-w-2xl">
             <header>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                    SEO Settings
+                    {t('seo.title')}
                 </h2>
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Configure search engine optimization settings.
+                    {t('seo.description')}
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-8 space-y-6">
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <InputLabel htmlFor="meta_title" value="Meta Title" />
+                        <InputLabel htmlFor="meta_title" value={t('seo.metaTitle')} />
                         <TextInput
                             id="meta_title"
                             value={data.meta_title}
                             onChange={(e) => setData('meta_title', e.target.value)}
-                            placeholder="Your site title"
+                            placeholder={t('seo.metaTitlePlaceholder')}
                         />
                         <InputError message={errors.meta_title} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="meta_description" value="Meta Description" />
+                        <InputLabel htmlFor="meta_description" value={t('seo.metaDescription')} />
                         <Textarea
                             id="meta_description"
                             rows={3}
                             value={data.meta_description}
                             onChange={(e) => setData('meta_description', e.target.value)}
-                            placeholder="A brief description of your site"
+                            placeholder={t('seo.metaDescriptionPlaceholder')}
                         />
                         <InputError message={errors.meta_description} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="meta_keywords" value="Meta Keywords" />
+                        <InputLabel htmlFor="meta_keywords" value={t('seo.metaKeywords')} />
                         <TextInput
                             id="meta_keywords"
                             value={data.meta_keywords}
                             onChange={(e) => setData('meta_keywords', e.target.value)}
-                            placeholder="keyword1, keyword2, keyword3"
+                            placeholder={t('seo.metaKeywordsPlaceholder')}
                         />
                         <InputError message={errors.meta_keywords} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel value="Open Graph Image" />
+                        <InputLabel value={t('seo.ogImage')} />
                         <div className="mt-3 flex items-center gap-6">
                             {ogImagePreview && (
                                 <div className="w-32 h-32 rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
@@ -531,7 +533,7 @@ export default function Settings({ settings = {}, flash }) {
                             <div className="space-y-3">
                                 <label className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all">
                                     <ImageIcon className="w-4 h-4" />
-                                    Upload Image
+                                    {t('seo.uploadImage')}
                                     <input
                                         type="file"
                                         className="hidden"
@@ -540,7 +542,7 @@ export default function Settings({ settings = {}, flash }) {
                                     />
                                 </label>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    PNG, JPG up to 2MB
+                                    {t('seo.imageUploadHint')}
                                 </p>
                             </div>
                         </div>
@@ -548,23 +550,23 @@ export default function Settings({ settings = {}, flash }) {
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="google_analytics_id" value="Google Analytics ID" />
+                        <InputLabel htmlFor="google_analytics_id" value={t('seo.googleAnalyticsId')} />
                         <TextInput
                             id="google_analytics_id"
                             value={data.google_analytics_id}
                             onChange={(e) => setData('google_analytics_id', e.target.value)}
-                            placeholder="G-XXXXXXXXXX"
+                            placeholder={t('seo.googleAnalyticsIdPlaceholder')}
                         />
                         <InputError message={errors.google_analytics_id} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="google_search_console_verification" value="Google Search Console Verification" />
+                        <InputLabel htmlFor="google_search_console_verification" value={t('seo.googleSearchConsoleVerification')} />
                         <TextInput
                             id="google_search_console_verification"
                             value={data.google_search_console_verification}
                             onChange={(e) => setData('google_search_console_verification', e.target.value)}
-                            placeholder="Verification code"
+                            placeholder={t('seo.googleSearchConsoleVerificationPlaceholder')}
                         />
                         <InputError message={errors.google_search_console_verification} />
                     </div>
@@ -572,7 +574,7 @@ export default function Settings({ settings = {}, flash }) {
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
                     <Button disabled={processing} isActive={true} className="px-8 py-4">
-                        Save Changes
+                        {t('saveChanges')}
                     </Button>
                 </div>
             </form>
@@ -583,51 +585,51 @@ export default function Settings({ settings = {}, flash }) {
         <section className="max-w-2xl">
             <header>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                    SMTP Settings
+                    {t('smtp.title')}
                 </h2>
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Configure email server settings for sending emails.
+                    {t('smtp.description')}
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-8 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                        <InputLabel htmlFor="smtp_host" value="SMTP Host" />
+                        <InputLabel htmlFor="smtp_host" value={t('smtp.smtpHost')} />
                         <TextInput
                             id="smtp_host"
                             value={data.smtp_host}
                             onChange={(e) => setData('smtp_host', e.target.value)}
-                            placeholder="smtp.example.com"
+                            placeholder={t('smtp.smtpHostPlaceholder')}
                         />
                         <InputError message={errors.smtp_host} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="smtp_port" value="SMTP Port" />
+                        <InputLabel htmlFor="smtp_port" value={t('smtp.smtpPort')} />
                         <TextInput
                             id="smtp_port"
                             type="number"
                             value={data.smtp_port}
                             onChange={(e) => setData('smtp_port', e.target.value)}
-                            placeholder="SMTP Port"
+                            placeholder={t('smtp.smtpPortPlaceholder')}
                         />
                         <InputError message={errors.smtp_port} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="smtp_username" value="SMTP Username" />
+                        <InputLabel htmlFor="smtp_username" value={t('smtp.smtpUsername')} />
                         <TextInput
                             id="smtp_username"
                             value={data.smtp_username}
                             onChange={(e) => setData('smtp_username', e.target.value)}
-                            placeholder="SMTP Username"
+                            placeholder={t('smtp.smtpUsernamePlaceholder')}
                         />
                         <InputError message={errors.smtp_username} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="smtp_password" value="SMTP Password" />
+                        <InputLabel htmlFor="smtp_password" value={t('smtp.smtpPassword')} />
                         <div className="relative">
                             <TextInput
                                 id="smtp_password"
@@ -635,7 +637,7 @@ export default function Settings({ settings = {}, flash }) {
                                 value={data.smtp_password}
                                 onChange={(e) => setData('smtp_password', e.target.value)}
                                 className="pr-10"
-                                placeholder="SMTP Password"
+                                placeholder={t('smtp.smtpPasswordPlaceholder')}
                             />
                             <button
                                 type="button"
@@ -649,38 +651,38 @@ export default function Settings({ settings = {}, flash }) {
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="smtp_encryption" value="Encryption" />
+                        <InputLabel htmlFor="smtp_encryption" value={t('smtp.encryption')} />
                         <Select
                             id="smtp_encryption"
                             value={data.smtp_encryption}
                             onChange={(e) => setData('smtp_encryption', e.target.value)}
                         >
-                            <option value="tls">TLS</option>
-                            <option value="ssl">SSL</option>
-                            <option value="none">None</option>
+                            <option value="tls">{t('smtp.tls')}</option>
+                            <option value="ssl">{t('smtp.ssl')}</option>
+                            <option value="none">{t('smtp.none')}</option>
                         </Select>
                         <InputError message={errors.smtp_encryption} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="smtp_from_address" value="From Email Address" />
+                        <InputLabel htmlFor="smtp_from_address" value={t('smtp.fromEmailAddress')} />
                         <TextInput
                             id="smtp_from_address"
                             type="email"
                             value={data.smtp_from_address}
                             onChange={(e) => setData('smtp_from_address', e.target.value)}
-                            placeholder="noreply@example.com"
+                            placeholder={t('smtp.fromEmailAddressPlaceholder')}
                         />
                         <InputError message={errors.smtp_from_address} />
                     </div>
 
                     <div className="space-y-2 md:col-span-2">
-                        <InputLabel htmlFor="smtp_from_name" value="From Name" />
+                        <InputLabel htmlFor="smtp_from_name" value={t('smtp.fromName')} />
                         <TextInput
                             id="smtp_from_name"
                             value={data.smtp_from_name}
                             onChange={(e) => setData('smtp_from_name', e.target.value)}
-                            placeholder="Your App Name"
+                            placeholder={t('smtp.fromNamePlaceholder')}
                         />
                         <InputError message={errors.smtp_from_name} />
                     </div>
@@ -688,7 +690,7 @@ export default function Settings({ settings = {}, flash }) {
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
                     <Button disabled={processing} isActive={true} className="px-8 py-4">
-                        Save Changes
+                        {t('saveChanges')}
                     </Button>
                 </div>
             </form>
@@ -699,10 +701,10 @@ export default function Settings({ settings = {}, flash }) {
         <section className="max-w-2xl">
             <header>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                    Notification Settings
+                    {t('notifications.title')}
                 </h2>
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Configure email and push notification preferences.
+                    {t('notifications.description')}
                 </p>
             </header>
 
@@ -710,9 +712,9 @@ export default function Settings({ settings = {}, flash }) {
                 <div className="space-y-6">
                     <div className="flex items-center justify-between py-4 border-b border-gray-100 dark:border-gray-700">
                         <div>
-                            <InputLabel value="Email Notifications" />
+                            <InputLabel value={t('notifications.emailNotifications')} />
                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                Enable email notifications for important events
+                                {t('notifications.emailNotificationsDescription')}
                             </p>
                         </div>
                         <Toggle
@@ -723,9 +725,9 @@ export default function Settings({ settings = {}, flash }) {
 
                     <div className="flex items-center justify-between py-4 border-b border-gray-100 dark:border-gray-700">
                         <div>
-                            <InputLabel value="Push Notifications" />
+                            <InputLabel value={t('notifications.pushNotifications')} />
                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                Enable push notifications in the browser
+                                {t('notifications.pushNotificationsDescription')}
                             </p>
                         </div>
                         <Toggle
@@ -736,9 +738,9 @@ export default function Settings({ settings = {}, flash }) {
 
                     <div className="flex items-center justify-between py-4 border-b border-gray-100 dark:border-gray-700">
                         <div>
-                            <InputLabel value="Order Notifications" />
+                            <InputLabel value={t('notifications.orderNotifications')} />
                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                Receive notifications for new orders
+                                {t('notifications.orderNotificationsDescription')}
                             </p>
                         </div>
                         <Toggle
@@ -748,25 +750,25 @@ export default function Settings({ settings = {}, flash }) {
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="notification_email" value="Notification Email" />
+                        <InputLabel htmlFor="notification_email" value={t('notifications.notificationEmail')} />
                         <TextInput
                             id="notification_email"
                             type="email"
                             value={data.notification_email}
                             onChange={(e) => setData('notification_email', e.target.value)}
-                            placeholder="notifications@example.com"
+                            placeholder={t('notifications.notificationEmailPlaceholder')}
                         />
                         <InputError message={errors.notification_email} />
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="low_stock_threshold" value="Low Stock Threshold" />
+                        <InputLabel htmlFor="low_stock_threshold" value={t('notifications.lowStockThreshold')} />
                         <TextInput
                             id="low_stock_threshold"
                             type="number"
                             value={data.low_stock_threshold}
                             onChange={(e) => setData('low_stock_threshold', e.target.value)}
-                            placeholder="10"
+                            placeholder={t('notifications.lowStockThresholdPlaceholder')}
                         />
                         <InputError message={errors.low_stock_threshold} />
                     </div>
@@ -774,7 +776,7 @@ export default function Settings({ settings = {}, flash }) {
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
                     <Button disabled={processing} isActive={true} className="px-8 py-4">
-                        Save Changes
+                        {t('saveChanges')}
                     </Button>
                 </div>
             </form>
@@ -785,17 +787,17 @@ export default function Settings({ settings = {}, flash }) {
         <section className="max-w-2xl">
             <header>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                    Security Settings
+                    {t('security.title')}
                 </h2>
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Configure password requirements and security features.
+                    {t('security.description')}
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-8 space-y-6">
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <InputLabel htmlFor="password_min_length" value="Minimum Password Length" />
+                        <InputLabel htmlFor="password_min_length" value={t('security.passwordMinLength')} />
                         <TextInput
                             id="password_min_length"
                             type="number"
@@ -809,14 +811,14 @@ export default function Settings({ settings = {}, flash }) {
 
                     <div className="space-y-4">
                         <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                            Password Requirements
+                            {t('security.passwordRequirements')}
                         </h3>
 
                         <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
                             <div>
-                                <InputLabel value="Require Uppercase Letters" />
+                                <InputLabel value={t('security.requireUppercase')} />
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                    Passwords must contain at least one uppercase letter (A-Z)
+                                    {t('security.requireUppercaseDescription')}
                                 </p>
                             </div>
                             <Toggle
@@ -827,9 +829,9 @@ export default function Settings({ settings = {}, flash }) {
 
                         <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
                             <div>
-                                <InputLabel value="Require Lowercase Letters" />
+                                <InputLabel value={t('security.requireLowercase')} />
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                    Passwords must contain at least one lowercase letter (a-z)
+                                    {t('security.requireLowercaseDescription')}
                                 </p>
                             </div>
                             <Toggle
@@ -840,9 +842,9 @@ export default function Settings({ settings = {}, flash }) {
 
                         <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
                             <div>
-                                <InputLabel value="Require Numbers" />
+                                <InputLabel value={t('security.requireNumbers')} />
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                    Passwords must contain at least one number (0-9)
+                                    {t('security.requireNumbersDescription')}
                                 </p>
                             </div>
                             <Toggle
@@ -853,9 +855,9 @@ export default function Settings({ settings = {}, flash }) {
 
                         <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
                             <div>
-                                <InputLabel value="Require Symbols" />
+                                <InputLabel value={t('security.requireSymbols')} />
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                    Passwords must contain at least one symbol (!@#$%^&*)
+                                    {t('security.requireSymbolsDescription')}
                                 </p>
                             </div>
                             <Toggle
@@ -867,9 +869,9 @@ export default function Settings({ settings = {}, flash }) {
 
                     <div className="flex items-center justify-between py-4 border-b border-gray-100 dark:border-gray-700">
                         <div>
-                            <InputLabel value="Two-Factor Authentication" />
+                            <InputLabel value={t('security.twoFactorAuthentication')} />
                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                Enable two-factor authentication for enhanced security
+                                {t('security.twoFactorAuthenticationDescription')}
                             </p>
                         </div>
                         <Toggle
@@ -879,7 +881,7 @@ export default function Settings({ settings = {}, flash }) {
                     </div>
 
                     <div className="space-y-2">
-                        <InputLabel htmlFor="session_timeout" value="Session Timeout (minutes)" />
+                        <InputLabel htmlFor="session_timeout" value={t('security.sessionTimeout')} />
                         <TextInput
                             id="session_timeout"
                             type="number"
@@ -887,7 +889,7 @@ export default function Settings({ settings = {}, flash }) {
                             onChange={(e) => setData('session_timeout', e.target.value)}
                             min="1"
                             max="1440"
-                            placeholder="120"
+                            placeholder={t('security.sessionTimeoutPlaceholder')}
                         />
                         <InputError message={errors.session_timeout} />
                     </div>
@@ -895,7 +897,7 @@ export default function Settings({ settings = {}, flash }) {
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
                     <Button disabled={processing} isActive={true} className="w-auto px-8 py-4">
-                        Save Changes
+                        {t('saveChanges')}
                     </Button>
                 </div>
             </form>
@@ -923,10 +925,10 @@ export default function Settings({ settings = {}, flash }) {
                             <SettingsIcon className="w-10 h-10 text-gray-400" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                            Settings
+                            {t('headTitle')}
                         </h3>
                         <p className="text-gray-500 dark:text-gray-400 max-w-xs mt-2">
-                            Select a category to configure settings.
+                            {t('selectCategory')}
                         </p>
                     </div>
                 );
@@ -937,11 +939,11 @@ export default function Settings({ settings = {}, flash }) {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Application Settings
+                    {t('pageTitle')}
                 </h2>
             }
         >
-            <Head title="Settings" />
+            <Head title={t('headTitle')} />
 
             {flash?.success && (
                 <div className="mb-4 bg-green-100 dark:bg-green-800 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-200 px-4 py-3 rounded relative" role="alert">
