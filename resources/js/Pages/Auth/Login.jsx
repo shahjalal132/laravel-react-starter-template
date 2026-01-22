@@ -2,8 +2,10 @@ import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 export default function Login({ status, canResetPassword }) {
+    const { t } = useTranslation('auth');
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -20,7 +22,7 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <>
-            <Head title="Log in" />
+            <Head title={t('login.title')} />
             <section
                 className="relative flex min-h-screen items-center justify-center bg-black/70 px-4 py-6 text-white"
                 style={{
@@ -37,7 +39,7 @@ export default function Login({ status, canResetPassword }) {
                 <div className="relative z-10 w-full max-w-[480px]">
                     <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-6 text-slate-900 dark:text-gray-100 shadow-sm sm:p-8">
                         <h1 className="text-center text-3xl font-semibold">
-                            Sign in
+                            {t('login.heading')}
                         </h1>
                         {status && (
                             <div className="mt-4 text-center text-sm font-medium text-green-600 dark:text-green-400">
@@ -50,7 +52,7 @@ export default function Login({ status, canResetPassword }) {
                                     htmlFor="email"
                                     className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
                                 >
-                                    Email
+                                    {t('login.email')}
                                 </label>
                                 <div className="relative flex items-center">
                                     <TextInput
@@ -64,7 +66,7 @@ export default function Login({ status, canResetPassword }) {
                                         onChange={(e) =>
                                             setData('email', e.target.value)
                                         }
-                                        placeholder="Enter email"
+                                        placeholder={t('login.email_placeholder')}
                                         required
                                     />
                                     <svg
@@ -96,7 +98,7 @@ export default function Login({ status, canResetPassword }) {
                                     htmlFor="password"
                                     className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
                                 >
-                                    Password
+                                    {t('login.password')}
                                 </label>
                                 <div className="relative flex items-center">
                                     <TextInput
@@ -109,7 +111,7 @@ export default function Login({ status, canResetPassword }) {
                                         onChange={(e) =>
                                             setData('password', e.target.value)
                                         }
-                                        placeholder="Enter password"
+                                        placeholder={t('login.password_placeholder')}
                                         required
                                     />
                                     <svg
@@ -145,7 +147,7 @@ export default function Login({ status, canResetPassword }) {
                                         className="h-4 w-4 shrink-0 border-slate-300 text-blue-600 focus:ring-blue-500"
                                     />
                                     <span className="ml-3 text-sm text-slate-900 dark:text-gray-100">
-                                        Remember me
+                                        {t('login.remember_me')}
                                     </span>
                                 </label>
                                 {canResetPassword && (
@@ -154,7 +156,7 @@ export default function Login({ status, canResetPassword }) {
                                             href={route('password.request')}
                                             className="font-semibold text-blue-600 hover:underline"
                                         >
-                                            Forgot your password?
+                                            {t('login.forgot_password')}
                                         </Link>
                                     </div>
                                 )}
@@ -165,16 +167,16 @@ export default function Login({ status, canResetPassword }) {
                                     disabled={processing}
                                     className="w-full cursor-pointer rounded-md bg-blue-600 dark:bg-blue-500 px-4 py-3 text-[15px] font-medium tracking-wide text-white transition hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
                                 >
-                                    Sign in
+                                    {t('login.sign_in')}
                                 </button>
                             </div>
                             <p className="!mt-6 text-center text-sm text-slate-900 dark:text-gray-100">
-                                Don&apos;t have an account?
+                                {t('login.no_account')}
                                 <Link
                                     href={route('register')}
                                     className="ml-1 whitespace-nowrap font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                                 >
-                                    Register here
+                                    {t('login.register_link')}
                                 </Link>
                             </p>
                         </form>

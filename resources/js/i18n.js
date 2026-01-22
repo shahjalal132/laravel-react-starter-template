@@ -6,10 +6,14 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import enCommon from './locales/en/common.json';
 import enNavigation from './locales/en/navigation.json';
 import enSettings from './locales/en/settings.json';
+import enAuth from './locales/en/auth.json';
+import enProfile from './locales/en/profile.json';
 
 import bnCommon from './locales/bn/common.json';
 import bnNavigation from './locales/bn/navigation.json';
 import bnSettings from './locales/bn/settings.json';
+import bnAuth from './locales/bn/auth.json';
+import bnProfile from './locales/bn/profile.json';
 
 i18n
     .use(LanguageDetector)
@@ -20,11 +24,15 @@ i18n
                 common: enCommon,
                 navigation: enNavigation,
                 settings: enSettings,
+                auth: enAuth,
+                profile: enProfile,
             },
             bn: {
                 common: bnCommon,
                 navigation: bnNavigation,
                 settings: bnSettings,
+                auth: bnAuth,
+                profile: bnProfile,
             },
         },
         fallbackLng: 'en',
