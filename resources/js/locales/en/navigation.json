@@ -1,0 +1,15 @@
+{
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Sign out",
+    "editProfile": "Edit profile",
+    "tabs": {
+        "general": "General",
+        "payment": "Payment",
+        "seo": "SEO",
+        "smtp": "SMTP",
+        "notifications": "Notifications",
+        "security": "Security"
+    }
+}

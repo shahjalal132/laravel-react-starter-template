@@ -38,6 +38,10 @@ class HandleInertiaRequests extends Middleware
                 'general' => \App\Models\Setting::getGroup('general'),
                 'seo' => \App\Models\Setting::getGroup('seo'),
             ],
+            'locale' => [
+                'current' => app()->getLocale(),
+                'available' => ['en', 'bn'],
+            ],
         ];
     }
 }

@@ -1,0 +1,25 @@
+{
+    "buttons": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "back": "Back",
+        "submit": "Submit",
+        "close": "Close",
+        "saveChanges": "Save Changes"
+    },
+    "messages": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "updated": "Updated successfully",
+        "created": "Created successfully",
+        "deleted": "Deleted successfully"
+    },
+    "labels": {
+        "language": "Language",
+        "theme": "Theme",
+        "search": "Search",
+        "menu": "Menu"
+    }
+}

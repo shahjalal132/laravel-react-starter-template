@@ -33,7 +33,7 @@ class SettingsController extends Controller
     /**
      * Update settings.
      */
-    public function update(SettingsUpdateRequest $request): RedirectResponse
+    public function update(SettingsUpdateRequest $request): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $data = $request->validated();
         $group = $request->input('group');
@@ -42,6 +42,11 @@ class SettingsController extends Controller
         if ($request->hasFile('logo')) {
             $logoPath = $request->file('logo')->store('settings', 'public');
             Setting::setValue('logo', $logoPath, 'general', 'file');
+        }
+
+        if ($request->hasFile('background_image')) {
+            $bgPath = $request->file('background_image')->store('settings', 'public');
+            Setting::setValue('background_image', $bgPath, 'general', 'file');
         }
 
         if ($request->hasFile('og_image')) {
@@ -61,7 +66,11 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect()->route('admin.settings')->with('success', 'Settings updated successfully.');
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Settings updated successfully.']);
+        }
+
+        return back()->with('success', 'Settings updated successfully.');
     }
 
     /**
@@ -75,6 +84,8 @@ class SettingsController extends Controller
                 'app_email' => ['key' => 'app_email', 'type' => 'string'],
                 'app_phone' => ['key' => 'app_phone', 'type' => 'string'],
                 'app_address' => ['key' => 'app_address', 'type' => 'string'],
+                'language' => ['key' => 'language', 'type' => 'string'],
+                'background_image' => ['key' => 'background_image', 'type' => 'file'],
             ],
             'payment' => [
                 'payment_gateway' => ['key' => 'payment_gateway', 'type' => 'string'],

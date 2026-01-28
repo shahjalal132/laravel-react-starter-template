@@ -1,8 +1,17 @@
+import ApplicationLogo from '@/Components/ApplicationLogo';
 import InputError from '@/Components/InputError';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 export default function Register() {
+    const { t } = useTranslation('auth');
+    const { settings } = usePage().props;
+    const logoUrl = settings?.general?.logo ? `/storage/${settings.general.logo}` : null;
+    const backgroundImage = settings?.general?.background_image
+        ? `/storage/${settings.general.background_image}`
+        : 'https://images.pexels.com/photos/34441449/pexels-photo-34441449.jpeg';
+
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -20,12 +29,11 @@ export default function Register() {
 
     return (
         <>
-            <Head title="Register" />
+            <Head title={t('register.title')} />
             <section
                 className="relative flex min-h-screen items-center justify-center bg-black/70 px-4 py-6 text-white"
                 style={{
-                    backgroundImage:
-                        'url(https://images.pexels.com/photos/34441449/pexels-photo-34441449.jpeg)',
+                    backgroundImage: `url(${backgroundImage})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 }}
@@ -36,8 +44,14 @@ export default function Register() {
                 />
                 <div className="relative z-10 w-full max-w-[480px]">
                     <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-6 text-slate-900 dark:text-gray-100 shadow-sm sm:p-8">
+                        <div className="flex justify-center mb-6">
+                            <ApplicationLogo
+                                url={logoUrl}
+                                className="h-20 w-20 fill-current text-gray-500 dark:text-gray-400"
+                            />
+                        </div>
                         <h1 className="text-center text-3xl font-semibold">
-                            Create account
+                            {t('register.heading')}
                         </h1>
                         <form onSubmit={submit} className="mt-8 space-y-6">
                             <div>
@@ -45,7 +59,7 @@ export default function Register() {
                                     htmlFor="name"
                                     className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
                                 >
-                                    Name
+                                    {t('register.name')}
                                 </label>
                                 <div className="relative flex items-center">
                                     <TextInput
@@ -58,7 +72,7 @@ export default function Register() {
                                         onChange={(e) =>
                                             setData('name', e.target.value)
                                         }
-                                        placeholder="Enter full name"
+                                        placeholder={t('register.name_placeholder')}
                                         required
                                     />
                                     <svg
@@ -90,7 +104,7 @@ export default function Register() {
                                     htmlFor="email"
                                     className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
                                 >
-                                    Email
+                                    {t('register.email')}
                                 </label>
                                 <div className="relative flex items-center">
                                     <TextInput
@@ -103,7 +117,7 @@ export default function Register() {
                                         onChange={(e) =>
                                             setData('email', e.target.value)
                                         }
-                                        placeholder="Enter email"
+                                        placeholder={t('register.email_placeholder')}
                                         required
                                     />
                                     <svg
@@ -135,7 +149,7 @@ export default function Register() {
                                     htmlFor="password"
                                     className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
                                 >
-                                    Password
+                                    {t('register.password')}
                                 </label>
                                 <div className="relative flex items-center">
                                     <TextInput
@@ -148,7 +162,7 @@ export default function Register() {
                                         onChange={(e) =>
                                             setData('password', e.target.value)
                                         }
-                                        placeholder="Enter password"
+                                        placeholder={t('register.password_placeholder')}
                                         required
                                     />
                                     <svg
@@ -174,7 +188,7 @@ export default function Register() {
                                     htmlFor="password_confirmation"
                                     className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
                                 >
-                                    Confirm Password
+                                    {t('register.confirm_password')}
                                 </label>
                                 <div className="relative flex items-center">
                                     <TextInput
@@ -190,7 +204,7 @@ export default function Register() {
                                                 e.target.value,
                                             )
                                         }
-                                        placeholder="Confirm password"
+                                        placeholder={t('register.confirm_password_placeholder')}
                                         required
                                     />
                                     <svg
@@ -217,16 +231,16 @@ export default function Register() {
                                     disabled={processing}
                                     className="w-full cursor-pointer rounded-md bg-blue-600 dark:bg-blue-500 px-4 py-3 text-[15px] font-medium tracking-wide text-white transition hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
                                 >
-                                    Register
+                                    {t('register.register_button')}
                                 </button>
                             </div>
                             <p className="!mt-6 text-center text-sm text-slate-900 dark:text-gray-100">
-                                Already registered?
+                                {t('register.already_registered')}
                                 <Link
                                     href={route('login')}
                                     className="ml-1 whitespace-nowrap font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                                 >
-                                    Sign in here
+                                    {t('login.sign_in')}
                                 </Link>
                             </p>
                         </form>

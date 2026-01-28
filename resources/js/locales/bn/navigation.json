@@ -1,0 +1,15 @@
+{
+    "dashboard": "ড্যাশবোর্ড",
+    "settings": "সেটিংস",
+    "profile": "প্রোফাইল",
+    "logout": "সাইন আউট",
+    "editProfile": "প্রোফাইল সম্পাদনা করুন",
+    "tabs": {
+        "general": "সাধারণ",
+        "payment": "পেমেন্ট",
+        "seo": "এসইও",
+        "smtp": "এসএমটিপি",
+        "notifications": "বিজ্ঞপ্তি",
+        "security": "নিরাপত্তা"
+    }
+}

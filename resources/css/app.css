@@ -25,16 +25,16 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, var(--color-neon-blue), var(--color-neon-purple));
+    background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, var(--color-neon-purple), var(--color-neon-pink));
+    background: linear-gradient(to bottom, #1d4ed8, #1e40af);
 }
 
 /* For Firefox */
 * {
     scrollbar-width: thin;
-    scrollbar-color: var(--color-neon-purple) transparent;
+    scrollbar-color: #3b82f6 transparent;
 }

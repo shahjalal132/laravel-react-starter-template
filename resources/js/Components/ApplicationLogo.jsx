@@ -1,6 +1,18 @@
-export default function ApplicationLogo(props) {
+export default function ApplicationLogo({ url, className, ...props }) {
+    if (url) {
+        return (
+            <img
+                src={url}
+                alt="Application Logo"
+                className={className}
+                {...props}
+            />
+        );
+    }
+
     return (
         <svg
+            className={className}
             {...props}
             viewBox="0 0 316 316"
             xmlns="http://www.w3.org/2000/svg"

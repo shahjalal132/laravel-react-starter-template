@@ -1,5 +1,6 @@
 import { Link, usePage, Head } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     LayoutDashboard,
     ShoppingBag,
@@ -15,9 +16,11 @@ import {
     X,
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
+import LanguageSelector from '@/Components/LanguageSelector';
 import { Toaster } from 'react-hot-toast';
 
 export default function AuthenticatedLayout({ header, children }) {
+    const { t } = useTranslation('navigation');
     const { auth, settings } = usePage().props;
     const user = auth.user;
     
@@ -67,24 +70,24 @@ export default function AuthenticatedLayout({ header, children }) {
     const menuItems = [
         {
             id: 'dashboard',
-            label: 'Dashboard',
+            label: 'dashboard',
             icon: LayoutDashboard,
             hasSubmenu: false,
             route: 'admin.dashboard',
         },
         {
             id: 'settings',
-            label: 'Settings',
+            label: 'settings',
             icon: Settings,
             hasSubmenu: true,
             route: 'admin.settings',
             submenu: [
-                { label: 'General', route: 'admin.settings', params: { tab: 'general' } },
-                { label: 'Payment', route: 'admin.settings', params: { tab: 'payment' } },
-                { label: 'SEO', route: 'admin.settings', params: { tab: 'seo' } },
-                { label: 'SMTP', route: 'admin.settings', params: { tab: 'smtp' } },
-                { label: 'Notifications', route: 'admin.settings', params: { tab: 'notifications' } },
-                { label: 'Security', route: 'admin.settings', params: { tab: 'security' } },
+                { label: 'tabs.general', route: 'admin.settings', params: { tab: 'general' } },
+                { label: 'tabs.payment', route: 'admin.settings', params: { tab: 'payment' } },
+                { label: 'tabs.seo', route: 'admin.settings', params: { tab: 'seo' } },
+                { label: 'tabs.smtp', route: 'admin.settings', params: { tab: 'smtp' } },
+                { label: 'tabs.notifications', route: 'admin.settings', params: { tab: 'notifications' } },
+                { label: 'tabs.security', route: 'admin.settings', params: { tab: 'security' } },
             ]
         },
     ];
@@ -110,13 +113,14 @@ export default function AuthenticatedLayout({ header, children }) {
         const results = [];
         const searchRecursive = (menuItems, parentPath = '') => {
             menuItems.forEach(item => {
-                const currentPath = parentPath ? `${parentPath} > ${item.label}` : item.label;
-                if (item.label.toLowerCase().includes(query.toLowerCase())) {
+                const translatedLabel = t(item.label);
+                const currentPath = parentPath ? `${parentPath} > ${translatedLabel}` : translatedLabel;
+                if (translatedLabel.toLowerCase().includes(query.toLowerCase())) {
                     if (item.route) {
                         results.push({
                             ...item,
                             path: currentPath,
-                            displayLabel: item.label
+                            displayLabel: translatedLabel
                         });
                     }
                 }
@@ -194,6 +198,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 <nav className="flex-1 px-3 pb-4 overflow-y-auto custom-scrollbar">
                     {menuItems.map((item) => {
+                        const isActive = item.route && route().current(item.route);
                         const isLink = item.route && (!item.hasSubmenu || !sidebarOpen);
                         const Component = isLink ? Link : 'button';
                         const componentProps = isLink
@@ -207,14 +212,20 @@ export default function AuthenticatedLayout({ header, children }) {
                             <div key={item.id} className="mb-1">
                                 <Component
                                     {...componentProps}
-                                    className="w-full flex items-center justify-between px-3 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors group"
-                                    title={!sidebarOpen ? item.label : ''}
+                                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors group ${
+                                        isActive
+                                            ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
+                                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                    }`}
+                                    title={!sidebarOpen ? t(item.label) : ''}
                                 >
                                     <div className="flex items-center gap-3">
                                         <item.icon
-                                            className={`w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0 ${
-                                                !sidebarOpen && 'lg:mx-auto'
-                                            }`}
+                                            className={`w-5 h-5 shrink-0 transition-colors ${
+                                                isActive
+                                                    ? 'text-blue-600 dark:text-blue-400'
+                                                    : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
+                                            } ${!sidebarOpen && 'lg:mx-auto'}`}
                                         />
                                         <span
                                             className={`text-sm font-medium transition-opacity duration-300 ${
@@ -223,7 +234,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                                     : 'lg:opacity-0 lg:hidden'
                                             }`}
                                         >
-                                            {item.label}
+                                            {t(item.label)}
                                         </span>
                                         {sidebarOpen && item.badge && (
                                             <span className="px-2 py-0.5 text-xs font-semibold bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">
@@ -257,7 +268,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                                             : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                                                     }`}
                                                 >
-                                                    <span>{subitem.label}</span>
+                                                    <span>{t(subitem.label)}</span>
                                                 </Link>
                                             ))}
                                         </div>
@@ -345,6 +356,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     >
                                         <Globe className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                                     </Link>
+                                    <LanguageSelector />
                                     <ThemeToggle />
                                     
                                     <div className="relative">
