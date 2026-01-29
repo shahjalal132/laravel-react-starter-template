@@ -85,7 +85,7 @@ class SettingsController extends Controller
                 'app_phone' => ['key' => 'app_phone', 'type' => 'string'],
                 'app_address' => ['key' => 'app_address', 'type' => 'string'],
                 'language' => ['key' => 'language', 'type' => 'string'],
-                'background_image' => ['key' => 'background_image', 'type' => 'file'],
+                'logo' => ['key' => 'logo', 'type' => 'file'],
             ],
             'payment' => [
                 'payment_gateway' => ['key' => 'payment_gateway', 'type' => 'string'],
