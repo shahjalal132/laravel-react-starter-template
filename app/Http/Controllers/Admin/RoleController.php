@@ -19,6 +19,7 @@ class RoleController extends Controller
      */
     public function index(Request $request): Response
     {
+        abort_unless($request->user()->can('view-roles'), 403);
         $query = Role::withCount('permissions');
 
         // Search
@@ -39,6 +40,7 @@ class RoleController extends Controller
      */
     public function create(): Response
     {
+        abort_unless(auth()->user()->can('create-roles'), 403);
         $permissions = Permission::all();
 
         return Inertia::render('Admin/Administration/Roles/Create', [
@@ -51,6 +53,7 @@ class RoleController extends Controller
      */
     public function store(RoleStoreRequest $request): RedirectResponse
     {
+        abort_unless($request->user()->can('create-roles'), 403);
         $role = Role::create(['name' => $request->name]);
 
         if ($request->has('permissions')) {
@@ -66,6 +69,7 @@ class RoleController extends Controller
      */
     public function show(Role $role): Response
     {
+        abort_unless(auth()->user()->can('view-roles'), 403);
         $role->load('permissions');
         $permissions = Permission::all();
 
@@ -80,6 +84,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role): Response
     {
+        abort_unless(auth()->user()->can('edit-roles'), 403);
         $role->load('permissions');
         $permissions = Permission::all();
 
@@ -94,6 +99,7 @@ class RoleController extends Controller
      */
     public function update(RoleUpdateRequest $request, Role $role): RedirectResponse
     {
+        abort_unless($request->user()->can('edit-roles'), 403);
         $role->update(['name' => $request->name]);
 
         if ($request->has('permissions')) {
@@ -109,6 +115,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role): RedirectResponse
     {
+        abort_unless(auth()->user()->can('delete-roles'), 403);
         // Check if role is assigned to any users
         if ($role->users()->count() > 0) {
             return redirect()->back()

@@ -21,6 +21,7 @@ class UserController extends Controller
      */
     public function index(Request $request): Response
     {
+        abort_unless($request->user()->can('view-users'), 403);
         $query = User::with('roles');
 
         // Search
@@ -63,6 +64,7 @@ class UserController extends Controller
      */
     public function create(): Response
     {
+        abort_unless(auth()->user()->can('create-users'), 403);
         $roles = Role::all();
 
         return Inertia::render('Admin/Administration/Users/Create', [
@@ -75,6 +77,7 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request): RedirectResponse
     {
+        abort_unless($request->user()->can('create-users'), 403);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -102,6 +105,7 @@ class UserController extends Controller
      */
     public function edit(User $user): Response
     {
+        abort_unless(auth()->user()->can('edit-users'), 403);
         $user->load('roles');
         $roles = Role::all();
 
@@ -116,6 +120,7 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user): RedirectResponse
     {
+        abort_unless($request->user()->can('edit-users'), 403);
         $data = [
             'name' => $request->name,
             'email' => $request->email,
@@ -140,6 +145,7 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
+        abort_unless(auth()->user()->can('delete-users'), 403);
         $user->delete();
 
         return redirect()->route('admin.administration.users.index')
@@ -151,6 +157,7 @@ class UserController extends Controller
      */
     public function suspend(SuspendUserRequest $request, User $user): RedirectResponse
     {
+        abort_unless($request->user()->can('suspend-users'), 403);
         $user->suspend($request->suspended_until);
 
         return redirect()->back()
@@ -162,6 +169,7 @@ class UserController extends Controller
      */
     public function unsuspend(User $user): RedirectResponse
     {
+        abort_unless(auth()->user()->can('suspend-users'), 403);
         $user->unsuspend();
 
         return redirect()->back()

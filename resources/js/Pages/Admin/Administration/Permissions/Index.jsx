@@ -12,7 +12,8 @@ import { Search, Plus, Edit, Trash2 } from 'lucide-react';
 
 export default function PermissionsIndex({ permissions, filters }) {
     const { t } = useTranslation('administration');
-    const { flash } = usePage().props;
+    const { flash, auth } = usePage().props;
+    const userPermissions = auth?.user?.permissions || [];
     const [search, setSearch] = useState(filters?.search || '');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [permissionToDelete, setPermissionToDelete] = useState(null);
@@ -73,12 +74,14 @@ export default function PermissionsIndex({ permissions, filters }) {
                     <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-100">
                         {t('permissions.title')}
                     </h2>
-                    <Link href={route('admin.administration.permissions.create')}>
-                        <PrimaryButton>
-                            <Plus size={16} className="mr-2" />
-                            {t('permissions.createPermission')}
-                        </PrimaryButton>
-                    </Link>
+                    {userPermissions.includes('create-permissions') && (
+                        <Link href={route('admin.administration.permissions.create')}>
+                            <PrimaryButton>
+                                <Plus size={16} className="mr-2" />
+                                {t('permissions.createPermission')}
+                            </PrimaryButton>
+                        </Link>
+                    )}
                 </div>
             }
         >

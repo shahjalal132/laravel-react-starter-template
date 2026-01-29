@@ -12,7 +12,8 @@ import { Search, Plus, Edit, Trash2 } from 'lucide-react';
 
 export default function RolesIndex({ roles, filters }) {
     const { t } = useTranslation('administration');
-    const { flash } = usePage().props;
+    const { flash, auth } = usePage().props;
+    const permissions = auth?.user?.permissions || [];
     const [search, setSearch] = useState(filters?.search || '');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [roleToDelete, setRoleToDelete] = useState(null);
@@ -55,18 +56,22 @@ export default function RolesIndex({ roles, filters }) {
 
     const actions = (role) => (
         <div className="flex items-center gap-2">
-            <Link
-                href={route('admin.administration.roles.edit', role.id)}
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-            >
-                <Edit size={16} />
-            </Link>
-            <button
-                onClick={() => handleDelete(role)}
-                className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
-            >
-                <Trash2 size={16} />
-            </button>
+            {permissions.includes('edit-roles') && (
+                <Link
+                    href={route('admin.administration.roles.edit', role.id)}
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                >
+                    <Edit size={16} />
+                </Link>
+            )}
+            {permissions.includes('delete-roles') && (
+                <button
+                    onClick={() => handleDelete(role)}
+                    className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
+                >
+                    <Trash2 size={16} />
+                </button>
+            )}
         </div>
     );
 
@@ -77,12 +82,14 @@ export default function RolesIndex({ roles, filters }) {
                     <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-100">
                         {t('roles.title')}
                     </h2>
-                    <Link href={route('admin.administration.roles.create')}>
-                        <PrimaryButton>
-                            <Plus size={16} className="mr-2" />
-                            {t('roles.createRole')}
-                        </PrimaryButton>
-                    </Link>
+                    {permissions.includes('create-roles') && (
+                        <Link href={route('admin.administration.roles.create')}>
+                            <PrimaryButton>
+                                <Plus size={16} className="mr-2" />
+                                {t('roles.createRole')}
+                            </PrimaryButton>
+                        </Link>
+                    )}
                 </div>
             }
         >

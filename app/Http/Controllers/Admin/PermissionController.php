@@ -18,6 +18,7 @@ class PermissionController extends Controller
      */
     public function index(Request $request): Response
     {
+        abort_unless($request->user()->can('view-permissions'), 403);
         $query = Permission::query();
 
         // Search
@@ -38,6 +39,7 @@ class PermissionController extends Controller
      */
     public function create(): Response
     {
+        abort_unless(auth()->user()->can('create-permissions'), 403);
         return Inertia::render('Admin/Administration/Permissions/Create');
     }
 
@@ -46,6 +48,7 @@ class PermissionController extends Controller
      */
     public function store(PermissionStoreRequest $request): RedirectResponse
     {
+        abort_unless($request->user()->can('create-permissions'), 403);
         Permission::create(['name' => $request->name]);
 
         return redirect()->route('admin.administration.permissions.index')
@@ -57,6 +60,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission): Response
     {
+        abort_unless(auth()->user()->can('view-permissions'), 403);
         return Inertia::render('Admin/Administration/Permissions/Edit', [
             'permission' => $permission,
         ]);
@@ -67,6 +71,7 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission): Response
     {
+        abort_unless(auth()->user()->can('edit-permissions'), 403);
         return Inertia::render('Admin/Administration/Permissions/Edit', [
             'permission' => $permission,
         ]);
@@ -77,6 +82,7 @@ class PermissionController extends Controller
      */
     public function update(PermissionUpdateRequest $request, Permission $permission): RedirectResponse
     {
+        abort_unless($request->user()->can('edit-permissions'), 403);
         $permission->update(['name' => $request->name]);
 
         return redirect()->route('admin.administration.permissions.index')
@@ -88,6 +94,7 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission): RedirectResponse
     {
+        abort_unless(auth()->user()->can('delete-permissions'), 403);
         // Check if permission is assigned to any roles
         if ($permission->roles()->count() > 0) {
             return redirect()->back()

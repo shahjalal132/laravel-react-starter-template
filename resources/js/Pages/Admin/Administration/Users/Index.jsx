@@ -14,7 +14,8 @@ import { Search, Plus, Edit, Trash2, Ban, UserCheck } from 'lucide-react';
 
 export default function UsersIndex({ users, roles, filters }) {
     const { t } = useTranslation('administration');
-    const { flash } = usePage().props;
+    const { flash, auth } = usePage().props;
+    const permissions = auth?.user?.permissions || [];
     const [search, setSearch] = useState(filters?.search || '');
     const [roleFilter, setRoleFilter] = useState(filters?.role || '');
     const [suspendedFilter, setSuspendedFilter] = useState(filters?.suspended ?? '');
@@ -100,28 +101,34 @@ export default function UsersIndex({ users, roles, filters }) {
 
     const actions = (user) => (
         <div className="flex items-center gap-2">
-            <Link
-                href={route('admin.administration.users.edit', user.id)}
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-            >
-                <Edit size={16} />
-            </Link>
-            <button
-                onClick={() => openSuspendModal(user)}
-                className="text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-200"
-            >
-                {user.suspended_until && new Date(user.suspended_until) > new Date() ? (
-                    <UserCheck size={16} />
-                ) : (
-                    <Ban size={16} />
-                )}
-            </button>
-            <button
-                onClick={() => handleDelete(user)}
-                className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
-            >
-                <Trash2 size={16} />
-            </button>
+            {permissions.includes('edit-users') && (
+                <Link
+                    href={route('admin.administration.users.edit', user.id)}
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                >
+                    <Edit size={16} />
+                </Link>
+            )}
+            {permissions.includes('suspend-users') && (
+                <button
+                    onClick={() => openSuspendModal(user)}
+                    className="text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-200"
+                >
+                    {user.suspended_until && new Date(user.suspended_until) > new Date() ? (
+                        <UserCheck size={16} />
+                    ) : (
+                        <Ban size={16} />
+                    )}
+                </button>
+            )}
+            {permissions.includes('delete-users') && (
+                <button
+                    onClick={() => handleDelete(user)}
+                    className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
+                >
+                    <Trash2 size={16} />
+                </button>
+            )}
         </div>
     );
 
@@ -132,12 +139,14 @@ export default function UsersIndex({ users, roles, filters }) {
                     <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-100">
                         {t('users.title')}
                     </h2>
-                    <Link href={route('admin.administration.users.create')}>
-                        <PrimaryButton>
-                            <Plus size={16} className="mr-2" />
-                            {t('users.createUser')}
-                        </PrimaryButton>
-                    </Link>
+                    {permissions.includes('create-users') && (
+                        <Link href={route('admin.administration.users.create')}>
+                            <PrimaryButton>
+                                <Plus size={16} className="mr-2" />
+                                {t('users.createUser')}
+                            </PrimaryButton>
+                        </Link>
+                    )}
                 </div>
             }
         >
