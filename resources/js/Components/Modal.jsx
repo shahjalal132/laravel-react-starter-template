@@ -1,3 +1,4 @@
+import { X } from 'lucide-react';
 import {
     Dialog,
     DialogPanel,
@@ -11,6 +12,7 @@ export default function Modal({
     maxWidth = '2xl',
     closeable = true,
     onClose = () => {},
+    title = null,
 }) {
     const close = () => {
         if (closeable) {
@@ -24,39 +26,49 @@ export default function Modal({
         lg: 'sm:max-w-lg',
         xl: 'sm:max-w-xl',
         '2xl': 'sm:max-w-2xl',
+        '3xl': 'sm:max-w-3xl',
+        '4xl': 'sm:max-w-4xl',
     }[maxWidth];
+
+    if (!show) return null;
 
     return (
         <Transition show={show} leave="duration-200">
             <Dialog
                 as="div"
                 id="modal"
-                className="fixed inset-0 z-50 flex transform items-center overflow-y-auto px-4 py-6 transition-all sm:px-0"
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/20 dark:bg-black/40"
                 onClose={close}
             >
                 <TransitionChild
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
+                    enter="ease-out duration-200"
+                    enterFrom="opacity-0 scale-95"
+                    enterTo="opacity-100 scale-100"
                     leave="ease-in duration-200"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                >
-                    <div className="absolute inset-0 bg-gray-500/75 dark:bg-gray-900/75" />
-                </TransitionChild>
-
-                <TransitionChild
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                    enterTo="opacity-100 translate-y-0 sm:scale-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                    leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    leaveFrom="opacity-100 scale-100"
+                    leaveTo="opacity-0 scale-95"
                 >
                     <DialogPanel
-                        className={`mb-6 transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 shadow-xl transition-all sm:mx-auto sm:w-full ${maxWidthClass}`}
+                        className={`bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full ${maxWidthClass} animate-in fade-in zoom-in duration-200 border border-gray-200 dark:border-gray-700`}
                     >
-                        {children}
+                        {title && (
+                            <div className="flex justify-between items-center p-4 border-b border-gray-100 dark:border-gray-700">
+                                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                                    {title}
+                                </h3>
+                                {closeable && (
+                                    <button
+                                        onClick={close}
+                                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                        <div className="p-4">
+                            {children}
+                        </div>
                     </DialogPanel>
                 </TransitionChild>
             </Dialog>

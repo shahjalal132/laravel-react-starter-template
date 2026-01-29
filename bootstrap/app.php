@@ -19,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
         ]);
+
+        $middleware->alias([
+            'suspended' => \App\Http\Middleware\CheckSuspended::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

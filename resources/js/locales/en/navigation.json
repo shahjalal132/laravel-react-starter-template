@@ -1,9 +1,13 @@
 {
     "dashboard": "Dashboard",
+    "administration": "Administration",
     "settings": "Settings",
     "profile": "Profile",
     "logout": "Sign out",
     "editProfile": "Edit profile",
+    "users": "Users",
+    "roles": "Roles",
+    "permissions": "Permissions",
     "tabs": {
         "general": "General",
         "payment": "Payment",

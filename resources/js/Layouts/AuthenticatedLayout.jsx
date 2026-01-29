@@ -14,6 +14,7 @@ import {
     Settings,
     ArrowLeft,
     X,
+    Users,
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
 import LanguageSelector from '@/Components/LanguageSelector';
@@ -74,6 +75,18 @@ export default function AuthenticatedLayout({ header, children }) {
             icon: LayoutDashboard,
             hasSubmenu: false,
             route: 'admin.dashboard',
+        },
+        {
+            id: 'administration',
+            label: 'administration',
+            icon: Users,
+            hasSubmenu: true,
+            route: '',
+            submenu: [
+                { label: 'users', route: 'admin.administration.users.index' },
+                { label: 'roles', route: 'admin.administration.roles.index' },
+                { label: 'permissions', route: 'admin.administration.permissions.index' },
+            ]
         },
         {
             id: 'settings',
