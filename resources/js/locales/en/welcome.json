@@ -1,0 +1,13 @@
+{
+    "label": "Rice Inventory",
+    "title": {
+        "line1": "Digital Rice Inventory",
+        "line2": "Platform"
+    },
+    "tagline": "Accurate data. Real-time insights. Smarter decisions.",
+    "buttons": {
+        "dashboard": "Go to Dashboard",
+        "login": "Login",
+        "register": "Register"
+    }
+}
