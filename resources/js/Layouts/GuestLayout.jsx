@@ -32,7 +32,7 @@ export default function GuestLayout({ children }) {
                 </Link>
             </div>
 
-            <div className="relative z-10 mt-6 w-full overflow-hidden bg-transparent px-6 py-4 sm:max-w-md">
+            <div className="relative z-10 mt-6 w-full overflow-hidden bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 px-6 py-8 sm:max-w-md">
                 {children}
             </div>
         </div>

@@ -25,14 +25,14 @@ export default function Register() {
     return (
         <GuestLayout>
             <Head title={t('register.title')} />
-            <h1 className="text-center text-3xl font-semibold">
+            <h1 className="text-center text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 {t('register.heading')}
             </h1>
-            <form onSubmit={submit} className="mt-8 space-y-6">
+            <form onSubmit={submit} className="mt-8 space-y-5">
                 <div>
                     <label
                         htmlFor="name"
-                        className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
+                        className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-200"
                     >
                         {t('register.name')}
                     </label>
@@ -41,7 +41,7 @@ export default function Register() {
                             id="name"
                             name="name"
                             value={data.name}
-                            className="w-full border border-slate-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 pr-10 text-sm text-slate-900 dark:text-gray-100 outline-blue-600 dark:outline-blue-400"
+                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700/50 px-4 py-3 pr-10 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 transition-colors"
                             autoComplete="name"
                             isFocused={true}
                             onChange={(e) =>
@@ -52,20 +52,16 @@ export default function Register() {
                         />
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            fill="#bbb"
-                            stroke="#bbb"
-                            className="absolute right-4 h-4 w-4"
+                            className="absolute right-4 h-5 w-5 text-gray-400 dark:text-gray-500"
+                            fill="none"
                             viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
                         >
-                            <circle
-                                cx="10"
-                                cy="7"
-                                r="6"
-                                data-original="#000000"
-                            />
                             <path
-                                d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
-                                data-original="#000000"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                             />
                         </svg>
                     </div>
@@ -77,7 +73,7 @@ export default function Register() {
                 <div>
                     <label
                         htmlFor="email"
-                        className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
+                        className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-200"
                     >
                         {t('register.email')}
                     </label>
@@ -87,7 +83,7 @@ export default function Register() {
                             type="email"
                             name="email"
                             value={data.email}
-                            className="w-full border border-slate-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 pr-10 text-sm text-slate-900 dark:text-gray-100 outline-blue-600 dark:outline-blue-400"
+                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700/50 px-4 py-3 pr-10 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 transition-colors"
                             autoComplete="username"
                             onChange={(e) =>
                                 setData('email', e.target.value)
@@ -97,20 +93,16 @@ export default function Register() {
                         />
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            fill="#bbb"
-                            stroke="#bbb"
-                            className="absolute right-4 h-4 w-4"
+                            className="absolute right-4 h-5 w-5 text-gray-400 dark:text-gray-500"
+                            fill="none"
                             viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
                         >
-                            <circle
-                                cx="10"
-                                cy="7"
-                                r="6"
-                                data-original="#000000"
-                            />
                             <path
-                                d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
-                                data-original="#000000"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                             />
                         </svg>
                     </div>
@@ -122,7 +114,7 @@ export default function Register() {
                 <div>
                     <label
                         htmlFor="password"
-                        className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
+                        className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-200"
                     >
                         {t('register.password')}
                     </label>
@@ -132,7 +124,7 @@ export default function Register() {
                             type="password"
                             name="password"
                             value={data.password}
-                            className="w-full border border-slate-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 pr-10 text-sm text-slate-900 dark:text-gray-100 outline-blue-600 dark:outline-blue-400"
+                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700/50 px-4 py-3 pr-10 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 transition-colors"
                             autoComplete="new-password"
                             onChange={(e) =>
                                 setData('password', e.target.value)
@@ -142,14 +134,21 @@ export default function Register() {
                         />
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            fill="#bbb"
-                            stroke="#bbb"
-                            className="absolute right-4 h-4 w-4 cursor-pointer"
-                            viewBox="0 0 128 128"
+                            className="absolute right-4 h-5 w-5 text-gray-400 dark:text-gray-500 cursor-pointer"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
                         >
                             <path
-                                d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
-                                data-original="#000000"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                             />
                         </svg>
                     </div>
@@ -161,7 +160,7 @@ export default function Register() {
                 <div>
                     <label
                         htmlFor="password_confirmation"
-                        className="mb-2 block text-sm font-medium text-slate-900 dark:text-gray-100"
+                        className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-200"
                     >
                         {t('register.confirm_password')}
                     </label>
@@ -171,7 +170,7 @@ export default function Register() {
                             type="password"
                             name="password_confirmation"
                             value={data.password_confirmation}
-                            className="w-full border border-slate-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 pr-10 text-sm text-slate-900 dark:text-gray-100 outline-blue-600 dark:outline-blue-400"
+                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700/50 px-4 py-3 pr-10 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 transition-colors"
                             autoComplete="new-password"
                             onChange={(e) =>
                                 setData(
@@ -184,14 +183,21 @@ export default function Register() {
                         />
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            fill="#bbb"
-                            stroke="#bbb"
-                            className="absolute right-4 h-4 w-4 cursor-pointer"
-                            viewBox="0 0 128 128"
+                            className="absolute right-4 h-5 w-5 text-gray-400 dark:text-gray-500 cursor-pointer"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
                         >
                             <path
-                                d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
-                                data-original="#000000"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                             />
                         </svg>
                     </div>
@@ -200,20 +206,20 @@ export default function Register() {
                         className="mt-2"
                     />
                 </div>
-                <div className="!mt-12">
+                <div className="!mt-10">
                     <button
                         type="submit"
                         disabled={processing}
-                        className="w-full cursor-pointer rounded-md bg-blue-600 dark:bg-blue-500 px-4 py-3 text-[15px] font-medium tracking-wide text-white transition hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
+                        className="w-full cursor-pointer rounded-lg bg-blue-600 dark:bg-blue-500 px-4 py-3 text-sm font-semibold tracking-wide text-white shadow-md hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-blue-600 dark:disabled:hover:bg-blue-500 transition-all"
                     >
                         {t('register.register_button')}
                     </button>
                 </div>
-                <p className="!mt-6 text-center text-sm text-slate-900 dark:text-gray-100">
-                    {t('register.already_registered')}
+                <p className="!mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+                    {t('register.already_registered')}{' '}
                     <Link
                         href={route('login')}
-                        className="ml-1 whitespace-nowrap font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                        className="whitespace-nowrap font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                     >
                         {t('login.sign_in')}
                     </Link>
