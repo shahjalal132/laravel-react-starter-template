@@ -44,7 +44,6 @@ export default function Settings({ settings = {}, flash }) {
             app_phone: general.app_phone || '',
             app_address: general.app_address || '',
             language: general.language || 'en',
-            language: general.language || 'en',
             logo: null,
             background_image: null,
             // Payment
