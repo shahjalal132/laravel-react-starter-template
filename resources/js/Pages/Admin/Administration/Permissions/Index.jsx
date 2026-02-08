@@ -100,7 +100,7 @@ export default function PermissionsIndex({ permissions, filters }) {
             )}
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6">
                             <div className="mb-6 flex gap-4">
@@ -136,11 +136,10 @@ export default function PermissionsIndex({ permissions, filters }) {
                                             <Link
                                                 key={index}
                                                 href={link.url || '#'}
-                                                className={`px-3 py-2 text-sm rounded-md ${
-                                                    link.active
+                                                className={`px-3 py-2 text-sm rounded-md ${link.active
                                                         ? 'bg-blue-600 text-white'
                                                         : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                                                }`}
+                                                    }`}
                                                 dangerouslySetInnerHTML={{ __html: link.label }}
                                             />
                                         ))}
