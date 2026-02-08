@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'suspended_at',
         'suspended_until',
+        'suspension_reason',
     ];
 
     /**
@@ -66,10 +67,11 @@ class User extends Authenticatable
     /**
      * Suspend the user until a specific date.
      */
-    public function suspend(\DateTimeInterface|string|null $until = null): void
+    public function suspend(\DateTimeInterface|string|null $until = null, ?string $reason = null): void
     {
         $this->suspended_at = now();
         $this->suspended_until = $until ? (is_string($until) ? \Carbon\Carbon::parse($until) : $until) : null;
+        $this->suspension_reason = $reason;
         $this->save();
     }
 
@@ -80,6 +82,7 @@ class User extends Authenticatable
     {
         $this->suspended_at = null;
         $this->suspended_until = null;
+        $this->suspension_reason = null;
         $this->save();
     }
 

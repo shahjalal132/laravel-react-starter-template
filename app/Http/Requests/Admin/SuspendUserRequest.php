@@ -23,6 +23,7 @@ class SuspendUserRequest extends FormRequest
     {
         return [
             'suspended_until' => ['required', 'date', 'after:now'],
+            'suspension_reason' => ['nullable', 'string', 'max:1000'],
         ];
     }
 }

@@ -158,7 +158,7 @@ class UserController extends Controller
     public function suspend(SuspendUserRequest $request, User $user): RedirectResponse
     {
         abort_unless($request->user()->can('suspend-users'), 403);
-        $user->suspend($request->suspended_until);
+        $user->suspend($request->suspended_until, $request->suspension_reason);
 
         return redirect()->back()
             ->with('success', 'User suspended successfully.');

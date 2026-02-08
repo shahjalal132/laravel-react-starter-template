@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 
 export default function Welcome({ auth }) {
     const { t } = useTranslation('welcome');
-    const { settings } = usePage().props;
+    const { settings, flash } = usePage().props;
     const isLoggedIn = Boolean(auth?.user);
+    const user = auth?.user;
+    const isSuspended = user?.suspended_until && new Date(user.suspended_until) > new Date();
     const backgroundImage = settings?.general?.background_image
         ? `/storage/${settings.general.background_image}`
         : null;
@@ -29,6 +31,26 @@ export default function Welcome({ auth }) {
 
                 {/* Content */}
                 <div className="relative z-10 w-full max-w-4xl px-6 text-center">
+                    {isLoggedIn && isSuspended && (
+                        <div className="mb-6 mx-auto max-w-2xl rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-400">
+                            <p className="font-semibold mb-2">Your account has been suspended.</p>
+                            {user.suspension_reason && (
+                                <p className="text-red-600 dark:text-red-300 whitespace-pre-wrap">
+                                    {user.suspension_reason}
+                                </p>
+                            )}
+                        </div>
+                    )}
+                    {flash?.error && (
+                        <div className="mb-6 mx-auto max-w-2xl rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-400">
+                            <p className="font-semibold mb-2">{flash.error}</p>
+                            {flash.suspension_reason && (
+                                <p className="text-red-600 dark:text-red-300 whitespace-pre-wrap">
+                                    {flash.suspension_reason}
+                                </p>
+                            )}
+                        </div>
+                    )}
                     <p className="mb-6 text-sm sm:text-base font-medium uppercase tracking-[0.4em] text-blue-400 animate-fade-in-up">
                         {t('label')}
                     </p>

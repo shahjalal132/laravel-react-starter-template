@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DataTable from '@/Components/DataTable';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -11,6 +11,7 @@ import Select from '@/Components/Select';
 import SuspendModal from '@/Components/SuspendModal';
 import Modal from '@/Components/Modal';
 import { Search, Plus, Edit, Trash2, Ban, UserCheck } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function UsersIndex({ users, roles, filters }) {
     const { t } = useTranslation('administration');
@@ -24,16 +25,30 @@ export default function UsersIndex({ users, roles, filters }) {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
 
-    const handleSearch = () => {
-        router.get(route('admin.administration.users.index'), {
-            search,
-            role: roleFilter || null,
-            suspended: suspendedFilter !== '' ? suspendedFilter : null,
-        }, {
-            preserveState: true,
-            replace: true,
-        });
-    };
+    // Filter effect
+    useEffect(() => {
+        const fetchUsers = () => {
+            router.get(
+                route('admin.administration.users.index'),
+                {
+                    search,
+                    role: roleFilter || null,
+                    suspended: suspendedFilter !== '' ? suspendedFilter : null,
+                },
+                {
+                    preserveState: true,
+                    replace: true,
+                    preserveScroll: true,
+                }
+            );
+        };
+
+        const timer = setTimeout(() => {
+            fetchUsers();
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [search, roleFilter, suspendedFilter]);
 
     const handleDelete = (user) => {
         setUserToDelete(user);
@@ -44,6 +59,7 @@ export default function UsersIndex({ users, roles, filters }) {
         if (userToDelete) {
             router.delete(route('admin.administration.users.destroy', userToDelete.id), {
                 onSuccess: () => {
+                    toast.success(t('users.userDeleted'));
                     setDeleteModalOpen(false);
                     setUserToDelete(null);
                 },
@@ -140,32 +156,20 @@ export default function UsersIndex({ users, roles, filters }) {
                         {t('users.title')}
                     </h2>
                     {permissions.includes('create-users') && (
-                        <Link href={route('admin.administration.users.create')}>
-                            <PrimaryButton>
-                                <Plus size={16} className="mr-2" />
-                                {t('users.createUser')}
-                            </PrimaryButton>
-                        </Link>
+                        <PrimaryButton
+                            onClick={() => router.visit(route('admin.administration.users.create'))}
+                        >
+                            <Plus size={16} className="mr-2" />
+                            {t('users.createUser')}
+                        </PrimaryButton>
                     )}
                 </div>
             }
         >
             <Head title={t('users.title')} />
 
-            {flash?.success && (
-                <div className="mb-4 bg-green-100 dark:bg-green-800 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-200 px-4 py-3 rounded relative">
-                    {flash.success}
-                </div>
-            )}
-
-            {flash?.error && (
-                <div className="mb-4 bg-red-100 dark:bg-red-800 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-200 px-4 py-3 rounded relative">
-                    {flash.error}
-                </div>
-            )}
-
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6">
                             <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -177,7 +181,6 @@ export default function UsersIndex({ users, roles, filters }) {
                                             placeholder={t('users.search')}
                                             value={search}
                                             onChange={(e) => setSearch(e.target.value)}
-                                            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                                             className="pl-10"
                                         />
                                     </div>
@@ -205,9 +208,6 @@ export default function UsersIndex({ users, roles, filters }) {
                                         <option value="1">{t('users.suspended')}</option>
                                     </Select>
                                 </div>
-                                <PrimaryButton onClick={handleSearch}>
-                                    {t('common.search')}
-                                </PrimaryButton>
                             </div>
 
                             <DataTable
@@ -224,11 +224,10 @@ export default function UsersIndex({ users, roles, filters }) {
                                             <Link
                                                 key={index}
                                                 href={link.url || '#'}
-                                                className={`px-3 py-2 text-sm rounded-md ${
-                                                    link.active
-                                                        ? 'bg-blue-600 text-white'
-                                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                                                }`}
+                                                className={`px-3 py-2 text-sm rounded-md ${link.active
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                                    }`}
                                                 dangerouslySetInnerHTML={{ __html: link.label }}
                                             />
                                         ))}

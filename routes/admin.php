@@ -12,14 +12,19 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
         return Inertia::render('Admin/Dashboard');
     })->name('dashboard');
 
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
-    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    // Settings
+    Route::middleware('permission:view-settings')->group(function () {
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    });
+
+    Route::middleware('permission:edit-settings')->group(function () {
+        Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    });
 
     Route::prefix('administration')->name('administration.')->group(function () {
         // Users
         Route::middleware('permission:view-users')->group(function () {
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
-            Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
         });
         
         Route::middleware('permission:create-users')->group(function () {
@@ -27,6 +32,10 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
             Route::post('/users', [UserController::class, 'store'])->name('users.store');
         });
         
+        Route::middleware('permission:view-users')->group(function () {
+            Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+        });
+
         Route::middleware('permission:edit-users')->group(function () {
             Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
             Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
@@ -44,12 +53,15 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
         // Roles
         Route::middleware('permission:view-roles')->group(function () {
             Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-            Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
         });
-        
+
         Route::middleware('permission:create-roles')->group(function () {
             Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
             Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+        });
+
+        Route::middleware('permission:view-roles')->group(function () {
+            Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
         });
         
         Route::middleware('permission:edit-roles')->group(function () {
@@ -64,12 +76,15 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
         // Permissions
         Route::middleware('permission:view-permissions')->group(function () {
             Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
-            Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
         });
-        
+
         Route::middleware('permission:create-permissions')->group(function () {
             Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
             Route::post('/permissions', [PermissionController::class, 'store'])->name('permissions.store');
+        });
+
+        Route::middleware('permission:view-permissions')->group(function () {
+            Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
         });
         
         Route::middleware('permission:edit-permissions')->group(function () {

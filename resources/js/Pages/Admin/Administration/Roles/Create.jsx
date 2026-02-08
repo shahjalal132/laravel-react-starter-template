@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import RoleForm from '@/Components/RoleForm';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -27,16 +27,16 @@ export default function CreateRole({ permissions }) {
             <Head title={t('roles.create')} />
 
             <div className="py-12">
-                <div className="max-w-2xl mx-auto sm:px-6 lg:px-8">
+                <div className="sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6">
                             <RoleForm
                                 permissions={permissions}
                                 onSubmit={() => {
-                                    window.location.href = route('admin.administration.roles.index');
+                                    router.visit(route('admin.administration.roles.index'));
                                 }}
                                 onCancel={() => {
-                                    window.location.href = route('admin.administration.roles.index');
+                                    router.visit(route('admin.administration.roles.index'));
                                 }}
                             />
                         </div>

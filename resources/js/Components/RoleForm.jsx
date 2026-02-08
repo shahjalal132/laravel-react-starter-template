@@ -5,6 +5,7 @@ import TextInput from '@/Components/TextInput';
 import Checkbox from '@/Components/Checkbox';
 import { useForm } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-hot-toast';
 
 export default function RoleForm({ role = null, permissions = [], onSubmit, onCancel }) {
     const { t } = useTranslation('administration');
@@ -21,6 +22,7 @@ export default function RoleForm({ role = null, permissions = [], onSubmit, onCa
         if (isEdit) {
             put(route('admin.administration.roles.update', role.id), {
                 onSuccess: () => {
+                    toast.success(t('roles.roleUpdated'));
                     reset();
                     if (onSubmit) onSubmit();
                 },
@@ -28,6 +30,7 @@ export default function RoleForm({ role = null, permissions = [], onSubmit, onCa
         } else {
             post(route('admin.administration.roles.store'), {
                 onSuccess: () => {
+                    toast.success(t('roles.roleCreated'));
                     reset();
                     if (onSubmit) onSubmit();
                 },

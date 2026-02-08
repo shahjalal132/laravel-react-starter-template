@@ -10,6 +10,8 @@
         "roles": "Roles",
         "suspended": "Suspended",
         "suspendedUntil": "Suspended Until",
+        "suspensionReason": "Suspension Reason",
+        "suspensionReasonPlaceholder": "Enter the reason for suspending this user...",
         "actions": "Actions",
         "createUser": "Create User",
         "editUser": "Edit User",

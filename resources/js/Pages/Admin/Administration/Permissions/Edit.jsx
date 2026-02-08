@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import PermissionForm from '@/Components/PermissionForm';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -27,16 +27,16 @@ export default function EditPermission({ permission }) {
             <Head title={t('permissions.edit')} />
 
             <div className="py-12">
-                <div className="max-w-2xl mx-auto sm:px-6 lg:px-8">
+                <div className="sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6">
                             <PermissionForm
                                 permission={permission}
                                 onSubmit={() => {
-                                    window.location.href = route('admin.administration.permissions.index');
+                                    router.visit(route('admin.administration.permissions.index'));
                                 }}
                                 onCancel={() => {
-                                    window.location.href = route('admin.administration.permissions.index');
+                                    router.visit(route('admin.administration.permissions.index'));
                                 }}
                             />
                         </div>

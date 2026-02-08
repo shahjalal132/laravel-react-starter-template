@@ -18,25 +18,34 @@ import {
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
 import LanguageSelector from '@/Components/LanguageSelector';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function AuthenticatedLayout({ header, children }) {
     const { t } = useTranslation('navigation');
-    const { auth, settings } = usePage().props;
+    const { auth, settings, flash } = usePage().props;
     const user = auth.user;
-    
+
+    useEffect(() => {
+        if (flash?.success) {
+            toast.success(flash.success);
+        }
+        if (flash?.error) {
+            toast.error(flash.error);
+        }
+    }, [flash]);
+
     // Initialize sidebar state from localStorage
     const [sidebarOpen, setSidebarOpen] = useState(() => {
         const saved = localStorage.getItem('sidebar-open');
         return saved !== null ? JSON.parse(saved) : true;
     });
-    
+
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-    
+
     // Initialize open menus from localStorage
     const [openMenus, setOpenMenus] = useState(() => {
         const saved = localStorage.getItem('open-menus');
@@ -68,7 +77,59 @@ export default function AuthenticatedLayout({ header, children }) {
         }));
     };
 
-    const menuItems = [
+    // Check permissions helper
+    const hasPermission = (permissions) => {
+        if (!permissions) return true;
+
+        if (Array.isArray(permissions)) {
+            return permissions.some(p => user.permissions.includes(p));
+        }
+        return user.permissions.includes(permissions);
+    };
+
+    const hasRole = (roles) => {
+        if (!roles) return true;
+        if (Array.isArray(roles)) {
+            return roles.some(r => user.roles.includes(r));
+        }
+        return user.roles.includes(roles);
+    };
+
+    const processMenuItems = (items) => {
+        return items.reduce((acc, item) => {
+            // Check permission
+            if (item.permission && !hasPermission(item.permission)) {
+                return acc;
+            }
+            // Check role
+            if (item.role && !hasRole(item.role)) {
+                return acc;
+            }
+
+            const newItem = { ...item };
+
+            // Process submenu
+            if (newItem.submenu) {
+                newItem.submenu = processMenuItems(newItem.submenu);
+
+                // Calculate active state for subitems
+                newItem.submenu = newItem.submenu.map(sub => ({
+                    ...sub,
+                    active: sub.route && route().current(sub.route, sub.params)
+                }));
+
+                // If submenu becomes empty after filtering, don't show parent
+                if (newItem.submenu.length === 0 && newItem.hasSubmenu) {
+                    return acc;
+                }
+            }
+
+            acc.push(newItem);
+            return acc;
+        }, []);
+    };
+
+    const initialMenuItems = [
         {
             id: 'dashboard',
             label: 'dashboard',
@@ -82,10 +143,11 @@ export default function AuthenticatedLayout({ header, children }) {
             icon: Users,
             hasSubmenu: true,
             route: '',
+            permission: ['view-users', 'view-roles', 'view-permissions'], // Show if user has ANY of these
             submenu: [
-                { label: 'users', route: 'admin.administration.users.index' },
-                { label: 'roles', route: 'admin.administration.roles.index' },
-                { label: 'permissions', route: 'admin.administration.permissions.index' },
+                { label: 'users', route: 'admin.administration.users.index', permission: 'view-users' },
+                { label: 'roles', route: 'admin.administration.roles.index', permission: 'view-roles' },
+                { label: 'permissions', route: 'admin.administration.permissions.index', permission: 'view-permissions' },
             ]
         },
         {
@@ -94,6 +156,7 @@ export default function AuthenticatedLayout({ header, children }) {
             icon: Settings,
             hasSubmenu: true,
             route: 'admin.settings',
+            permission: 'view-settings',
             submenu: [
                 { label: 'tabs.general', route: 'admin.settings', params: { tab: 'general' } },
                 { label: 'tabs.payment', route: 'admin.settings', params: { tab: 'payment' } },
@@ -104,6 +167,28 @@ export default function AuthenticatedLayout({ header, children }) {
             ]
         },
     ];
+
+    const menuItems = processMenuItems(initialMenuItems);
+
+    // Auto-expand menus based on active child
+    useEffect(() => {
+        const newOpenMenus = { ...openMenus };
+        let hasChanges = false;
+
+        menuItems.forEach(item => {
+            if (item.hasSubmenu && item.submenu) {
+                const isChildActive = item.submenu.some(sub => sub.active);
+                if (isChildActive && !newOpenMenus[item.id]) {
+                    newOpenMenus[item.id] = true;
+                    hasChanges = true;
+                }
+            }
+        });
+
+        if (hasChanges) {
+            setOpenMenus(newOpenMenus);
+        }
+    }, [window.location.href]); // Re-run when URL changes via Inertia navigation checks
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -124,8 +209,8 @@ export default function AuthenticatedLayout({ header, children }) {
         }
 
         const results = [];
-        const searchRecursive = (menuItems, parentPath = '') => {
-            menuItems.forEach(item => {
+        const searchRecursive = (items, parentPath = '') => {
+            items.forEach(item => {
                 const translatedLabel = t(item.label);
                 const currentPath = parentPath ? `${parentPath} > ${translatedLabel}` : translatedLabel;
                 if (translatedLabel.toLowerCase().includes(query.toLowerCase())) {
@@ -168,9 +253,8 @@ export default function AuthenticatedLayout({ header, children }) {
 
             {/* Sidebar */}
             <aside
-                className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 lg:static lg:translate-x-0 ${
-                    sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0 lg:w-20'
-                }`}
+                className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0 lg:w-20'
+                    }`}
             >
                 <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-700">
                     <Link href="/" className="flex items-center gap-2">
@@ -187,9 +271,8 @@ export default function AuthenticatedLayout({ header, children }) {
                                 </div>
                             </div>
                         )}
-                        <span className={`text-xl font-bold text-gray-800 dark:text-gray-100 transition-opacity duration-300 ${
-                            sidebarOpen ? 'opacity-100' : 'lg:opacity-0 lg:hidden'
-                        }`}>
+                        <span className={`text-xl font-bold text-gray-800 dark:text-gray-100 transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'lg:opacity-0 lg:hidden'
+                            }`}>
                             {appName}
                         </span>
                     </Link>
@@ -201,9 +284,8 @@ export default function AuthenticatedLayout({ header, children }) {
                     </button>
                 </div>
 
-                <div className={`px-6 py-4 transition-opacity duration-300 ${
-                    sidebarOpen ? 'opacity-100' : 'lg:opacity-0 lg:hidden'
-                }`}>
+                <div className={`px-6 py-4 transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'lg:opacity-0 lg:hidden'
+                    }`}>
                     <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                         Menu
                     </span>
@@ -217,35 +299,32 @@ export default function AuthenticatedLayout({ header, children }) {
                         const componentProps = isLink
                             ? { href: route(item.route) }
                             : {
-                                  onClick: () =>
-                                      item.hasSubmenu && toggleMenu(item.id),
-                              };
+                                onClick: () =>
+                                    item.hasSubmenu && toggleMenu(item.id),
+                            };
 
                         return (
                             <div key={item.id} className="mb-1">
                                 <Component
                                     {...componentProps}
-                                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors group ${
-                                        isActive
-                                            ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
-                                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                    }`}
+                                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors group ${isActive
+                                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
+                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                        }`}
                                     title={!sidebarOpen ? t(item.label) : ''}
                                 >
                                     <div className="flex items-center gap-3">
                                         <item.icon
-                                            className={`w-5 h-5 shrink-0 transition-colors ${
-                                                isActive
-                                                    ? 'text-blue-600 dark:text-blue-400'
-                                                    : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
-                                            } ${!sidebarOpen && 'lg:mx-auto'}`}
+                                            className={`w-5 h-5 shrink-0 transition-colors ${isActive
+                                                ? 'text-blue-600 dark:text-blue-400'
+                                                : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
+                                                } ${!sidebarOpen && 'lg:mx-auto'}`}
                                         />
                                         <span
-                                            className={`text-sm font-medium transition-opacity duration-300 ${
-                                                sidebarOpen
-                                                    ? 'opacity-100'
-                                                    : 'lg:opacity-0 lg:hidden'
-                                            }`}
+                                            className={`text-sm font-medium transition-opacity duration-300 ${sidebarOpen
+                                                ? 'opacity-100'
+                                                : 'lg:opacity-0 lg:hidden'
+                                                }`}
                                         >
                                             {t(item.label)}
                                         </span>
@@ -275,11 +354,10 @@ export default function AuthenticatedLayout({ header, children }) {
                                                 <Link
                                                     key={`${item.id}-${idx}`}
                                                     href={route(subitem.route, subitem.params || {})}
-                                                    className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-between ${
-                                                        subitem.active
-                                                            ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
-                                                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                                    }`}
+                                                    className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-between ${subitem.active
+                                                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
+                                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                                        }`}
                                                 >
                                                     <span>{t(subitem.label)}</span>
                                                 </Link>
@@ -349,9 +427,9 @@ export default function AuthenticatedLayout({ header, children }) {
                                             </div>
                                         )}
                                     </div>
-                                    
+
                                     {/* Mobile Search Icon */}
-                                    <button 
+                                    <button
                                         onClick={() => setIsMobileSearchOpen(true)}
                                         className="p-2 md:hidden hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                     >
@@ -371,7 +449,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </Link>
                                     <LanguageSelector />
                                     <ThemeToggle />
-                                    
+
                                     <div className="relative">
                                         <button
                                             onClick={() => setUserDropdownOpen(!userDropdownOpen)}
@@ -433,7 +511,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             </>
                         ) : (
                             <div className="flex items-center gap-2 w-full">
-                                <button 
+                                <button
                                     onClick={() => setIsMobileSearchOpen(false)}
                                     className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                 >
@@ -450,7 +528,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         className="pl-10 pr-10 py-2 w-full border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                                     />
                                     {searchQuery && (
-                                        <button 
+                                        <button
                                             onClick={() => handleSearch('')}
                                             className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
                                         >

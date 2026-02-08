@@ -1,9 +1,10 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import UserForm from '@/Components/UserForm';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { ArrowLeft } from 'lucide-react';
+import { Toaster } from 'react-hot-toast';
 
 export default function CreateUser({ roles }) {
     const { t } = useTranslation('administration');
@@ -27,16 +28,16 @@ export default function CreateUser({ roles }) {
             <Head title={t('users.create')} />
 
             <div className="py-12">
-                <div className="max-w-2xl mx-auto sm:px-6 lg:px-8">
+                <div className="sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6">
                             <UserForm
                                 roles={roles}
                                 onSubmit={() => {
-                                    window.location.href = route('admin.administration.users.index');
+                                    router.visit(route('admin.administration.users.index'));
                                 }}
                                 onCancel={() => {
-                                    window.location.href = route('admin.administration.users.index');
+                                    router.visit(route('admin.administration.users.index'));
                                 }}
                             />
                         </div>

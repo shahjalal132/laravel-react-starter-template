@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DataTable from '@/Components/DataTable';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -9,6 +9,7 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import Modal from '@/Components/Modal';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function PermissionsIndex({ permissions, filters }) {
     const { t } = useTranslation('administration');
@@ -18,14 +19,22 @@ export default function PermissionsIndex({ permissions, filters }) {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [permissionToDelete, setPermissionToDelete] = useState(null);
 
-    const handleSearch = () => {
-        router.get(route('admin.administration.permissions.index'), {
-            search,
-        }, {
-            preserveState: true,
-            replace: true,
-        });
-    };
+    // Debounced search effect
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            router.get(
+                route('admin.administration.permissions.index'),
+                { search },
+                {
+                    preserveState: true,
+                    replace: true,
+                    preserveScroll: true,
+                }
+            );
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [search]);
 
     const handleDelete = (permission) => {
         setPermissionToDelete(permission);
@@ -36,6 +45,7 @@ export default function PermissionsIndex({ permissions, filters }) {
         if (permissionToDelete) {
             router.delete(route('admin.administration.permissions.destroy', permissionToDelete.id), {
                 onSuccess: () => {
+                    toast.success(t('permissions.permissionDeleted'));
                     setDeleteModalOpen(false);
                     setPermissionToDelete(null);
                 },
@@ -75,12 +85,12 @@ export default function PermissionsIndex({ permissions, filters }) {
                         {t('permissions.title')}
                     </h2>
                     {userPermissions.includes('create-permissions') && (
-                        <Link href={route('admin.administration.permissions.create')}>
-                            <PrimaryButton>
-                                <Plus size={16} className="mr-2" />
-                                {t('permissions.createPermission')}
-                            </PrimaryButton>
-                        </Link>
+                        <PrimaryButton
+                            onClick={() => router.visit(route('admin.administration.permissions.create'))}
+                        >
+                            <Plus size={16} className="mr-2" />
+                            {t('permissions.createPermission')}
+                        </PrimaryButton>
                     )}
                 </div>
             }
@@ -100,7 +110,7 @@ export default function PermissionsIndex({ permissions, filters }) {
             )}
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6">
                             <div className="mb-6 flex gap-4">
@@ -112,16 +122,13 @@ export default function PermissionsIndex({ permissions, filters }) {
                                             placeholder={t('permissions.search')}
                                             value={search}
                                             onChange={(e) => setSearch(e.target.value)}
-                                            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                                             className="pl-10"
                                         />
                                     </div>
                                 </div>
-                                <PrimaryButton onClick={handleSearch}>
-                                    {t('common.search')}
-                                </PrimaryButton>
                             </div>
 
+                            {/* Permission DataTable */}
                             <DataTable
                                 columns={columns}
                                 data={permissions.data}
@@ -129,6 +136,7 @@ export default function PermissionsIndex({ permissions, filters }) {
                                 emptyMessage={t('permissions.noPermissions')}
                             />
 
+                            {/* Permission Pagination */}
                             {permissions.links && permissions.links.length > 3 && (
                                 <div className="mt-4 flex justify-center">
                                     <nav className="flex gap-2">
@@ -136,11 +144,10 @@ export default function PermissionsIndex({ permissions, filters }) {
                                             <Link
                                                 key={index}
                                                 href={link.url || '#'}
-                                                className={`px-3 py-2 text-sm rounded-md ${
-                                                    link.active
-                                                        ? 'bg-blue-600 text-white'
-                                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                                                }`}
+                                                className={`px-3 py-2 text-sm rounded-md ${link.active
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                                    }`}
                                                 dangerouslySetInnerHTML={{ __html: link.label }}
                                             />
                                         ))}
@@ -152,6 +159,7 @@ export default function PermissionsIndex({ permissions, filters }) {
                 </div>
             </div>
 
+            {/* Delete Permission Modal */}
             <Modal
                 show={deleteModalOpen}
                 onClose={() => {

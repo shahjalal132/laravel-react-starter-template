@@ -16,8 +16,9 @@ class SettingsController extends Controller
     /**
      * Display the settings page.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        abort_unless($request->user()->can('view-settings'), 403);
         $groups = ['general', 'payment', 'seo', 'smtp', 'notifications', 'security'];
         $settings = [];
 
@@ -35,6 +36,7 @@ class SettingsController extends Controller
      */
     public function update(SettingsUpdateRequest $request): RedirectResponse|\Illuminate\Http\JsonResponse
     {
+        abort_unless($request->user()->can('edit-settings'), 403);
         $data = $request->validated();
         $group = $request->input('group');
 
