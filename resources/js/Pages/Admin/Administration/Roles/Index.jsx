@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DataTable from '@/Components/DataTable';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -18,14 +18,20 @@ export default function RolesIndex({ roles, filters }) {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [roleToDelete, setRoleToDelete] = useState(null);
 
-    const handleSearch = () => {
-        router.get(route('admin.administration.roles.index'), {
-            search,
-        }, {
-            preserveState: true,
-            replace: true,
-        });
-    };
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            router.get(
+                route('admin.administration.roles.index'),
+                { search },
+                {
+                    preserveState: true,
+                    replace: true,
+                    preserveScroll: true,
+                }
+            );
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [search]);
 
     const handleDelete = (role) => {
         setRoleToDelete(role);
@@ -120,14 +126,10 @@ export default function RolesIndex({ roles, filters }) {
                                             placeholder={t('roles.search')}
                                             value={search}
                                             onChange={(e) => setSearch(e.target.value)}
-                                            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                                             className="pl-10"
                                         />
                                     </div>
                                 </div>
-                                <PrimaryButton onClick={handleSearch}>
-                                    {t('common.search')}
-                                </PrimaryButton>
                             </div>
 
                             <DataTable
@@ -145,8 +147,8 @@ export default function RolesIndex({ roles, filters }) {
                                                 key={index}
                                                 href={link.url || '#'}
                                                 className={`px-3 py-2 text-sm rounded-md ${link.active
-                                                        ? 'bg-blue-600 text-white'
-                                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                                                     }`}
                                                 dangerouslySetInnerHTML={{ __html: link.label }}
                                             />

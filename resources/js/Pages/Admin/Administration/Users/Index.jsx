@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DataTable from '@/Components/DataTable';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -24,16 +24,32 @@ export default function UsersIndex({ users, roles, filters }) {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
 
-    const handleSearch = () => {
-        router.get(route('admin.administration.users.index'), {
-            search,
-            role: roleFilter || null,
-            suspended: suspendedFilter !== '' ? suspendedFilter : null,
-        }, {
-            preserveState: true,
-            replace: true,
-        });
-    };
+    // Filter effect
+    useEffect(() => {
+        const fetchUsers = () => {
+            router.get(
+                route('admin.administration.users.index'),
+                {
+                    search,
+                    role: roleFilter || null,
+                    suspended: suspendedFilter !== '' ? suspendedFilter : null,
+                },
+                {
+                    preserveState: true,
+                    replace: true,
+                    preserveScroll: true,
+                }
+            );
+        };
+
+        // Debounce search, but immediate filter for others if search is empty or unchanged
+        // Actually simplest is just to debounce the whole effect if search changed
+        const timer = setTimeout(() => {
+            fetchUsers();
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [search, roleFilter, suspendedFilter]);
 
     const handleDelete = (user) => {
         setUserToDelete(user);
@@ -177,7 +193,6 @@ export default function UsersIndex({ users, roles, filters }) {
                                             placeholder={t('users.search')}
                                             value={search}
                                             onChange={(e) => setSearch(e.target.value)}
-                                            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                                             className="pl-10"
                                         />
                                     </div>
@@ -205,9 +220,6 @@ export default function UsersIndex({ users, roles, filters }) {
                                         <option value="1">{t('users.suspended')}</option>
                                     </Select>
                                 </div>
-                                <PrimaryButton onClick={handleSearch}>
-                                    {t('common.search')}
-                                </PrimaryButton>
                             </div>
 
                             <DataTable
@@ -225,8 +237,8 @@ export default function UsersIndex({ users, roles, filters }) {
                                                 key={index}
                                                 href={link.url || '#'}
                                                 className={`px-3 py-2 text-sm rounded-md ${link.active
-                                                        ? 'bg-blue-600 text-white'
-                                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                                                     }`}
                                                 dangerouslySetInnerHTML={{ __html: link.label }}
                                             />
