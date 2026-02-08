@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage, router } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
@@ -18,9 +18,12 @@ const CURRENCY_SYMBOLS = {
     'USD': '$',
 };
 
-export default function Settings({ settings = {}, flash }) {
+export default function Settings({ settings: initialSettings = {}, flash }) {
     const { t: tNav } = useTranslation('navigation');
     const { t } = useTranslation('settings');
+    const { props } = usePage();
+    const settings = props.settings || initialSettings;
+
     const [activeTab, setActiveTab] = useState('');
     const [logoPreview, setLogoPreview] = useState(null);
     const [backgroundImagePreview, setBackgroundImagePreview] = useState(null);
@@ -43,7 +46,6 @@ export default function Settings({ settings = {}, flash }) {
             app_email: general.app_email || '',
             app_phone: general.app_phone || '',
             app_address: general.app_address || '',
-            language: general.language || 'en',
             language: general.language || 'en',
             logo: null,
             background_image: null,
@@ -178,6 +180,7 @@ export default function Settings({ settings = {}, flash }) {
             preserveScroll: true,
             onSuccess: () => {
                 toast.success(t('settingsUpdatedSuccess'));
+                router.reload({ only: ['settings'] });
             },
             onError: () => {
                 toast.error(t('settingsUpdateFailed'));

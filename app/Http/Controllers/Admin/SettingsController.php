@@ -42,16 +42,19 @@ class SettingsController extends Controller
         if ($request->hasFile('logo')) {
             $logoPath = $request->file('logo')->store('settings', 'public');
             Setting::setValue('logo', $logoPath, 'general', 'file');
+            unset($data['logo']);
         }
 
         if ($request->hasFile('background_image')) {
             $bgPath = $request->file('background_image')->store('settings', 'public');
             Setting::setValue('background_image', $bgPath, 'general', 'file');
+            unset($data['background_image']);
         }
 
         if ($request->hasFile('og_image')) {
             $ogImagePath = $request->file('og_image')->store('settings', 'public');
             Setting::setValue('og_image', $ogImagePath, 'seo', 'file');
+            unset($data['og_image']);
         }
 
         // Process other settings based on group
@@ -85,7 +88,7 @@ class SettingsController extends Controller
                 'app_phone' => ['key' => 'app_phone', 'type' => 'string'],
                 'app_address' => ['key' => 'app_address', 'type' => 'string'],
                 'language' => ['key' => 'language', 'type' => 'string'],
-                'background_image' => ['key' => 'background_image', 'type' => 'file'],
+                'logo' => ['key' => 'logo', 'type' => 'file'],
             ],
             'payment' => [
                 'payment_gateway' => ['key' => 'payment_gateway', 'type' => 'string'],

@@ -8,12 +8,16 @@ import enNavigation from './locales/en/navigation.json';
 import enSettings from './locales/en/settings.json';
 import enAuth from './locales/en/auth.json';
 import enProfile from './locales/en/profile.json';
+import enWelcome from './locales/en/welcome.json';
+import enAdministration from './locales/en/administration.json';
 
 import bnCommon from './locales/bn/common.json';
 import bnNavigation from './locales/bn/navigation.json';
 import bnSettings from './locales/bn/settings.json';
 import bnAuth from './locales/bn/auth.json';
 import bnProfile from './locales/bn/profile.json';
+import bnWelcome from './locales/bn/welcome.json';
+import bnAdministration from './locales/bn/administration.json';
 
 i18n
     .use(LanguageDetector)
@@ -26,6 +30,8 @@ i18n
                 settings: enSettings,
                 auth: enAuth,
                 profile: enProfile,
+                welcome: enWelcome,
+                administration: enAdministration,
             },
             bn: {
                 common: bnCommon,
@@ -33,6 +39,8 @@ i18n
                 settings: bnSettings,
                 auth: bnAuth,
                 profile: bnProfile,
+                welcome: bnWelcome,
+                administration: bnAdministration,
             },
         },
         fallbackLng: 'en',
