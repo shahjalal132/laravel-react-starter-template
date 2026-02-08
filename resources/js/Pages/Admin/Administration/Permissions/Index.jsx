@@ -120,7 +120,7 @@ export default function PermissionsIndex({ permissions, filters }) {
                                             placeholder={t('permissions.search')}
                                             value={search}
                                             onChange={(e) => setSearch(e.target.value)}
-                                            className=""
+                                            className="pl-10"
                                         />
                                     </div>
                                 </div>
