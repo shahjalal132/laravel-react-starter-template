@@ -354,7 +354,7 @@ export default function Settings({ settings: initialSettings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <Button disabled={processing} isActive={true} className="px-8 py-4">
+                    <Button disabled={processing} isActive={true}>
                         {t('saveChanges')}
                     </Button>
                 </div>
@@ -520,7 +520,7 @@ export default function Settings({ settings: initialSettings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <Button disabled={processing} isActive={true} className="w-auto px-8 py-4">
+                    <Button disabled={processing} isActive={true}>
                         {t('saveChanges')}
                     </Button>
                 </div>
@@ -626,7 +626,7 @@ export default function Settings({ settings: initialSettings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <Button disabled={processing} isActive={true} className="px-8 py-4">
+                    <Button disabled={processing} isActive={true}>
                         {t('saveChanges')}
                     </Button>
                 </div>
@@ -742,7 +742,7 @@ export default function Settings({ settings: initialSettings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <Button disabled={processing} isActive={true} className="px-8 py-4">
+                    <Button disabled={processing} isActive={true}>
                         {t('saveChanges')}
                     </Button>
                 </div>
@@ -828,7 +828,7 @@ export default function Settings({ settings: initialSettings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <Button disabled={processing} isActive={true} className="px-8 py-4">
+                    <Button disabled={processing} isActive={true}>
                         {t('saveChanges')}
                     </Button>
                 </div>
@@ -949,7 +949,7 @@ export default function Settings({ settings: initialSettings = {}, flash }) {
                 </div>
 
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                    <Button disabled={processing} isActive={true} className="w-auto px-8 py-4">
+                    <Button disabled={processing} isActive={true}>
                         {t('saveChanges')}
                     </Button>
                 </div>
