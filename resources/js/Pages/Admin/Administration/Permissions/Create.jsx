@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useRouter } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import PermissionForm from '@/Components/PermissionForm';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -7,6 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function CreatePermission() {
     const { t } = useTranslation('administration');
+    const router = useRouter();
 
     return (
         <AuthenticatedLayout
@@ -32,10 +33,10 @@ export default function CreatePermission() {
                         <div className="p-6">
                             <PermissionForm
                                 onSubmit={() => {
-                                    window.location.href = route('admin.administration.permissions.index');
+                                    router.visit(route('admin.administration.permissions.index'));
                                 }}
                                 onCancel={() => {
-                                    window.location.href = route('admin.administration.permissions.index');
+                                    router.visit(route('admin.administration.permissions.index'));
                                 }}
                             />
                         </div>

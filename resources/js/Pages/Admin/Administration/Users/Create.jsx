@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useRouter } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import UserForm from '@/Components/UserForm';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -7,6 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function CreateUser({ roles }) {
     const { t } = useTranslation('administration');
+    const router = useRouter();
 
     return (
         <AuthenticatedLayout
@@ -33,10 +34,10 @@ export default function CreateUser({ roles }) {
                             <UserForm
                                 roles={roles}
                                 onSubmit={() => {
-                                    window.location.href = route('admin.administration.users.index');
+                                    router.visit(route('admin.administration.users.index'));
                                 }}
                                 onCancel={() => {
-                                    window.location.href = route('admin.administration.users.index');
+                                    router.visit(route('admin.administration.users.index'));
                                 }}
                             />
                         </div>
