@@ -9,6 +9,7 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import Modal from '@/Components/Modal';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function RolesIndex({ roles, filters }) {
     const { t } = useTranslation('administration');
@@ -42,6 +43,7 @@ export default function RolesIndex({ roles, filters }) {
         if (roleToDelete) {
             router.delete(route('admin.administration.roles.destroy', roleToDelete.id), {
                 onSuccess: () => {
+                    toast.success(t('roles.roleDeleted'));
                     setDeleteModalOpen(false);
                     setRoleToDelete(null);
                 },

@@ -9,6 +9,7 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import Modal from '@/Components/Modal';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function PermissionsIndex({ permissions, filters }) {
     const { t } = useTranslation('administration');
@@ -44,6 +45,7 @@ export default function PermissionsIndex({ permissions, filters }) {
         if (permissionToDelete) {
             router.delete(route('admin.administration.permissions.destroy', permissionToDelete.id), {
                 onSuccess: () => {
+                    toast.success(t('permissions.permissionDeleted'));
                     setDeleteModalOpen(false);
                     setPermissionToDelete(null);
                 },
@@ -126,6 +128,7 @@ export default function PermissionsIndex({ permissions, filters }) {
                                 </div>
                             </div>
 
+                            {/* Permission DataTable */}
                             <DataTable
                                 columns={columns}
                                 data={permissions.data}
@@ -133,6 +136,7 @@ export default function PermissionsIndex({ permissions, filters }) {
                                 emptyMessage={t('permissions.noPermissions')}
                             />
 
+                            {/* Permission Pagination */}
                             {permissions.links && permissions.links.length > 3 && (
                                 <div className="mt-4 flex justify-center">
                                     <nav className="flex gap-2">
@@ -155,6 +159,7 @@ export default function PermissionsIndex({ permissions, filters }) {
                 </div>
             </div>
 
+            {/* Delete Permission Modal */}
             <Modal
                 show={deleteModalOpen}
                 onClose={() => {

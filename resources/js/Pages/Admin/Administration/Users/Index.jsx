@@ -11,6 +11,7 @@ import Select from '@/Components/Select';
 import SuspendModal from '@/Components/SuspendModal';
 import Modal from '@/Components/Modal';
 import { Search, Plus, Edit, Trash2, Ban, UserCheck } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function UsersIndex({ users, roles, filters }) {
     const { t } = useTranslation('administration');
@@ -42,8 +43,6 @@ export default function UsersIndex({ users, roles, filters }) {
             );
         };
 
-        // Debounce search, but immediate filter for others if search is empty or unchanged
-        // Actually simplest is just to debounce the whole effect if search changed
         const timer = setTimeout(() => {
             fetchUsers();
         }, 300);
@@ -60,6 +59,7 @@ export default function UsersIndex({ users, roles, filters }) {
         if (userToDelete) {
             router.delete(route('admin.administration.users.destroy', userToDelete.id), {
                 onSuccess: () => {
+                    toast.success(t('users.userDeleted'));
                     setDeleteModalOpen(false);
                     setUserToDelete(null);
                 },
