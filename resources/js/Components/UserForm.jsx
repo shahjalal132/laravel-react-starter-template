@@ -6,6 +6,7 @@ import Select from '@/Components/Select';
 import Checkbox from '@/Components/Checkbox';
 import { useForm } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-hot-toast';
 
 export default function UserForm({ user = null, roles = [], onSubmit, onCancel }) {
     const { t } = useTranslation('administration');
@@ -25,6 +26,7 @@ export default function UserForm({ user = null, roles = [], onSubmit, onCancel }
         if (isEdit) {
             put(route('admin.administration.users.update', user.id), {
                 onSuccess: () => {
+                    toast.success(t('users.userUpdated'));
                     reset();
                     if (onSubmit) onSubmit();
                 },
@@ -32,6 +34,7 @@ export default function UserForm({ user = null, roles = [], onSubmit, onCancel }
         } else {
             post(route('admin.administration.users.store'), {
                 onSuccess: () => {
+                    toast.success(t('users.userCreated'));
                     reset();
                     if (onSubmit) onSubmit();
                 },

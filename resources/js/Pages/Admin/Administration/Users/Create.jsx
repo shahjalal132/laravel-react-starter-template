@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import UserForm from '@/Components/UserForm';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { ArrowLeft } from 'lucide-react';
+import { Toaster } from 'react-hot-toast';
 
 export default function CreateUser({ roles }) {
     const { t } = useTranslation('administration');

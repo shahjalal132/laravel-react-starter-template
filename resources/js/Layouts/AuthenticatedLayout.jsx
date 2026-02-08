@@ -18,12 +18,21 @@ import {
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
 import LanguageSelector from '@/Components/LanguageSelector';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function AuthenticatedLayout({ header, children }) {
     const { t } = useTranslation('navigation');
-    const { auth, settings } = usePage().props;
+    const { auth, settings, flash } = usePage().props;
     const user = auth.user;
+
+    useEffect(() => {
+        if (flash?.success) {
+            toast.success(flash.success);
+        }
+        if (flash?.error) {
+            toast.error(flash.error);
+        }
+    }, [flash]);
 
     // Initialize sidebar state from localStorage
     const [sidebarOpen, setSidebarOpen] = useState(() => {
