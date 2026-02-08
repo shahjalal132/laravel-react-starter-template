@@ -12,8 +12,14 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
         return Inertia::render('Admin/Dashboard');
     })->name('dashboard');
 
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
-    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    // Settings
+    Route::middleware('permission:view-settings')->group(function () {
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    });
+
+    Route::middleware('permission:edit-settings')->group(function () {
+        Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    });
 
     Route::prefix('administration')->name('administration.')->group(function () {
         // Users

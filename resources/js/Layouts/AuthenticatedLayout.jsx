@@ -156,6 +156,7 @@ export default function AuthenticatedLayout({ header, children }) {
             icon: Settings,
             hasSubmenu: true,
             route: 'admin.settings',
+            permission: 'view-settings',
             submenu: [
                 { label: 'tabs.general', route: 'admin.settings', params: { tab: 'general' } },
                 { label: 'tabs.payment', route: 'admin.settings', params: { tab: 'payment' } },
