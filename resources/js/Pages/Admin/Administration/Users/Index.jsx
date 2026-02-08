@@ -156,12 +156,12 @@ export default function UsersIndex({ users, roles, filters }) {
                         {t('users.title')}
                     </h2>
                     {permissions.includes('create-users') && (
-                        <Link href={route('admin.administration.users.create')}>
-                            <PrimaryButton>
-                                <Plus size={16} className="mr-2" />
-                                {t('users.createUser')}
-                            </PrimaryButton>
-                        </Link>
+                        <PrimaryButton
+                            onClick={() => router.visit(route('admin.administration.users.create'))}
+                        >
+                            <Plus size={16} className="mr-2" />
+                            {t('users.createUser')}
+                        </PrimaryButton>
                     )}
                 </div>
             }

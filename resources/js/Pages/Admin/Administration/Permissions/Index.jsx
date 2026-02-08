@@ -83,12 +83,12 @@ export default function PermissionsIndex({ permissions, filters }) {
                         {t('permissions.title')}
                     </h2>
                     {userPermissions.includes('create-permissions') && (
-                        <Link href={route('admin.administration.permissions.create')}>
-                            <PrimaryButton>
-                                <Plus size={16} className="mr-2" />
-                                {t('permissions.createPermission')}
-                            </PrimaryButton>
-                        </Link>
+                        <PrimaryButton
+                            onClick={() => router.visit(route('admin.administration.permissions.create'))}
+                        >
+                            <Plus size={16} className="mr-2" />
+                            {t('permissions.createPermission')}
+                        </PrimaryButton>
                     )}
                 </div>
             }

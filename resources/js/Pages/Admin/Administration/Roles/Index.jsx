@@ -89,12 +89,12 @@ export default function RolesIndex({ roles, filters }) {
                         {t('roles.title')}
                     </h2>
                     {permissions.includes('create-roles') && (
-                        <Link href={route('admin.administration.roles.create')}>
-                            <PrimaryButton>
-                                <Plus size={16} className="mr-2" />
-                                {t('roles.createRole')}
-                            </PrimaryButton>
-                        </Link>
+                        <PrimaryButton
+                            onClick={() => router.visit(route('admin.administration.roles.create'))}
+                        >
+                            <Plus size={16} className="mr-2" />
+                            {t('roles.createRole')}
+                        </PrimaryButton>
                     )}
                 </div>
             }

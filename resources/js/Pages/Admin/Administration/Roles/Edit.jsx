@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useRouter } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import RoleForm from '@/Components/RoleForm';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -7,7 +7,6 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function EditRole({ role, permissions }) {
     const { t } = useTranslation('administration');
-    const router = useRouter();
 
     return (
         <AuthenticatedLayout
