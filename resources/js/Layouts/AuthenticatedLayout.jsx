@@ -81,10 +81,6 @@ export default function AuthenticatedLayout({ header, children }) {
     const hasPermission = (permissions) => {
         if (!permissions) return true;
 
-        // If user is admin/super-admin (checking role name or specific permission if needed)
-        // Usually admins have all permissions via Gate::before or similar, but here we check explicit permissions list from backend
-        // If the backend sends all permissions for admin, this check is fine.
-
         if (Array.isArray(permissions)) {
             return permissions.some(p => user.permissions.includes(p));
         }

@@ -4,6 +4,10 @@
     "profile": "প্রোফাইল",
     "logout": "সাইন আউট",
     "editProfile": "প্রোফাইল সম্পাদনা করুন",
+    "administration": "প্রশাসন",
+    "users": "ব্যবহারকারী",
+    "roles": "ভূমিকা",
+    "permissions": "অনুমতি",
     "tabs": {
         "general": "সাধারণ",
         "payment": "পেমেন্ট",
