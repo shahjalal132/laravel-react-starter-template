@@ -16,10 +16,13 @@ class CheckSuspended
     public function handle(Request $request, Closure $next): Response
     {
         if ($request->user() && $request->user()->isSuspended()) {
+            $user = $request->user();
+            $suspensionReason = $user->suspension_reason;
             auth()->logout();
             
             return redirect()->route('login')
-                ->with('error', 'Your account has been suspended.');
+                ->with('error', 'Your account has been suspended.')
+                ->with('suspension_reason', $suspensionReason);
         }
 
         return $next($request);

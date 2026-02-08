@@ -2,11 +2,12 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
-export default function Login({ status, canResetPassword }) {
+export default function Login({ status, canResetPassword, suspension_reason }) {
     const { t } = useTranslation('auth');
+    const { flash } = usePage().props;
 
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
@@ -31,6 +32,16 @@ export default function Login({ status, canResetPassword }) {
             {status && (
                 <div className="mt-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-center text-sm font-medium text-green-700 dark:text-green-400">
                     {status}
+                </div>
+            )}
+            {flash?.error && (
+                <div className="mt-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-400">
+                    <p className="font-semibold mb-2">{flash.error}</p>
+                    {flash.suspension_reason && (
+                        <p className="text-red-600 dark:text-red-300 whitespace-pre-wrap">
+                            {flash.suspension_reason}
+                        </p>
+                    )}
                 </div>
             )}
             <form onSubmit={submit} className="mt-8 space-y-5">

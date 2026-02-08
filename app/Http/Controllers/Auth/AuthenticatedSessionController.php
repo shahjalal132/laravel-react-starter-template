@@ -21,6 +21,7 @@ class AuthenticatedSessionController extends Controller
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
+            'suspension_reason' => session('suspension_reason'),
         ]);
     }
 
@@ -32,6 +33,18 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        // Check if user is suspended after authentication
+        $user = Auth::user();
+        if ($user && $user->isSuspended()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login')
+                ->with('error', 'Your account has been suspended.')
+                ->with('suspension_reason', $user->suspension_reason);
+        }
 
         return redirect()->intended(route('admin.dashboard', absolute: false));
     }

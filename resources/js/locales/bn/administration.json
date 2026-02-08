@@ -10,6 +10,8 @@
         "roles": "ভূমিকা",
         "suspended": "স্থগিত",
         "suspendedUntil": "স্থগিত পর্যন্ত",
+        "suspensionReason": "স্থগিতকরণের কারণ",
+        "suspensionReasonPlaceholder": "এই ব্যবহারকারীকে স্থগিত করার কারণ লিখুন...",
         "actions": "কর্ম",
         "createUser": "ব্যবহারকারী তৈরি করুন",
         "editUser": "ব্যবহারকারী সম্পাদনা করুন",
