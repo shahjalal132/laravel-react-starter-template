@@ -48,6 +48,12 @@ class HandleInertiaRequests extends Middleware
                 'current' => app()->getLocale(),
                 'available' => ['en', 'bn'],
             ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+                'message' => fn () => $request->session()->get('message'),
+                'suspension_reason' => fn () => $request->session()->get('suspension_reason'),
+            ],
         ];
     }
 }

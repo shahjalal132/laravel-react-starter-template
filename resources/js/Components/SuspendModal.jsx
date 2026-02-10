@@ -28,7 +28,6 @@ export default function SuspendModal({ show, onClose, user, onUnsuspend }) {
         e.preventDefault();
         post(route('admin.administration.users.suspend', user.id), {
             onSuccess: () => {
-                toast.success(t('users.userSuspended'));
                 reset();
                 onClose();
             },
@@ -38,7 +37,6 @@ export default function SuspendModal({ show, onClose, user, onUnsuspend }) {
     const handleUnsuspend = () => {
         post(route('admin.administration.users.unsuspend', user.id), {
             onSuccess: () => {
-                toast.success(t('users.userUnsuspended'));
                 onClose();
             },
         });

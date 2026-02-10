@@ -38,7 +38,7 @@ export default function Login({ status, canResetPassword, suspension_reason }) {
                 <div className="mt-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-400">
                     <p className="font-semibold mb-2">{flash.error}</p>
                     {flash.suspension_reason && (
-                        <p className="text-red-600 dark:text-red-300 whitespace-pre-wrap">
+                        <p className="font-bold text-red-600 dark:text-red-300 whitespace-pre-wrap">
                             {flash.suspension_reason}
                         </p>
                     )}
