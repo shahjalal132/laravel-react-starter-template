@@ -8,6 +8,7 @@ import Textarea from '@/Components/Textarea';
 import { useForm } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
+import DateTimePicker from './DateTimePicker';
 
 export default function SuspendModal({ show, onClose, user, onUnsuspend }) {
     const { t } = useTranslation('administration');
@@ -75,19 +76,17 @@ export default function SuspendModal({ show, onClose, user, onUnsuspend }) {
                 </div>
             ) : (
                 <form onSubmit={handleSuspend} className="space-y-4">
-                    <div>
-                        <InputLabel htmlFor="suspended_until" value={t('users.suspendedUntil')} />
-                        <TextInput
-                            id="suspended_until"
-                            type="datetime-local"
-                            className="mt-1 block w-full"
-                            value={data.suspended_until}
-                            onChange={(e) => setData('suspended_until', e.target.value)}
-                            required
-                            min={new Date().toISOString().slice(0, 16)}
-                        />
-                        <InputError message={errors.suspended_until} className="mt-2" />
-                    </div>
+                    <DateTimePicker
+                        label={t('users.suspendedUntil')}
+                        value={data.suspended_until}
+                        onChange={(date) => {
+                            // Format date for Laravel backend (Y-m-d H:i:s)
+                            const offset = date.getTimezoneOffset();
+                            const adjustedDate = new Date(date.getTime() - (offset * 60 * 1000));
+                            setData('suspended_until', adjustedDate.toISOString().slice(0, 19).replace('T', ' '));
+                        }}
+                    />
+                    <InputError message={errors.suspended_until} className="mt-2" />
 
                     <div>
                         <InputLabel htmlFor="suspension_reason" value={t('users.suspensionReason')} />
@@ -116,6 +115,8 @@ export default function SuspendModal({ show, onClose, user, onUnsuspend }) {
                     </div>
                 </form>
             )}
+
+
         </Modal>
     );
 }
