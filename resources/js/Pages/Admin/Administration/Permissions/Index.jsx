@@ -45,7 +45,6 @@ export default function PermissionsIndex({ permissions, filters }) {
         if (permissionToDelete) {
             router.delete(route('admin.administration.permissions.destroy', permissionToDelete.id), {
                 onSuccess: () => {
-                    toast.success(t('permissions.permissionDeleted'));
                     setDeleteModalOpen(false);
                     setPermissionToDelete(null);
                 },
@@ -97,17 +96,7 @@ export default function PermissionsIndex({ permissions, filters }) {
         >
             <Head title={t('permissions.title')} />
 
-            {flash?.success && (
-                <div className="mb-4 bg-green-100 dark:bg-green-800 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-200 px-4 py-3 rounded relative">
-                    {flash.success}
-                </div>
-            )}
 
-            {flash?.error && (
-                <div className="mb-4 bg-red-100 dark:bg-red-800 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-200 px-4 py-3 rounded relative">
-                    {flash.error}
-                </div>
-            )}
 
             <div className="py-12">
                 <div className="sm:px-6 lg:px-8">

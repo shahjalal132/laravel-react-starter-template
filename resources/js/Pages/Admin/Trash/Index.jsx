@@ -9,7 +9,7 @@ import Modal from '@/Components/Modal';
 import { RotateCcw, Trash2, AlertTriangle } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-export default function TrashIndex({ data, tab }) {
+export default function TrashIndex({ data, tab, counts }) {
     const { auth } = usePage().props;
     const permissions = auth?.user?.permissions || [];
     
@@ -57,11 +57,6 @@ export default function TrashIndex({ data, tab }) {
         router.visit(route(routeName, selectedItem.id), {
             method: method,
             onSuccess: () => {
-                toast.success(
-                    actionType === 'restore' 
-                        ? 'Item restored successfully' 
-                        : 'Item permanently deleted'
-                );
                 setConfirmModalOpen(false);
                 setSelectedItem(null);
                 setActionType(null);
@@ -154,13 +149,18 @@ export default function TrashIndex({ data, tab }) {
                                             key={t.id}
                                             href={route('admin.trash.index', { tab: t.id })}
                                             className={`
-                                                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
+                                                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2
                                                 ${tab === t.id
                                                     ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                                                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'}
                                             `}
                                         >
                                             {t.label}
+                                            {counts[t.id] > 0 && (
+                                                <span className="inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white bg-blue-500 rounded-full">
+                                                    {counts[t.id]}
+                                                </span>
+                                            )}
                                         </Link>
                                     )
                                 ))}

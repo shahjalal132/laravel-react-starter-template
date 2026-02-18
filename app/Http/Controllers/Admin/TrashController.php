@@ -32,6 +32,11 @@ class TrashController extends Controller
         return Inertia::render('Admin/Trash/Index', [
             'tab' => $tab,
             'data' => $data,
+            'counts' => [
+                'users' => User::onlyTrashed()->count(),
+                'roles' => Role::onlyTrashed()->count(),
+                'permissions' => Permission::onlyTrashed()->count(),
+            ],
         ]);
     }
 

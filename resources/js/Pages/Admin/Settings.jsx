@@ -179,11 +179,9 @@ export default function Settings({ settings: initialSettings = {}, flash }) {
         post(route('admin.settings.update'), {
             preserveScroll: true,
             onSuccess: () => {
-                toast.success(t('settingsUpdatedSuccess'));
                 router.reload({ only: ['settings'] });
             },
             onError: () => {
-                toast.error(t('settingsUpdateFailed'));
             },
         });
     };
@@ -998,11 +996,7 @@ export default function Settings({ settings: initialSettings = {}, flash }) {
         >
             <Head title={t('headTitle')} />
 
-            {flash?.success && (
-                <div className="mb-4 bg-green-100 dark:bg-green-800 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-200 px-4 py-3 rounded relative" role="alert">
-                    <span className="block sm:inline">{flash.success}</span>
-                </div>
-            )}
+
 
             <div className="py-12">
                 <div className="sm:px-6 lg:px-8">

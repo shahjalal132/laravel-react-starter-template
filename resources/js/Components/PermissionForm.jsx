@@ -20,7 +20,6 @@ export default function PermissionForm({ permission = null, onSubmit, onCancel }
         if (isEdit) {
             put(route('admin.administration.permissions.update', permission.id), {
                 onSuccess: () => {
-                    toast.success(t('permissions.permissionUpdated'));
                     reset();
                     if (onSubmit) onSubmit();
                 },
@@ -28,7 +27,6 @@ export default function PermissionForm({ permission = null, onSubmit, onCancel }
         } else {
             post(route('admin.administration.permissions.store'), {
                 onSuccess: () => {
-                    toast.success(t('permissions.permissionCreated'));
                     reset();
                     if (onSubmit) onSubmit();
                 },

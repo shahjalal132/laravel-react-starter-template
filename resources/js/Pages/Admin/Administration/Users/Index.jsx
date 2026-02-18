@@ -59,7 +59,6 @@ export default function UsersIndex({ users, roles, filters }) {
         if (userToDelete) {
             router.delete(route('admin.administration.users.destroy', userToDelete.id), {
                 onSuccess: () => {
-                    toast.success(t('users.userDeleted'));
                     setDeleteModalOpen(false);
                     setUserToDelete(null);
                 },
