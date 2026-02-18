@@ -145,7 +145,6 @@ export default function Login({ status, canResetPassword, suspension_reason }) {
                                     e.target.checked,
                                 )
                             }
-                            className="h-4 w-4 shrink-0 border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-500 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700"
                         />
                         <span className="ml-3 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                             {t('login.remember_me')}

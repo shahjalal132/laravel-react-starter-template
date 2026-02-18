@@ -1,3 +1,5 @@
+import Checkbox from '@/Components/Checkbox';
+
 export default function DataTable({ 
     columns, 
     data, 
@@ -19,15 +21,9 @@ export default function DataTable({
                     <tr>
                         {selectable && (
                             <th scope="col" className="px-6 py-3 text-left">
-                                <input
-                                    type="checkbox"
-                                    className="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                                <Checkbox
                                     checked={allSelected}
-                                    ref={(input) => {
-                                        if (input) {
-                                            input.indeterminate = isIndeterminate;
-                                        }
-                                    }}
+                                    indeterminate={isIndeterminate}
                                     onChange={onSelectAllToggle}
                                 />
                             </th>
@@ -71,9 +67,7 @@ export default function DataTable({
                                 >
                                     {selectable && (
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <input
-                                                type="checkbox"
-                                                className="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                                            <Checkbox
                                                 checked={isSelected}
                                                 onChange={() => onSelectToggle(row.id)}
                                             />

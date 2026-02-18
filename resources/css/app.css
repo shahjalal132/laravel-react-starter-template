@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./custom-checkbox.css";
 
 @theme {
     --color-neon-blue: #00f3ff;

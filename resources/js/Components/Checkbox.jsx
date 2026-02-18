@@ -1,12 +1,27 @@
-export default function Checkbox({ className = '', ...props }) {
+import { useId, useEffect, useRef } from 'react';
+
+export default function Checkbox({ className = '', indeterminate = false, id, ...props }) {
+    const generatedId = useId();
+    const inputId = id || generatedId;
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.indeterminate = indeterminate;
+        }
+    }, [indeterminate]);
+
     return (
-        <input
-            {...props}
-            type="checkbox"
-            className={
-                'rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-400 ' +
-                className
-            }
-        />
+        <div className={`custom-checkbox-container ${className}`}>
+            <div className="custom-checkbox-round">
+                <input
+                    {...props}
+                    ref={inputRef}
+                    type="checkbox"
+                    id={inputId}
+                />
+                <label htmlFor={inputId}></label>
+            </div>
+        </div>
     );
 }
