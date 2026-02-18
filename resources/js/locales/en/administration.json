@@ -23,7 +23,6 @@
         "filterByStatus": "Filter by status",
         "all": "All",
         "active": "Active",
-        "suspended": "Suspended",
         "noUsers": "No users found",
         "confirmDelete": "Are you sure you want to delete this user?",
         "userCreated": "User created successfully",
@@ -82,6 +81,29 @@
         "noData": "No data available",
         "confirm": "Confirm",
         "close": "Close"
+    },
+    "trash": {
+        "title": "Trash",
+        "users": "Users",
+        "roles": "Roles",
+        "permissions": "Permissions",
+        "name": "Name",
+        "email": "Email",
+        "guard": "Guard",
+        "deletedAt": "Deleted At",
+        "actions": "Actions",
+        "restore": "Restore",
+        "deletePermanently": "Delete Permanently",
+        "emptyMessage": "No deleted {{tab}} found.",
+        "confirmRestoreTitle": "Confirm Restore",
+        "confirmDeleteTitle": "Confirm Permanent Delete",
+        "restoreItemQuestion": "Restore Item?",
+        "deleteItemQuestion": "Permanently Delete Item?",
+        "restoreConfirmMessage": "Are you sure you want to restore this {{item}}? It will be moved back to the active list.",
+        "deleteConfirmMessage": "Are you sure you want to permanently delete this {{item}}? This action CANNOT be undone.",
+        "user": "user",
+        "role": "role",
+        "permission": "permission",
+        "errorOccurred": "An error occurred"
     }
 }
-

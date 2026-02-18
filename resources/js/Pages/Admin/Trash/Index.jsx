@@ -8,8 +8,10 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import Modal from '@/Components/Modal';
 import { RotateCcw, Trash2, AlertTriangle } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export default function TrashIndex({ data, tab, counts }) {
+    const { t } = useTranslation('administration');
     const { auth } = usePage().props;
     const permissions = auth?.user?.permissions || [];
     
@@ -19,9 +21,9 @@ export default function TrashIndex({ data, tab, counts }) {
     const [selectedItem, setSelectedItem] = useState(null);
 
     const tabs = [
-        { id: 'users', label: 'Users', permission: 'view-users' },
-        { id: 'roles', label: 'Roles', permission: 'view-roles' },
-        { id: 'permissions', label: 'Permissions', permission: 'view-permissions' },
+        { id: 'users', label: t('trash.users'), permission: 'view-users' },
+        { id: 'roles', label: t('trash.roles'), permission: 'view-roles' },
+        { id: 'permissions', label: t('trash.permissions'), permission: 'view-permissions' },
     ];
 
     const handleAction = (item, type) => {
@@ -62,7 +64,7 @@ export default function TrashIndex({ data, tab, counts }) {
                 setActionType(null);
             },
             onError: () => {
-                toast.error('An error occurred');
+                toast.error(t('trash.errorOccurred'));
                 setConfirmModalOpen(false);
             }
         });
@@ -72,30 +74,30 @@ export default function TrashIndex({ data, tab, counts }) {
         switch (tab) {
             case 'users':
                 return [
-                    { header: 'Name', accessor: 'name' },
-                    { header: 'Email', accessor: 'email' },
+                    { header: t('trash.name'), accessor: 'name' },
+                    { header: t('trash.email'), accessor: 'email' },
                     { 
-                        header: 'Deleted At', 
+                        header: t('trash.deletedAt'), 
                         accessor: 'deleted_at',
                         render: (item) => new Date(item.deleted_at).toLocaleDateString() 
                     },
                 ];
             case 'roles':
                 return [
-                    { header: 'Name', accessor: 'name' },
-                    { header: 'Guard', accessor: 'guard_name' },
+                    { header: t('trash.name'), accessor: 'name' },
+                    { header: t('trash.guard'), accessor: 'guard_name' },
                     { 
-                        header: 'Deleted At', 
+                        header: t('trash.deletedAt'), 
                         accessor: 'deleted_at',
                         render: (item) => new Date(item.deleted_at).toLocaleDateString() 
                     },
                 ];
             case 'permissions':
                 return [
-                    { header: 'Name', accessor: 'name' },
-                    { header: 'Guard', accessor: 'guard_name' },
+                    { header: t('trash.name'), accessor: 'name' },
+                    { header: t('trash.guard'), accessor: 'guard_name' },
                     { 
-                        header: 'Deleted At', 
+                        header: t('trash.deletedAt'), 
                         accessor: 'deleted_at',
                         render: (item) => new Date(item.deleted_at).toLocaleDateString() 
                     },
@@ -111,7 +113,7 @@ export default function TrashIndex({ data, tab, counts }) {
                 <button
                     onClick={() => handleAction(item, 'restore')}
                     className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200"
-                    title="Restore"
+                    title={t('trash.restore')}
                 >
                     <RotateCcw size={18} />
                 </button>
@@ -120,7 +122,7 @@ export default function TrashIndex({ data, tab, counts }) {
                 <button
                     onClick={() => handleAction(item, 'force-delete')}
                     className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
-                    title="Delete Permanently"
+                    title={t('trash.deletePermanently')}
                 >
                     <Trash2 size={18} />
                 </button>
@@ -132,11 +134,11 @@ export default function TrashIndex({ data, tab, counts }) {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-100">
-                    Trash
+                    {t('trash.title')}
                 </h2>
             }
         >
-            <Head title="Trash" />
+            <Head title={t('trash.title')} />
 
             <div className="py-12">
                 <div className="sm:px-6 lg:px-8">
@@ -172,8 +174,8 @@ export default function TrashIndex({ data, tab, counts }) {
                                 columns={getColumns()}
                                 data={data.data}
                                 actions={actions}
-                                emptyMessage={`No deleted ${tab} found.`}
-                                actionLabel="Actions"
+                                emptyMessage={t('trash.emptyMessage', { tab: t(`trash.${tab}`).toLowerCase() })}
+                                actionLabel={t('trash.actions')}
                             />
 
                             {data.links && data.links.length > 3 && (
@@ -205,20 +207,20 @@ export default function TrashIndex({ data, tab, counts }) {
                     setSelectedItem(null);
                     setActionType(null);
                 }}
-                title={actionType === 'restore' ? 'Confirm Restore' : 'Confirm Permanent Delete'}
+                title={actionType === 'restore' ? t('trash.confirmRestoreTitle') : t('trash.confirmDeleteTitle')}
             >
                 <div className="p-6">
                     <div className="flex items-center gap-3 mb-4">
                         <AlertTriangle className={`w-10 h-10 ${actionType === 'restore' ? 'text-green-500' : 'text-red-500'}`} />
                         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                            {actionType === 'restore' ? 'Restore Item?' : 'Permanently Delete Item?'}
+                            {actionType === 'restore' ? t('trash.restoreItemQuestion') : t('trash.deleteItemQuestion')}
                         </h3>
                     </div>
                     
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                         {actionType === 'restore' 
-                            ? `Are you sure you want to restore this ${tab.slice(0, -1)}? It will be moved back to the active list.`
-                            : `Are you sure you want to permanently delete this ${tab.slice(0, -1)}? This action CANNOT be undone.`
+                            ? t('trash.restoreConfirmMessage', { item: t(`trash.${tab.slice(0, -1)}`).toLowerCase() })
+                            : t('trash.deleteConfirmMessage', { item: t(`trash.${tab.slice(0, -1)}`).toLowerCase() })
                         }
                     </p>
 
@@ -230,15 +232,15 @@ export default function TrashIndex({ data, tab, counts }) {
                                 setActionType(null);
                             }}
                         >
-                            Cancel
+                            {t('common.cancel')}
                         </SecondaryButton>
                         {actionType === 'restore' ? (
                             <PrimaryButton onClick={confirmAction}>
-                                Restore
+                                {t('trash.restore')}
                             </PrimaryButton>
                         ) : (
                             <DangerButton onClick={confirmAction}>
-                                Delete Permanently
+                                {t('trash.deletePermanently')}
                             </DangerButton>
                         )}
                     </div>

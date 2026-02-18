@@ -8,6 +8,7 @@
     "users": "Users",
     "roles": "Roles",
     "permissions": "Permissions",
+    "trash": "Trash",
     "tabs": {
         "general": "General",
         "payment": "Payment",
