@@ -150,6 +150,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 { label: 'permissions', route: 'admin.administration.permissions.index', permission: 'view-permissions' },
             ]
         },
+        // TODO: Add a menu item for Trash
         {
             id: 'settings',
             label: 'settings',
@@ -308,7 +309,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                 <Component
                                     {...componentProps}
                                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors group ${isActive
-                                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium'
+                                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold'
                                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                                         }`}
                                     title={!sidebarOpen ? t(item.label) : ''}
@@ -321,7 +322,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                                 } ${!sidebarOpen && 'lg:mx-auto'}`}
                                         />
                                         <span
-                                            className={`text-sm font-medium transition-opacity duration-300 ${sidebarOpen
+                                            className={`text-sm font-bold transition-opacity duration-300 ${sidebarOpen
                                                 ? 'opacity-100'
                                                 : 'lg:opacity-0 lg:hidden'
                                                 }`}
