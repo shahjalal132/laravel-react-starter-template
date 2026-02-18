@@ -1,4 +1,4 @@
-export default function DataTable({ columns, data, actions, emptyMessage = 'No data available' }) {
+export default function DataTable({ columns, data, actions, emptyMessage = 'No data available', actionLabel = 'Actions' }) {
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -18,7 +18,7 @@ export default function DataTable({ columns, data, actions, emptyMessage = 'No d
                                 scope="col"
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
                             >
-                                Actions
+                                {actionLabel}
                             </th>
                         )}
                     </tr>

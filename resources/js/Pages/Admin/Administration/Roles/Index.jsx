@@ -139,6 +139,7 @@ export default function RolesIndex({ roles, filters }) {
                                 data={roles.data}
                                 actions={actions}
                                 emptyMessage={t('roles.noRoles')}
+                                actionLabel={t('roles.actions')}
                             />
 
                             {roles.links && roles.links.length > 3 && (

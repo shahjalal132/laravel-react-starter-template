@@ -134,6 +134,7 @@ export default function PermissionsIndex({ permissions, filters }) {
                                 data={permissions.data}
                                 actions={actions}
                                 emptyMessage={t('permissions.noPermissions')}
+                                actionLabel={t('permissions.actions')}
                             />
 
                             {/* Permission Pagination */}

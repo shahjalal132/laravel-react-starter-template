@@ -215,6 +215,7 @@ export default function UsersIndex({ users, roles, filters }) {
                                 data={users.data}
                                 actions={actions}
                                 emptyMessage={t('users.noUsers')}
+                                actionLabel={t('users.actions')}
                             />
 
                             {users.links && users.links.length > 3 && (
