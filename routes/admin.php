@@ -103,13 +103,19 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
     
     // User Trash Actions
     Route::post('/trash/users/{id}/restore', [TrashController::class, 'restoreUser'])->name('trash.users.restore');
+    Route::post('/trash/users/bulk-restore', [TrashController::class, 'bulkRestoreUsers'])->name('trash.users.bulk-restore');
     Route::delete('/trash/users/{id}/force', [TrashController::class, 'forceDeleteUser'])->name('trash.users.force-delete');
+    Route::delete('/trash/users/bulk-force', [TrashController::class, 'bulkForceDeleteUsers'])->name('trash.users.bulk-force-delete');
 
     // Role Trash Actions
     Route::post('/trash/roles/{id}/restore', [TrashController::class, 'restoreRole'])->name('trash.roles.restore');
+    Route::post('/trash/roles/bulk-restore', [TrashController::class, 'bulkRestoreRoles'])->name('trash.roles.bulk-restore');
     Route::delete('/trash/roles/{id}/force', [TrashController::class, 'forceDeleteRole'])->name('trash.roles.force-delete');
+    Route::delete('/trash/roles/bulk-force', [TrashController::class, 'bulkForceDeleteRoles'])->name('trash.roles.bulk-force-delete');
 
     // Permission Trash Actions
     Route::post('/trash/permissions/{id}/restore', [TrashController::class, 'restorePermission'])->name('trash.permissions.restore');
+    Route::post('/trash/permissions/bulk-restore', [TrashController::class, 'bulkRestorePermissions'])->name('trash.permissions.bulk-restore');
     Route::delete('/trash/permissions/{id}/force', [TrashController::class, 'forceDeletePermission'])->name('trash.permissions.force-delete');
+    Route::delete('/trash/permissions/bulk-force', [TrashController::class, 'bulkForceDeletePermissions'])->name('trash.permissions.bulk-force-delete');
 });

@@ -58,6 +58,24 @@ class TrashController extends Controller
         return redirect()->back()->with('success', 'User permanently deleted.');
     }
 
+    public function bulkRestoreUsers(Request $request)
+    {
+        abort_unless($request->user()->can('edit-users'), 403);
+        $ids = $request->input('ids', []);
+        User::onlyTrashed()->whereIn('id', $ids)->restore();
+
+        return redirect()->back()->with('success', count($ids) . ' users restored successfully.');
+    }
+
+    public function bulkForceDeleteUsers(Request $request)
+    {
+        abort_unless($request->user()->can('delete-users'), 403);
+        $ids = $request->input('ids', []);
+        User::onlyTrashed()->whereIn('id', $ids)->forceDelete();
+
+        return redirect()->back()->with('success', count($ids) . ' users permanently deleted.');
+    }
+
     public function restoreRole($id)
     {
         abort_unless(auth()->user()->can('edit-roles'), 403);
@@ -76,6 +94,24 @@ class TrashController extends Controller
         return redirect()->back()->with('success', 'Role permanently deleted.');
     }
 
+    public function bulkRestoreRoles(Request $request)
+    {
+        abort_unless($request->user()->can('edit-roles'), 403);
+        $ids = $request->input('ids', []);
+        Role::onlyTrashed()->whereIn('id', $ids)->restore();
+
+        return redirect()->back()->with('success', count($ids) . ' roles restored successfully.');
+    }
+
+    public function bulkForceDeleteRoles(Request $request)
+    {
+        abort_unless($request->user()->can('delete-roles'), 403);
+        $ids = $request->input('ids', []);
+        Role::onlyTrashed()->whereIn('id', $ids)->forceDelete();
+
+        return redirect()->back()->with('success', count($ids) . ' roles permanently deleted.');
+    }
+
     public function restorePermission($id)
     {
         abort_unless(auth()->user()->can('edit-permissions'), 403);
@@ -92,5 +128,22 @@ class TrashController extends Controller
         $permission->forceDelete();
 
         return redirect()->back()->with('success', 'Permission permanently deleted.');
+    }
+    public function bulkRestorePermissions(Request $request)
+    {
+        abort_unless($request->user()->can('edit-permissions'), 403);
+        $ids = $request->input('ids', []);
+        Permission::onlyTrashed()->whereIn('id', $ids)->restore();
+
+        return redirect()->back()->with('success', count($ids) . ' permissions restored successfully.');
+    }
+
+    public function bulkForceDeletePermissions(Request $request)
+    {
+        abort_unless($request->user()->can('delete-permissions'), 403);
+        $ids = $request->input('ids', []);
+        Permission::onlyTrashed()->whereIn('id', $ids)->forceDelete();
+
+        return redirect()->back()->with('success', count($ids) . ' permissions permanently deleted.');
     }
 }

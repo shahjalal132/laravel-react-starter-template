@@ -104,6 +104,17 @@
         "user": "user",
         "role": "role",
         "permission": "permission",
-        "errorOccurred": "An error occurred"
+        "errorOccurred": "An error occurred",
+        "restoreSelected": "Restore Selected",
+        "deleteSelected": "Delete Permanently",
+        "confirmBulkRestoreTitle": "Confirm Bulk Restore",
+        "confirmBulkDeleteTitle": "Confirm Bulk Permanent Delete",
+        "restoreItemsQuestion": "Restore Items?",
+        "deleteItemsQuestion": "Permanently Delete Items?",
+        "restoreBulkConfirmMessage": "Are you sure you want to restore {{count}} {{items}}? They will be moved back to the active list.",
+        "deleteBulkConfirmMessage": "Are you sure you want to permanently delete {{count}} {{items}}? This action CANNOT be undone.",
+        "users_plural": "users",
+        "roles_plural": "roles",
+        "permissions_plural": "permissions"
     }
 }

@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DataTable from '@/Components/DataTable';
 import PrimaryButton from '@/Components/PrimaryButton';
 import DangerButton from '@/Components/DangerButton';
@@ -17,8 +17,14 @@ export default function TrashIndex({ data, tab, counts }) {
     
     // Modal states
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-    const [actionType, setActionType] = useState(null); // 'restore' or 'force-delete'
+    const [actionType, setActionType] = useState(null); // 'restore', 'force-delete', 'bulk-restore', 'bulk-force-delete'
     const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedIds, setSelectedIds] = useState([]);
+
+    // Reset selection when tab changes
+    useEffect(() => {
+        setSelectedIds([]);
+    }, [tab]);
 
     const tabs = [
         { id: 'users', label: t('trash.users'), permission: 'view-users' },
@@ -32,36 +38,73 @@ export default function TrashIndex({ data, tab, counts }) {
         setConfirmModalOpen(true);
     };
 
+    const handleBulkAction = (type) => {
+        if (selectedIds.length === 0) return;
+        setActionType(type);
+        setConfirmModalOpen(true);
+    };
+
+    const handleSelectToggle = (id) => {
+        setSelectedIds(prev => 
+            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+        );
+    };
+
+    const handleSelectAllToggle = () => {
+        if (data.data.length > 0 && selectedIds.length === data.data.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(data.data.map(item => item.id));
+        }
+    };
+
     const confirmAction = () => {
-        if (!selectedItem || !actionType) return;
+        const isBulk = actionType?.startsWith('bulk-');
+        if (!isBulk && (!selectedItem || !actionType)) return;
+        if (isBulk && selectedIds.length === 0) return;
 
         const routes = {
             users: {
                 restore: 'admin.trash.users.restore',
                 forceDelete: 'admin.trash.users.force-delete',
+                bulkRestore: 'admin.trash.users.bulk-restore',
+                bulkForceDelete: 'admin.trash.users.bulk-force-delete',
             },
             roles: {
                 restore: 'admin.trash.roles.restore',
                 forceDelete: 'admin.trash.roles.force-delete',
+                bulkRestore: 'admin.trash.roles.bulk-restore',
+                bulkForceDelete: 'admin.trash.roles.bulk-force-delete',
             },
             permissions: {
                 restore: 'admin.trash.permissions.restore',
                 forceDelete: 'admin.trash.permissions.force-delete',
+                bulkRestore: 'admin.trash.permissions.bulk-restore',
+                bulkForceDelete: 'admin.trash.permissions.bulk-force-delete',
             },
         };
 
-        const routeName = actionType === 'restore' 
-            ? routes[tab].restore 
-            : routes[tab].forceDelete;
+        const currentRoutes = routes[tab];
+        let routeName, method, dataParams;
 
-        const method = actionType === 'restore' ? 'post' : 'delete';
+        if (isBulk) {
+            routeName = actionType === 'bulk-restore' ? currentRoutes.bulkRestore : currentRoutes.bulkForceDelete;
+            method = actionType === 'bulk-restore' ? 'post' : 'delete';
+            dataParams = { ids: selectedIds };
+        } else {
+            routeName = actionType === 'restore' ? currentRoutes.restore : currentRoutes.forceDelete;
+            method = actionType === 'restore' ? 'post' : 'delete';
+            dataParams = {};
+        }
 
-        router.visit(route(routeName, selectedItem.id), {
+        router.visit(route(routeName, isBulk ? null : selectedItem.id), {
             method: method,
+            data: dataParams,
             onSuccess: () => {
                 setConfirmModalOpen(false);
                 setSelectedItem(null);
                 setActionType(null);
+                setSelectedIds([]);
             },
             onError: () => {
                 toast.error(t('trash.errorOccurred'));
@@ -130,6 +173,9 @@ export default function TrashIndex({ data, tab, counts }) {
         </div>
     );
 
+    const isBulk = actionType?.startsWith('bulk-');
+    const isRestore = actionType === 'restore' || actionType === 'bulk-restore';
+
     return (
         <AuthenticatedLayout
             header={
@@ -143,30 +189,56 @@ export default function TrashIndex({ data, tab, counts }) {
             <div className="py-12">
                 <div className="sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="border-b border-gray-200 dark:border-gray-700">
-                            <nav className="-mb-px flex space-x-8 px-6" aria-label="Tabs">
-                                {tabs.map((t) => (
-                                    permissions.includes(t.permission) && (
+                        <div className="border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6">
+                            <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+                                {tabs.map((t_item) => (
+                                    permissions.includes(t_item.permission) && (
                                         <Link
-                                            key={t.id}
-                                            href={route('admin.trash.index', { tab: t.id })}
+                                            key={t_item.id}
+                                            href={route('admin.trash.index', { tab: t_item.id })}
                                             className={`
                                                 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2
-                                                ${tab === t.id
+                                                ${tab === t_item.id
                                                     ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                                                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'}
                                             `}
                                         >
-                                            {t.label}
-                                            {counts[t.id] > 0 && (
+                                            {t_item.label}
+                                            {counts[t_item.id] > 0 && (
                                                 <span className="inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white bg-blue-500 rounded-full">
-                                                    {counts[t.id]}
+                                                    {counts[t_item.id]}
                                                 </span>
                                             )}
                                         </Link>
                                     )
                                 ))}
                             </nav>
+
+                            {selectedIds.length > 0 && (
+                                <div className="flex items-center gap-3 py-4 border-t sm:border-t-0 border-gray-100 dark:border-gray-700">
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">
+                                        {selectedIds.length} {t('common.selected')}
+                                    </span>
+                                    {permissions.includes(`edit-${tab}`) && (
+                                        <button
+                                            onClick={() => handleBulkAction('bulk-restore')}
+                                            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-md hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+                                        >
+                                            <RotateCcw size={16} />
+                                            {t('trash.restoreSelected')}
+                                        </button>
+                                    )}
+                                    {permissions.includes(`delete-${tab}`) && (
+                                        <button
+                                            onClick={() => handleBulkAction('bulk-force-delete')}
+                                            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-md hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                                        >
+                                            <Trash2 size={16} />
+                                            {t('trash.deleteSelected')}
+                                        </button>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         <div className="p-6">
@@ -176,6 +248,10 @@ export default function TrashIndex({ data, tab, counts }) {
                                 actions={actions}
                                 emptyMessage={t('trash.emptyMessage', { tab: t(`trash.${tab}`).toLowerCase() })}
                                 actionLabel={t('trash.actions')}
+                                selectable={true}
+                                selectedIds={selectedIds}
+                                onSelectToggle={handleSelectToggle}
+                                onSelectAllToggle={handleSelectAllToggle}
                             />
 
                             {data.links && data.links.length > 3 && (
@@ -207,20 +283,33 @@ export default function TrashIndex({ data, tab, counts }) {
                     setSelectedItem(null);
                     setActionType(null);
                 }}
-                title={actionType === 'restore' ? t('trash.confirmRestoreTitle') : t('trash.confirmDeleteTitle')}
+                title={
+                    isBulk 
+                        ? (isRestore ? t('trash.confirmBulkRestoreTitle') : t('trash.confirmBulkDeleteTitle'))
+                        : (isRestore ? t('trash.confirmRestoreTitle') : t('trash.confirmDeleteTitle'))
+                }
             >
                 <div className="p-6">
                     <div className="flex items-center gap-3 mb-4">
-                        <AlertTriangle className={`w-10 h-10 ${actionType === 'restore' ? 'text-green-500' : 'text-red-500'}`} />
+                        <AlertTriangle className={`w-10 h-10 ${isRestore ? 'text-green-500' : 'text-red-500'}`} />
                         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                            {actionType === 'restore' ? t('trash.restoreItemQuestion') : t('trash.deleteItemQuestion')}
+                            {isBulk 
+                                ? (isRestore ? t('trash.restoreItemsQuestion') : t('trash.deleteItemsQuestion'))
+                                : (isRestore ? t('trash.restoreItemQuestion') : t('trash.deleteItemQuestion'))
+                            }
                         </h3>
                     </div>
                     
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                        {actionType === 'restore' 
-                            ? t('trash.restoreConfirmMessage', { item: t(`trash.${tab.slice(0, -1)}`).toLowerCase() })
-                            : t('trash.deleteConfirmMessage', { item: t(`trash.${tab.slice(0, -1)}`).toLowerCase() })
+                        {isBulk 
+                            ? (isRestore 
+                                ? t('trash.restoreBulkConfirmMessage', { count: selectedIds.length, items: t(`trash.${tab}_plural`).toLowerCase() })
+                                : t('trash.deleteBulkConfirmMessage', { count: selectedIds.length, items: t(`trash.${tab}_plural`).toLowerCase() })
+                              )
+                            : (isRestore 
+                                ? t('trash.restoreConfirmMessage', { item: t(`trash.${tab.slice(0, -1)}`).toLowerCase() })
+                                : t('trash.deleteConfirmMessage', { item: t(`trash.${tab.slice(0, -1)}`).toLowerCase() })
+                              )
                         }
                     </p>
 
@@ -234,13 +323,13 @@ export default function TrashIndex({ data, tab, counts }) {
                         >
                             {t('common.cancel')}
                         </SecondaryButton>
-                        {actionType === 'restore' ? (
+                        {isRestore ? (
                             <PrimaryButton onClick={confirmAction}>
                                 {t('trash.restore')}
                             </PrimaryButton>
                         ) : (
                             <DangerButton onClick={confirmAction}>
-                                {t('trash.deletePermanently')}
+                                {isBulk ? t('trash.deletePermanently') : t('trash.deletePermanently')}
                             </DangerButton>
                         )}
                     </div>

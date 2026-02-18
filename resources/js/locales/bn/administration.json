@@ -104,6 +104,17 @@
         "user": "ব্যবহারকারী",
         "role": "ভূমিকা",
         "permission": "অনুমতি",
-        "errorOccurred": "একটি ত্রুটি ঘটেছে"
+        "errorOccurred": "একটি ত্রুটি ঘটেছে",
+        "restoreSelected": "নির্বাচিতগুলো পুনরুদ্ধার করুন",
+        "deleteSelected": "নির্বাচিতগুলো স্থায়ীভাবে মুছুন",
+        "confirmBulkRestoreTitle": "একত্রে পুনরুদ্ধার নিশ্চিত করুন",
+        "confirmBulkDeleteTitle": "একত্রে স্থায়ীভাবে মুছে ফেলা নিশ্চিত করুন",
+        "restoreItemsQuestion": "আইটেমগুলো পুনরুদ্ধার করবেন?",
+        "deleteItemsQuestion": "আইটেমগুলো কি স্থায়ীভাবে মুছে ফেলবেন?",
+        "restoreBulkConfirmMessage": "আপনি কি নিশ্চিত যে আপনি {{count}}টি {{items}} পুনরুদ্ধার করতে চান? এগুলো সক্রিয় তালিকায় ফিরে যাবে।",
+        "deleteBulkConfirmMessage": "আপনি কি নিশ্চিত যে আপনি {{count}}টি {{items}} স্থায়ীভাবে মুছে ফেলতে চান? এই কাজটি পূর্বাবস্থায় ফিরিয়ে আনা যাবে না।",
+        "users_plural": "ব্যবহারকারী",
+        "roles_plural": "ভূমিকা",
+        "permissions_plural": "অনুমতি"
     }
 }
