@@ -15,6 +15,7 @@ import {
     ArrowLeft,
     X,
     Users,
+    Trash2,
 } from 'lucide-react';
 import ThemeToggle from '@/Components/ThemeToggle';
 import LanguageSelector from '@/Components/LanguageSelector';
@@ -150,7 +151,14 @@ export default function AuthenticatedLayout({ header, children }) {
                 { label: 'permissions', route: 'admin.administration.permissions.index', permission: 'view-permissions' },
             ]
         },
-        // TODO: Add a menu item for Trash
+        {
+            id: 'trash',
+            label: 'trash', // Lowercase for translation key
+            icon: Trash2,
+            hasSubmenu: false,
+            route: 'admin.trash.index',
+            permission: ['view-users', 'view-roles', 'view-permissions'],
+        },
         {
             id: 'settings',
             label: 'settings',

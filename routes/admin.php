@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\TrashController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -96,4 +97,19 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
             Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
         });
     });
+
+    // Trash
+    Route::get('/trash', [TrashController::class, 'index'])->name('trash.index');
+    
+    // User Trash Actions
+    Route::post('/trash/users/{id}/restore', [TrashController::class, 'restoreUser'])->name('trash.users.restore');
+    Route::delete('/trash/users/{id}/force', [TrashController::class, 'forceDeleteUser'])->name('trash.users.force-delete');
+
+    // Role Trash Actions
+    Route::post('/trash/roles/{id}/restore', [TrashController::class, 'restoreRole'])->name('trash.roles.restore');
+    Route::delete('/trash/roles/{id}/force', [TrashController::class, 'forceDeleteRole'])->name('trash.roles.force-delete');
+
+    // Permission Trash Actions
+    Route::post('/trash/permissions/{id}/restore', [TrashController::class, 'restorePermission'])->name('trash.permissions.restore');
+    Route::delete('/trash/permissions/{id}/force', [TrashController::class, 'forceDeletePermission'])->name('trash.permissions.force-delete');
 });
