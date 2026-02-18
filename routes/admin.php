@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
         });
         
         Route::middleware('permission:delete-users')->group(function () {
+            Route::delete('/users/bulk-delete', [UserController::class, 'bulkDestroy'])->name('users.bulk-destroy');
             Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
         });
         
@@ -62,6 +63,8 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
         });
 
         Route::middleware('permission:view-roles')->group(function () {
+            // Need to place specific routes before catch-all resource routes if they exist, 
+            // but here we are using explicit routes.
             Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
         });
         
@@ -71,6 +74,7 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
         });
         
         Route::middleware('permission:delete-roles')->group(function () {
+            Route::delete('/roles/bulk-delete', [RoleController::class, 'bulkDestroy'])->name('roles.bulk-destroy');
             Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
         });
         
@@ -94,6 +98,7 @@ Route::middleware(['auth', 'verified', 'suspended'])->prefix('admin')->name('adm
         });
         
         Route::middleware('permission:delete-permissions')->group(function () {
+            Route::delete('/permissions/bulk-delete', [PermissionController::class, 'bulkDestroy'])->name('permissions.bulk-destroy');
             Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
         });
     });

@@ -18,8 +18,13 @@ export default function RolesIndex({ roles, filters }) {
     const [search, setSearch] = useState(filters?.search || '');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [roleToDelete, setRoleToDelete] = useState(null);
+    const [selectedIds, setSelectedIds] = useState([]);
+    const [isBulkDelete, setIsBulkDelete] = useState(false);
 
     useEffect(() => {
+        // Skip searching on mount if the search value hasn't changed from filters
+        if (search === (filters?.search || '')) return;
+
         const timer = setTimeout(() => {
             router.get(
                 route('admin.administration.roles.index'),
@@ -28,6 +33,7 @@ export default function RolesIndex({ roles, filters }) {
                     preserveState: true,
                     replace: true,
                     preserveScroll: true,
+                    onSuccess: () => setSelectedIds([]),
                 }
             );
         }, 300);
@@ -35,12 +41,42 @@ export default function RolesIndex({ roles, filters }) {
     }, [search]);
 
     const handleDelete = (role) => {
+        setIsBulkDelete(false);
         setRoleToDelete(role);
         setDeleteModalOpen(true);
     };
 
+    const handleBulkDelete = () => {
+        if (selectedIds.length === 0) return;
+        setIsBulkDelete(true);
+        setDeleteModalOpen(true);
+    };
+
+    const handleSelectToggle = (id) => {
+        setSelectedIds(prev => 
+            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+        );
+    };
+
+    const handleSelectAllToggle = () => {
+        if (roles.data.length > 0 && selectedIds.length === roles.data.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(roles.data.map(role => role.id));
+        }
+    };
+
     const confirmDelete = () => {
-        if (roleToDelete) {
+        if (isBulkDelete) {
+            router.delete(route('admin.administration.roles.bulk-destroy'), {
+                data: { ids: selectedIds },
+                onSuccess: () => {
+                    setDeleteModalOpen(false);
+                    setSelectedIds([]);
+                    setIsBulkDelete(false);
+                },
+            });
+        } else if (roleToDelete) {
             router.delete(route('admin.administration.roles.destroy', roleToDelete.id), {
                 onSuccess: () => {
                     setDeleteModalOpen(false);
@@ -121,6 +157,15 @@ export default function RolesIndex({ roles, filters }) {
                                         />
                                     </div>
                                 </div>
+                                {selectedIds.length > 0 && permissions.includes('delete-roles') && (
+                                    <button
+                                        onClick={handleBulkDelete}
+                                        className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors border border-red-200 dark:border-red-800"
+                                    >
+                                        <Trash2 size={16} />
+                                        {t('common.deleteSelected')} ({selectedIds.length})
+                                    </button>
+                                )}
                             </div>
 
                             <DataTable
@@ -129,6 +174,10 @@ export default function RolesIndex({ roles, filters }) {
                                 actions={actions}
                                 emptyMessage={t('roles.noRoles')}
                                 actionLabel={t('roles.actions')}
+                                selectable={true}
+                                selectedIds={selectedIds}
+                                onSelectToggle={handleSelectToggle}
+                                onSelectAllToggle={handleSelectAllToggle}
                             />
 
                             {roles.links && roles.links.length > 3 && (
@@ -138,6 +187,8 @@ export default function RolesIndex({ roles, filters }) {
                                             <Link
                                                 key={index}
                                                 href={link.url || '#'}
+                                                preserveState
+                                                preserveScroll
                                                 className={`px-3 py-2 text-sm rounded-md ${link.active
                                                     ? 'bg-blue-600 text-white'
                                                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
@@ -158,24 +209,28 @@ export default function RolesIndex({ roles, filters }) {
                 onClose={() => {
                     setDeleteModalOpen(false);
                     setRoleToDelete(null);
+                    setIsBulkDelete(false);
                 }}
-                title={t('roles.deleteRole')}
+                title={isBulkDelete ? t('common.deleteSelected') : t('roles.deleteRole')}
             >
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    {t('roles.confirmDelete')}
-                </p>
-                <div className="flex items-center justify-end gap-4">
-                    <SecondaryButton
-                        onClick={() => {
-                            setDeleteModalOpen(false);
-                            setRoleToDelete(null);
-                        }}
-                    >
-                        {t('common.cancel')}
-                    </SecondaryButton>
-                    <DangerButton onClick={confirmDelete}>
-                        {t('common.delete')}
-                    </DangerButton>
+                <div className="p-6">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                        {isBulkDelete ? t('roles.confirmBulkDelete') : t('roles.confirmDelete')}
+                    </p>
+                    <div className="flex items-center justify-end gap-4">
+                        <SecondaryButton
+                            onClick={() => {
+                                setDeleteModalOpen(false);
+                                setRoleToDelete(null);
+                                setIsBulkDelete(false);
+                            }}
+                        >
+                            {t('common.cancel')}
+                        </SecondaryButton>
+                        <DangerButton onClick={confirmDelete}>
+                            {t('common.delete')}
+                        </DangerButton>
+                    </div>
                 </div>
             </Modal>
         </AuthenticatedLayout>

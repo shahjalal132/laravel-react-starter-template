@@ -127,4 +127,41 @@ class RoleController extends Controller
         return redirect()->route('admin.administration.roles.index')
             ->with('success', 'Role deleted successfully.');
     }
+    /**
+     * Remove the specified resources from storage.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        abort_unless($request->user()->can('delete-roles'), 403);
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'No roles selected.');
+        }
+
+        $roles = Role::whereIn('id', $ids)->get();
+        $deletedCount = 0;
+        $activeCount = 0;
+
+        foreach ($roles as $role) {
+            /** @var \App\Models\Role $role */
+            if ($role->users()->count() > 0) {
+                $activeCount++;
+                continue;
+            }
+            $role->delete();
+            $deletedCount++;
+        }
+
+        if ($deletedCount === 0) {
+            return redirect()->back()->with('error', 'Selected roles are assigned to users and cannot be deleted.');
+        }
+
+        $message = $deletedCount . ' roles deleted successfully.';
+        if ($activeCount > 0) {
+            $message .= ' ' . $activeCount . ' roles were skipped as they are assigned to users.';
+        }
+
+        return redirect()->route('admin.administration.roles.index')->with('success', $message);
+    }
 }

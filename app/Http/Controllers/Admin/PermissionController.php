@@ -19,7 +19,7 @@ class PermissionController extends Controller
     public function index(Request $request): Response
     {
         abort_unless($request->user()->can('view-permissions'), 403);
-        $query = Permission::query();
+        $query = Permission::query()->orderBy('name');
 
         // Search
         if ($request->has('search') && $request->search) {
@@ -105,5 +105,42 @@ class PermissionController extends Controller
 
         return redirect()->route('admin.administration.permissions.index')
             ->with('success', 'Permission deleted successfully.');
+    }
+    /**
+     * Remove the specified resources from storage.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        abort_unless($request->user()->can('delete-permissions'), 403);
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'No permissions selected.');
+        }
+
+        $permissions = Permission::whereIn('id', $ids)->get();
+        $deletedCount = 0;
+        $activeCount = 0;
+
+        foreach ($permissions as $permission) {
+            /** @var \App\Models\Permission $permission */
+            if ($permission->roles()->count() > 0) {
+                $activeCount++;
+                continue;
+            }
+            $permission->delete();
+            $deletedCount++;
+        }
+
+        if ($deletedCount === 0) {
+            return redirect()->back()->with('error', 'Selected permissions are assigned to roles and cannot be deleted.');
+        }
+
+        $message = $deletedCount . ' permissions deleted successfully.';
+        if ($activeCount > 0) {
+            $message .= ' ' . $activeCount . ' permissions were skipped as they are assigned to roles.';
+        }
+
+        return redirect()->route('admin.administration.permissions.index')->with('success', $message);
     }
 }

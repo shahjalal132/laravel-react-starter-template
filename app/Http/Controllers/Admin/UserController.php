@@ -175,4 +175,21 @@ class UserController extends Controller
         return redirect()->back()
             ->with('success', 'User unsuspended successfully.');
     }
+    /**
+     * Remove the specified resources from storage.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        abort_unless($request->user()->can('delete-users'), 403);
+        $ids = $request->input('ids', []);
+        
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'No users selected.');
+        }
+
+        User::whereIn('id', $ids)->delete();
+
+        return redirect()->route('admin.administration.users.index')
+            ->with('success', 'Selected users deleted successfully.');
+    }
 }

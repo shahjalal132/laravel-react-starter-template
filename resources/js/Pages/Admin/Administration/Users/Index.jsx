@@ -24,9 +24,22 @@ export default function UsersIndex({ users, roles, filters }) {
     const [selectedUser, setSelectedUser] = useState(null);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
+    const [selectedIds, setSelectedIds] = useState([]);
+    const [isBulkDelete, setIsBulkDelete] = useState(false);
 
     // Filter effect
     useEffect(() => {
+        // Skip searching on mount if the filters haven't changed
+        const currentSearch = filters?.search || '';
+        const currentRole = filters?.role || '';
+        const currentSuspended = filters?.suspended ?? '';
+
+        if (search === currentSearch && 
+            roleFilter === currentRole && 
+            suspendedFilter === currentSuspended) {
+            return;
+        }
+
         const fetchUsers = () => {
             router.get(
                 route('admin.administration.users.index'),
@@ -39,6 +52,7 @@ export default function UsersIndex({ users, roles, filters }) {
                     preserveState: true,
                     replace: true,
                     preserveScroll: true,
+                    onSuccess: () => setSelectedIds([]),
                 }
             );
         };
@@ -51,12 +65,42 @@ export default function UsersIndex({ users, roles, filters }) {
     }, [search, roleFilter, suspendedFilter]);
 
     const handleDelete = (user) => {
+        setIsBulkDelete(false);
         setUserToDelete(user);
         setDeleteModalOpen(true);
     };
 
+    const handleBulkDelete = () => {
+        if (selectedIds.length === 0) return;
+        setIsBulkDelete(true);
+        setDeleteModalOpen(true);
+    };
+
+    const handleSelectToggle = (id) => {
+        setSelectedIds(prev => 
+            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+        );
+    };
+
+    const handleSelectAllToggle = () => {
+        if (users.data.length > 0 && selectedIds.length === users.data.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(users.data.map(user => user.id));
+        }
+    };
+
     const confirmDelete = () => {
-        if (userToDelete) {
+        if (isBulkDelete) {
+            router.delete(route('admin.administration.users.bulk-destroy'), {
+                data: { ids: selectedIds },
+                onSuccess: () => {
+                    setDeleteModalOpen(false);
+                    setSelectedIds([]);
+                    setIsBulkDelete(false);
+                },
+            });
+        } else if (userToDelete) {
             router.delete(route('admin.administration.users.destroy', userToDelete.id), {
                 onSuccess: () => {
                     setDeleteModalOpen(false);
@@ -207,6 +251,15 @@ export default function UsersIndex({ users, roles, filters }) {
                                         <option value="1">{t('users.suspended')}</option>
                                     </Select>
                                 </div>
+                                {selectedIds.length > 0 && permissions.includes('delete-users') && (
+                                    <button
+                                        onClick={handleBulkDelete}
+                                        className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors border border-red-200 dark:border-red-800"
+                                    >
+                                        <Trash2 size={16} />
+                                        {t('common.deleteSelected')} ({selectedIds.length})
+                                    </button>
+                                )}
                             </div>
 
                             <DataTable
@@ -215,6 +268,10 @@ export default function UsersIndex({ users, roles, filters }) {
                                 actions={actions}
                                 emptyMessage={t('users.noUsers')}
                                 actionLabel={t('users.actions')}
+                                selectable={true}
+                                selectedIds={selectedIds}
+                                onSelectToggle={handleSelectToggle}
+                                onSelectAllToggle={handleSelectAllToggle}
                             />
 
                             {users.links && users.links.length > 3 && (
@@ -224,6 +281,8 @@ export default function UsersIndex({ users, roles, filters }) {
                                             <Link
                                                 key={index}
                                                 href={link.url || '#'}
+                                                preserveState
+                                                preserveScroll
                                                 className={`px-3 py-2 text-sm rounded-md ${link.active
                                                     ? 'bg-blue-600 text-white'
                                                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
@@ -253,24 +312,28 @@ export default function UsersIndex({ users, roles, filters }) {
                 onClose={() => {
                     setDeleteModalOpen(false);
                     setUserToDelete(null);
+                    setIsBulkDelete(false);
                 }}
-                title={t('users.deleteUser')}
+                title={isBulkDelete ? t('common.deleteSelected') : t('users.deleteUser')}
             >
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    {t('users.confirmDelete')}
-                </p>
-                <div className="flex items-center justify-end gap-4">
-                    <SecondaryButton
-                        onClick={() => {
-                            setDeleteModalOpen(false);
-                            setUserToDelete(null);
-                        }}
-                    >
-                        {t('common.cancel')}
-                    </SecondaryButton>
-                    <DangerButton onClick={confirmDelete}>
-                        {t('common.delete')}
-                    </DangerButton>
+                <div className="p-6">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                        {isBulkDelete ? t('users.confirmBulkDelete') : t('users.confirmDelete')}
+                    </p>
+                    <div className="flex items-center justify-end gap-4">
+                        <SecondaryButton
+                            onClick={() => {
+                                setDeleteModalOpen(false);
+                                setUserToDelete(null);
+                                setIsBulkDelete(false);
+                            }}
+                        >
+                            {t('common.cancel')}
+                        </SecondaryButton>
+                        <DangerButton onClick={confirmDelete}>
+                            {t('common.delete')}
+                        </DangerButton>
+                    </div>
                 </div>
             </Modal>
         </AuthenticatedLayout>

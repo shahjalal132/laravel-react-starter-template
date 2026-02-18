@@ -29,7 +29,9 @@
         "userUpdated": "User updated successfully",
         "userDeleted": "User deleted successfully",
         "userSuspended": "User suspended successfully",
-        "userUnsuspended": "User unsuspended successfully"
+        "userUnsuspended": "User unsuspended successfully",
+        "bulkDeleted": "Selected users deleted successfully",
+        "confirmBulkDelete": "Are you sure you want to delete the selected users?"
     },
     "roles": {
         "title": "Roles",
@@ -48,7 +50,9 @@
         "cannotDelete": "Cannot delete role that is assigned to users",
         "roleCreated": "Role created successfully",
         "roleUpdated": "Role updated successfully",
-        "roleDeleted": "Role deleted successfully"
+        "roleDeleted": "Role deleted successfully",
+        "bulkDeleted": "Selected roles deleted successfully",
+        "confirmBulkDelete": "Are you sure you want to delete the selected roles?"
     },
     "permissions": {
         "title": "Permissions",
@@ -65,7 +69,9 @@
         "cannotDelete": "Cannot delete permission that is assigned to roles",
         "permissionCreated": "Permission created successfully",
         "permissionUpdated": "Permission updated successfully",
-        "permissionDeleted": "Permission deleted successfully"
+        "permissionDeleted": "Permission deleted successfully",
+        "bulkDeleted": "Selected permissions deleted successfully",
+        "confirmBulkDelete": "Are you sure you want to delete the selected permissions?"
     },
     "common": {
         "save": "Save",
@@ -80,7 +86,9 @@
         "loading": "Loading...",
         "noData": "No data available",
         "confirm": "Confirm",
-        "close": "Close"
+        "close": "Close",
+        "deleteSelected": "Delete Selected",
+        "selected": "selected"
     },
     "trash": {
         "title": "Trash",
