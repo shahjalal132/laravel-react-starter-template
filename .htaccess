@@ -12,7 +12,6 @@ RewriteRule ^(.*)$ public/$1 [L]
 
 </IfModule>
 
-
 <Files .env>
   Order allow,deny
   Deny from all
@@ -22,14 +21,3 @@ RewriteRule ^(.*)$ public/$1 [L]
   Order allow,deny
   Deny from all
 </Files>
-
-#<IfModule php7_module>
-#php_flag display_errors Off
-#php_value upload_max_filesize 1000000000000000000000M
-#php_value post_max_size 1000000000000000000000M
-#php_value max_execution_time 9000000000000000000000
-#php_value max_input_time 9000000000000000000000
-#php_value memory_limit 9000000000000000000000M
-#php_value max_file_uploads 500
-#php_value default_socket_timeout 9000000000000000000000
-#</IfModule>
